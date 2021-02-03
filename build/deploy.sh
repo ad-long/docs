@@ -11,6 +11,7 @@ build() {
       bundle exec middleman build --clean --build-dir ../html/docs/$product/v1/$lang/
       done
     done
+  cp -rf ../html/docs/usdt_swap/v1/cn/* ../html/docs/
 }
 
 build
