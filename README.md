@@ -7,6 +7,7 @@ gem install bundler
 
 cd build
 bundler install
+bundle update
 ./deploy.sh
 
 cd ..

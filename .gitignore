@@ -1,2 +1,3 @@
 build/source/index.html.md
 docs/*
+build/Gemfile.lock
