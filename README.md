@@ -1,6 +1,6 @@
 apt update
-apt install pkg-config build-essential nodejs git libxml2-dev libxslt-dev
-apt install ruby ruby-dev
+apt install -y --no-install-recommends pkg-config build-essential nodejs git libxml2-dev libxslt-dev
+apt install ruby2.4 ruby-dev2.4
 ruby --version
 gem install bundler
 
