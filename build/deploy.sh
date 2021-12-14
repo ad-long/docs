@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 build() {
-  products=(coin_margined_swap dm option spot usdt_swap)
+  products=(spot dm coin_margined_swap usdt_swap option)
   for product in ${products[@]}
     do
     langs=(cn en)
@@ -11,7 +11,7 @@ build() {
       bundle exec middleman build --clean --build-dir ../docs/$product/v1/$lang/
       done
     done
-  cp -rf ../docs/spot/v1/cn/* ../docs/}
+}
 
 build
 
