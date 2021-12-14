@@ -76,6 +76,9 @@ under the License.
           <!--
           <span class="nav_cell nav_tab">
             <a href="/docs/option/v1/en/" id="btn_option">期权合约</a>
+          </span>
+           <span class="nav_cell nav_tab">
+            <a href="/docs/swap/v1/en/" id="btn_swap">永续合约</a>
           </span> -->
         </div>
       </div>
@@ -147,7 +150,7 @@ under the License.
       const btn_spot = document.getElementById('btn_spot');
       const btn_dm = document.getElementById('btn_dm');
       const btn_coin_margined_swap = document.getElementById('btn_coin_margined_swap');
-      const btn_usdt_swap = document.getElementById('btn_usdt_swap')
+      const btn_usdt_swap = document.getElementById('btn_usdt_swap');
     //  const btn_option = document.getElementById('btn_option');
       const v1_url = document.getElementById('v1_url');
       const url = GetUrlRelativePath();
@@ -218,7 +221,6 @@ under the License.
         btn_dm.className = '';
       //  btn_option.className = '';
       }
-      //显示语言切换按钮
       lang_btn.style.display = 'block';
       function GetUrlRelativePath(){
         let url = document.location.toString();

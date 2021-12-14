@@ -1,7 +1,6 @@
 apt update
-apt-get install zlib1g-dev build-essential ruby-full libffi-dev
-apt-get install nodejs npm
-npm i -g bower
+apt install pkg-config build-essential nodejs git libxml2-dev libxslt-dev
+apt install ruby ruby-dev
 ruby --version
 gem install bundler
 
