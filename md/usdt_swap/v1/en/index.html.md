@@ -38,1500 +38,263 @@ Welcome users, who are dedicated to maker strategy and have created large tradin
 
 # Changelog
 
-## 1.1.4 2021-6-15 【Added the content about USDT Margined Futures interfaces】
+| Release Time<br>(UTC +8) | Interface Type | Interface URL                     | Interface Type | Change   | 摘要    | 
+| 2021-12-17 |     |                                                           |      |      |  USDT交割合约上线   | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_contract_info                  | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, pair, business_type, delivery_date(contract delivery date, this field is an empty string when it is swap contract)   | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_price_limit                    | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_open_interest                  | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_risk_info                      | GET  | Update  |  Add optional parameters in request: business_type. Add fields in return parameter "data": business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_insurance_fund                 | GET  | Update  |  Add fields in return parameter "data": business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_cross_adjustfactor             | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_his_open_interest              | GET  | Update  |  Add optional parameters in request: contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_elite_account_ratio            | GET  | Update  |  Add fields in return parameter "data": business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_elite_position_ratio           | GET  | Update  |  Add fields in return parameter "data": business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_liquidation_orders             | GET  | Update  |  Add optional parameters in request: pair. Add fields in return parameter "data.orders": business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_settlement_records             | GET  | Update  |  Add fields in return parameter "data.settlement_record": business_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_estimated_settlement_price     | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_cross_trade_state              | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-ex/market/depth                            | GET  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   /linear-swap-ex/market/history/kline                    | GET  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   /linear-swap-api/v1/swap_cross_ladder_margin            | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | public  |   /linear-swap-ex/market/bbo                              | GET  | Update  |  Add one optional parameter in request: business_type. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly). Add one field in return parameter "ticks": business_type  | 
+| 2021-12-17 | public  |   /linear-swap-ex/market/detail/merged                    | GET  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   /linear-swap-ex/market/detail/batch_merged              | GET  | Update  |  Add one optional parameter in request: business_type. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly). Add one field in return parameter "data": business_type  | 
+| 2021-12-17 | public  |   /index/market/history/linear_swap_basis                 | GET  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   /index/market/history/linear_swap_mark_price_kline      | GET  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   /linear-swap-ex/market/trade                            | GET  | Update  |  Add one optional parameter in request: business_type. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly). Add one field in return parameter "data": business_type  | 
+| 2021-12-17 | public  |   /linear-swap-ex/market/history/trade                    | GET  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_account_info             | POST | Update  |  Added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameter "contract_detail","futures_contract_detail": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_position_info            | POST | Update  |  Add optional parameters in request: contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_sub_account_info         | POST | Update  |  Added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameter "contract_detail","futures_contract_detail": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_sub_position_info        | POST | Update  |  Add optional parameters in request: contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_financial_record               | POST | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-211225  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_financial_record_exact         | POST | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-211225  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_order_limit                    | POST | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_fee                            | POST | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, business_type, pair, delivery_fee  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_position_limit           | POST | Update  |  Add optional parameters in request: business_type, contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in return parameter "data": business_type, contract_type, pair,lever_rate, buy_limit_value, sell_limit_value, mark_price  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_account_position_info    | POST | Update  |  Added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameters "positions"，"contract_detail" and "futures_contract_detail": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_user_settlement_records  | POST | Update  |  Add one field in return parameters "contract_detail" and "positions": pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_available_level_rate     | POST | Update  |  Add optional parameters in request: business_type, contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_switch_lever_rate        | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_order                    | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_batchorder               | POST | Update  |  orders_data Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_cancel                   | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_cancelall                | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_order_info               | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_order_detail             | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_openorders               | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_hisorders                | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_matchresults             | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter. Add fields in return parameter "data.trades": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_hisorders_exact          | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_matchresults_exact       | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter. Add fields in return parameter "data.trades": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_lightning_close_position | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_trigger_order            | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_trigger_cancel           | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_trigger_cancelall        | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_trigger_openorders       | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_trigger_hisorders        | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_tpsl_order               | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_tpsl_cancel              | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_tpsl_cancelall           | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_tpsl_openorders          | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_tpsl_hisorders           | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_relation_tpsl_order      | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_track_order              | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_track_cancel             | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_track_cancelall          | POST | Update  |  Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_track_openorders         | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_track_hisorders          | POST | Update  |  Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair  | 
+| 2021-12-17 | public  |   market.$contract_code.kline.$period                     | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.kline.$period                     | REQ  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.depth.$type                       | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.depth.size_${size}.high_freq      | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.bbo                               | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.detail                            | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.trade.detail                      | REQ  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.trade.detail                      | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.basis.$period.$basis_price_type   | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.basis.$period.$basis_price_type   | REQ  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | private |   public.$contract_code.liquidation_orders                | SUB  | Update  |  Add one optional field in the outer layer of subscription parameters: business_type, which is at the same level as topic. Add fields in the return parameter "data": pair, contract_type, business_type. All of that is at the same level as contract_code. business_type should be filled when unsubscribed  | 
+| 2021-12-17 | private |   public.$contract_code.contract_info                     | SUB  | Update  |  Add one optional field in the outer layer of subscription parameters: business_type, which is at the same level as topic.Add fields in the return parameter "data": pair, contract_type, business_type, delivery_date. All of that is at the same level as contract_code. business_type should be filled when unsubscribed  | 
+| 2021-12-17 | public  |   market.$contract_code.mark_price.$period                | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | public  |   market.$contract_code.mark_price.$period                | REQ  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly)  | 
+| 2021-12-17 | private |   accounts_cross.$margin_account                          | SUB  | Update  |  Added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameter "contract_detail","futures_contract_detail": contract_type, business_type, pair  | 
+| 2021-12-17 | private |   orders_cross.$contract_code                             | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code  | 
+| 2021-12-17 | private |   positions_cross.$contract_code                          | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code  | 
+| 2021-12-17 | private |   matchOrders_cross.$contract_code                        | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code  | 
+| 2021-12-17 | private |   trigger_order_cross.$contract_code                      | SUB  | Update  |  The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_position_limit                 | POST | Update  |  Add returning parameters: lever_rate, buy_limit_value, sell_limit_value, mark_price  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_lever_position_limit           | POST | Add     |  Added Query Users' Position Limit for All Leverages(isolated) interface  | 
+| 2021-12-17 | private |   /linear-swap-api/v1/swap_cross_lever_position_limit     | POST | Add     |  Added Query Users' Position Limit for All Leverages(cross) interface  | 
+| 2021-05-17 | private |   /linear-swap-api/v1/swap_master_sub_transfer            | POST | Update  |  Added parameters in request: client_order_id   | 
+| 2021-05-17 | private |   /linear-swap-api/v1/swap_transfer_inner                 | POST | Update  |  Added parameters in request: client_order_id   | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_track_order                    | POST | Add     |  Added Place a Trailing Order(isolated) interface  | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_cross_track_order              | POST | Add     |  Added Place a Trailing Order(cross) interface  | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_track_cancel                   | POST | Add     |  Added Cancel a Trailing Order(isolated) interface  | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_cross_track_cancel             | POST | Add     |  Added Cancel a Trailing Order(cross) interface  | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_track_cancelall                | POST | Add     |  Added Cancel All Trailing Orders(isolated) interface   | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_cross_track_cancelall          | POST | Add     |  Added Cancel All Trailing Orders(cross) interface   | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_track_openorders               | POST | Add     |  Added Current unfilled trailing order acquisition(isolated) interface  | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_cross_track_openorders         | POST | Add     |  Added Current unfilled trailing order acquisition(cross) interface  | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_track_hisorders                | POST | Add     |  Added Get History Trailing Orders(isolated) interface  | 
+| 2021-05-12 | private |   /linear-swap-api/v1/swap_cross_track_hisorders          | POST | Add     |  Added Get History Trailing Orders(cross) interface  | 
+| 2021-04-29 | private |   /linear-swap-api/v1/swap_cancel                         | POST | Update  |  Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours   | 
+| 2021-04-29 | private |   /linear-swap-api/v1/swap_cross_cancel                   | POST | Update  |  Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours   | 
+| 2021-04-29 | private |   /linear-swap-api/v1/swap_order_info                     | POST | Update  |  Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours. Client can query the order info which has been cancelled within 2 hours(original is 4 hours)   | 
+| 2021-04-29 | private |   /linear-swap-api/v1/swap_cross_order_info               | POST | Update  |  Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours. Client can query the order info which has been cancelled within 2 hours(original is 4 hours)   | 
+| 2021-04-28 | public  |   /linear-swap-ex/market/bbo                              | GET  | Add     |  Added Get Market BBO Data interface   | 
+| 2021-02-26 | private |   /linear-swap-api/v1/swap_balance_valuation              | POST | Add     |  Added Query Asset Valuation interface    | 
+| 2021-02-26 | public  |   /linear-swap-api/v1/swap_batch_funding_rate             | GET  | Add     |  Added Query a Batch of Funding Rate interface   | 
+| 2021-02-26 | public  |   /linear-swap-api/v1/swap_price_limit                    | GET  | Update  |  Support users not to fill in all input parameters, and the interface returns the price limit data of all available contracts   | 
+| 2021-02-26 | public  |   /linear-swap-ex/market/trade                            | GET  | Update  |  Support users not to fill in all input parameters, the interface returns the latest transaction data of all available contracts; And in that case, the return parameter "ch" value is "market.*trade.detail". Added one field in return "data" parameter: "contract_code"   | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_hisorders_exact                | POST | Add     |  Added Get History Orders via Multiple Fields interface[Isolated]   | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_cross_hisorders_exact          | POST | Add     |  Added Get History Orders via Multiple Fields interface[Cross]   | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_matchresults_exact             | POST | Add     |  Added Get History Match Results via Multiple Fields interface[Isolated]   | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_cross_matchresults_exact       | POST | Add     |  Added Get History Match Results via Multiple Fields interface[Cross]   | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_financial_record_exact         | POST | Add     |  Added Query account financial records via Multiple Fields interface   | 
+| 2021-02-05 | public  |   /linear-swap-api/v1/swap_ladder_margin                  | GET  | Add     |  Added Query information on Tiered Margin interface[Isolated]   | 
+| 2021-02-05 | public  |   /linear-swap-api/v1/swap_cross_ladder_margin            | GET  | Add     |  Added Query information on Tiered Margin interface[Cross]  | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_sub_auth                       | POST | Add     |  Added Set a Batch of Sub-Account Trading Permissions interface   | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_sub_account_info_list          | POST | Add     |  Added Query a Batch of Sub-Account's Assets Information interface[Isolated]  | 
+| 2021-02-05 | private |   /linear-swap-api/v1/swap_cross_sub_account_info_list    | POST | Add     |  Added Query a Batch of Sub-Account's Assets Information interface[Cross]  | 
+| 2021-02-05 | public  |   /linear-swap-ex/market/trade                            | GET  | Update  |  Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.   | 
+| 2021-02-05 | public  |   /linear-swap-ex/market/history/trade                    | GET  | Update  |  Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.   | 
+| 2021-02-05 | public  |   market.$contract_code.trade.detail                      | SUB  | Update  |  Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.   | 
+| 2021-02-05 | public  |   market.$contract_code.trade.detail                      | REQ  | Update  |  Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.   | 
+| 2021-01-29 | public  |   /linear-swap-ex/market/detail/batch_merged              | GET  | Add     |  Added Get a Batch of Market Data Overview  | 
+| 2021-01-29 | public  |   /index/market/history/linear_swap_mark_price_kline      | GET  | Add     |  Added Get Kline Data of Mark Price  | 
+| 2021-01-29 | public  |   market.$contract_code.mark_price.$period                | SUB  | Add     |  Added Subscribe Kline Data of Mark Price   | 
+| 2021-01-29 | public  |   market.$contract_code.mark_price.$period                | REQ  | Add     |  Added Request Kline Data of Mark Price   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_user_settlement_records        | POST | Add     |  Added [Isolated]Query Settlement Records of Users   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_user_settlement_records  | POST | Add     |  Added [Cross]Query Settlement Records of Users   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cancelall                      | POST | Update  |  Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”; offset, order offset, if not filled in means both with available values: “open”, “close”.   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_cancelall                | POST | Update  |  Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”; offset, order offset, if not filled in means both with available values: “open”, “close”.   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_order_info                     | POST | Update  |  Added one field in return "data": real_profit(real profit when close position).   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_order_info               | POST | Update  |  Added one field in return "data": real_profit(real profit when close position).   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_order_detail                   | POST | Update  |  Added field in return parameters both "data" and "trades": real_profit(real profit when close position). And added one filed in "trades" to indicates each trade profit：profit(profit when close position)   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_order_detail             | POST | Update  |  Added field in return parameters both "data" and "trades": real_profit(real profit when close position). And added one filed in "trades" to indicates each trade profit：profit(profit when close position)   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_openorders                     | POST | Update  |  Added two optional parameters in request: sort_by, is sort field, if not filled in means order by create_at descending, with available values “created_at”(descending order), “update_time”(descending order); trade_type, indicates trade type, if not filled in means all, with available values: 0:all, 1:open long, 2:open short, 3:close short, 4:close long. Added two fields in return parameter "orders": update_time(order updated time, in milliseconds), real_profit(real profit when close position).   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_openorders               | POST | Update  |  Added two optional parameters in request: sort_by, is sort field, if not filled in means order by create_at descending, with available values “created_at”(descending order), “update_time”(descending order); trade_type, indicates trade type, if not filled in means all, with available values: 0:all, 1:open long, 2:open short, 3:close short, 4:close long. Added two fields in return parameter "orders": update_time(order updated time, in milliseconds), real_profit(real profit when close position).   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_hisorders                      | POST | Update  |  Added one field in return parameter "orders": real_profit(real profit when close position).  | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_hisorders                | POST | Update  |  Added one field in return parameter "orders": real_profit(real profit when close position).  | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_matchresults                   | POST | Update  |  Added one field in return parameter "trades": real_profit(real profit when close position).   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_matchresults             | POST | Update  |  Added one field in return parameter "trades": real_profit(real profit when close position).   | 
+| 2021-01-29 | private |   orders.$contract_code                                   | SUB  | Update  |  Added one field in return data: real_profit(real profit when close position). added field in return parameter "trade": profit(profit when close position),  real_profit(real profit when close position)   | 
+| 2021-01-29 | private |   orders_cross.$contract_code                             | REQ  | Update  |  Added one field in return data: real_profit(real profit when close position). added field in return parameter "trade": profit(profit when close position),  real_profit(real profit when close position)   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_trigger_cancelall              | POST | Update  |  Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”; offset, order offset, if not filled in means both with available values: “open”, “close”.   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_trigger_cancelall        | POST | Update  |  Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”; offset, order offset, if not filled in means both with available values: “open”, “close”.   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_tpsl_cancelall                 | POST | Update  |  Added one option parameter in request: direction, indicates order direction, if not filled in means cancle all   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_tpsl_cancelall           | POST | Update  |  Added one option parameter in request: direction, indicates order direction, if not filled in means cancle all   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_trigger_openorders             | POST | Update  |  Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 1:open long, 2:open short, 3:close short, 4:close long.   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_trigger_openorders       | POST | Update  |  Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 1:open long, 2:open short, 3:close short, 4:close long.   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_tpsl_openorders                | POST | Update  |  Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 3:close short, 4:close long.   | 
+| 2021-01-29 | private |   /linear-swap-api/v1/swap_cross_tpsl_openorders          | POST | Update  |  Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 3:close short, 4:close long.   | 
+| 2021-01-12 | public  |   /linear-swap-api/v1/swap_estimated_settlement_price     | GET  | Add     |  Added Get the estimated settlement price   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_tpsl_order                     | POST | Add     |  Added Set a Take-profit and Stop-loss Order for an Existing Position(Isolated)   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_tpsl_order               | POST | Add     |  Added Set a Take-profit and Stop-loss Order for an Existing Position(Cross)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_tpsl_cancel                    | POST | Add     |  Added Cancel a Take-profit and Stop-loss Order(Isolated)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_tpsl_cancel              | POST | Add     |  Added Cancel a Take-profit and Stop-loss Order(Cross)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_tpsl_cancelall                 | POST | Add     |  Added Cancel all Take-profit and Stop-loss Orders(Isolated)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_tpsl_cancelall           | POST | Add     |  Added Cancel all Take-profit and Stop-loss Orders(Cross)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_tpsl_openorders                | POST | Add     |  Added Query Open Take-profit and Stop-loss Orders (Isolated)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_tpsl_openorders          | POST | Add     |  Added Query Open Take-profit and Stop-loss Orders(Cross)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_tpsl_hisorders                 | POST | Add     |  Added Query Take-profit and Stop-loss History Orders(Isolated)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_tpsl_hisorders           | POST | Add     |  Added Query Take-profit and Stop-loss History Orders(Cross)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_relation_tpsl_order            | POST | Add     |  Added Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order(Isolated)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_relation_tpsl_order      | POST | Add     |  Added Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order(Cross)  | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_order                          | POST | Update  |  added optional parameters: tp_trigger_price (Trigger price of take-profit order), tp_order_price (Order price of take-profit order), tp_order_price_type (Order type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_order                    | POST | Update  |  added optional parameters: tp_trigger_price (Trigger price of take-profit order), tp_order_price (Order price of take-profit order), tp_order_price_type (Order type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_batchorder                     | POST | Update  |  added optional parameters in parameters "orders_data": tp_trigger_price (Trigger price of take-profit order)，tp_order_price (Order price of take-profit order), tp_order_price_typeOrder type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_batchorder               | POST | Update  |  added optional parameters in parameters "orders_data": tp_trigger_price (Trigger price of take-profit order)，tp_order_price (Order price of take-profit order), tp_order_price_typeOrder type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_order_info                     | POST | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_order_info               | POST | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_order_detail                   | POST | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_order_detail             | POST | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_openorders                     | POST | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_openorders               | POST | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_hisorders                      | POST | Update  |  Added paprameter "sort_by" to represent "sort fields" with optional value“create_date” and “update_time"; added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no), and "update_time" to indicate order's update time）; and "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit or stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_hisorders                | POST | Update  |  Added paprameter "sort_by" to represent "sort fields" with optional value“create_date” and “update_time"; added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no), and "update_time" to indicate order's update time）; and "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit or stop-loss）   | 
+| 2021-01-12 | private |   orders.$contract_code                                   | SUB  | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   orders_cross.$contract_code                             | SUB  | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   matchOrders.$contract_code                              | SUB  | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   matchOrders_cross.$contract_code                        | SUB  | Update  |  Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_trigger_hisorders              | POST | Update  |  Added paprameter "sort_by" to represent "sort fields" with optional values “created_at” and “update_time”). added "update_time" to indicate order's update time）   | 
+| 2021-01-12 | private |   /linear-swap-api/v1/swap_cross_trigger_hisorders        | POST | Update  |  Added paprameter "sort_by" to represent "sort fields" with optional values “created_at” and “update_time”). added "update_time" to indicate order's update time）   | 
+| 2021-01-12 | public  |   /linear-swap-api/v1/swap_open_interest                  | GET  | Update  |  Added "trade_volume" in return parameter "data" to indicate trading volume within the last 24 hours (cont),  and "trade_amount" to indicate trading volume within the last 24 hours (coin), and "trade_turnover" to represent trading amount within the last 24 hours.  | 
+| 2021-01-12 | public  |   market.$contract_code.detail                            | SUB  | Update  |  Added "ask" in return parameter “tick” to represent “sell one” and “bid” to represent "buy one".    | 
+| 2021-01-12 | public  |   /linear-swap-api/v1/swap_contract_info                  | GET  | Update  |  Added "delivery_time" in return parameter "data" to represent delivery time（millesecond timestamp）    | 
+| 2021-01-12 | public  |   public.$contract_code.contract_info                     | SUB  | Update  |  Added "delivery_time" in return parameter "data" to represent delivery time（millesecond timestamp）   | 
+| 2020-12-18 | public  |   public.$service.heartbeat                               | SUB  | Add     |  Added WS interface for subscribing system status updates push   | 
+| 2020-12-11 |         |                                                           |      |         |  USDT全仓合约上线   | 
+| 2020-12-11 | public  |   /linear-swap-api/v1/swap_cross_adjustfactor             | GET  | Add     |  Added Cross Margin Mode Query Information On Tiered Adjustment Factor   | 
+| 2020-12-11 | public  |   /linear-swap-api/v1/swap_cross_transfer_state           | GET  | Add     |  Added Cross Margin Mode Query Information On Transfer State  | 
+| 2020-12-11 | public  |   /linear-swap-api/v1/swap_cross_trade_state              | GET  | Add     |  Added Cross Margin Mode Query Information On Trade State  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_account_info             | POST | Add     |  Added Cross Margin Mode Query User's Account Information   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_position_info            | POST | Add     |  Added Cross Margin Mode Query User's Position Information  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_sub_account_list         | POST | Add     |  Added Cross Margin Mode Query Assets Information Of All Sub-Accounts Under The Master Account  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_sub_account_info         | POST | Add     |  Added Cross Margin Mode Query A Sub-Account's Assets Information  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_sub_position_info        | POST | Add     |  Added Cross Margin Mode Query A Sub-Account's Position Information  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_transfer_limit           | POST | Add     |  Added Cross Margin Mode Query Information On Transfer Limit   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_position_limit           | POST | Add     |  Added Cross Margin Mode Query Information On Position Limit   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_account_position_info    | POST | Add     |  Added Cross Margin Mode Query Assets And Positions  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_available_level_rate     | POST | Add     |  Added Cross Margin Mode Query User’s Available Leverage   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_switch_lever_rate        | POST | Add     |  Added Cross Margin Mode Switch Leverage   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_order                    | POST | Add     |  Added Cross Margin Mode Place An Order    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_batchorder               | POST | Add     |  Added Cross Margin Mode Place A Batch Of Orders   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_cancel                   | POST | Add     |  Added Cross Margin Mode Cancel An Order    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_cancelall                | POST | Add     |  Added Cross Margin Mode Cancel All Orders   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_order_info               | POST | Add     |  Added Cross Margin Mode Get Information of order  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_order_detail             | POST | Add     |  Added Cross Margin ModeGet Detail Information of order   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_openorders               | POST | Add     |  Added Cross Margin Mode Current unfilled order acquisition  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_hisorders                | POST | Add     |  Added Cross Margin Mode Get History Orders  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_matchresults             | POST | Add     |  Added Cross Margin Mode Get History Match Results    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_lightning_close_position | POST | Add     |  Added Cross Margin Mode Place Lightning Close Position   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_trigger_order            | POST | Add     |  Added Cross Margin Mode Place Trigger Order   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_trigger_cancel           | POST | Add     |  Added Cross Margin Mode Cancel Trigger Order  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_trigger_cancelall        | POST | Add     |  Added Cross Margin Mode Cancel All Trigger Orders  | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_trigger_openorders       | POST | Add     |  Added Cross Margin Mode Query Open Trigger Order   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_cross_trigger_hisorders        | POST | Add     |  Added Cross Margin Mode Query Trigger Order History   | 
+| 2020-12-11 | private |   orders_cross.$contract_code                             | SUB  | Add     |  Added Cross Margin Mode Subscribe Order Data  | 
+| 2020-12-11 | private |   accounts_cross.$margin_account                          | SUB  | Add     |  Added Cross Margin Mode Subscribe Account Equity Updates Data   | 
+| 2020-12-11 | private |   positions_cross.$contract_code                          | SUB  | Add     |  Added Cross Margin Mode Subscribe Position Updates   | 
+| 2020-12-11 | private |   matchOrders_cross.$contract_code                        | SUB  | Add     |  Added Cross Margin Mode Subscribe Match Order Data   | 
+| 2020-12-11 | private |   trigger_order_cross.$contract_code                      | SUB  | Add     |  Added Cross Margin Mode Subscribe trigger orders updates   | 
+| 2020-12-11 | public  |   /linear-swap-api/v1/swap_contract_info                  | GET  | Update  |  added “support_margin_mode” parameter; added “support_margin_mode” in return parameter “data” to represent the margin mode that a contract supports.   | 
+| 2020-12-11 | public  |   /linear-swap-api/v1/swap_adjustfactor                   | GET  | Update  |  added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | public  |   /linear-swap-api/v1/swap_api_state                      | GET  | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_account_info                   | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_sub_account_info               | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_account_position_info          | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_sub_account_list               | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_position_info                  | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_sub_position_info              | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_financial_record               | POST | Update  |  added “contract_code” to represent contract code    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_order_detail                   | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_openorders                     | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_hisorders                      | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_matchresults                   | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_trigger_openorders             | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_trigger_hisorders              | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_transfer_limit                 | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode    | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_position_limit                 | POST | Update  |  added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_available_level_rate           | POST | Update  |  added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_switch_lever_rate              | POST | Update  |  added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   orders.$contract_code                                   | SUB  | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   matchOrders.$contract_code                              | SUB  | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   trigger_order.$contract_code                            | SUB  | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   positions.$contract_code                                | SUB  | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode   | 
+| 2020-12-11 | private |   accounts.$contract_code                                 | SUB  | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode    | 
+| 2020-12-11 | public  |   public.$contract_code.contract_info                     | SUB  | Update  |  added “support_margin_mode” to represent support margin mode   | 
+| 2020-12-11 | private |   /linear-swap-api/v1/swap_order_info                     | POST | Update  |  added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode    | 
+| 2020-12-02 | private |   linear-swap-api/v1/swap_hisorders                       | POST | Update  |  When querying cancelation data of orders that have not been partially filled, if “created_at” and “order_type” parameters are not uploaded, the data that can be queried reduced from last 12 hours to last 2 hours.   |  
+| 2020-12-02 | private |   linear-swap-api/v1/swap_order_detail                    | POST | Update  |  When querying cancelation data of orders that have not been partially filled, the data that can be retained reduced from last 24 hours to last 2 hours.   | 
+| 2020-11-24 | public  |   public.$contract_code.liquidation_orders                | SUB  | Update  |  “amount” and “trade_turnover”  are added for return parameter “data".   | 
+| 2020-11-24 | public  |   linear-swap-api/v1/swap_liquidation_orders              | GET  | Update  |  “orders” and “trade_turnover”  are added for return parameter “data".   | 
+| 2020-11-24 | public  |   linear-swap-api/v1/swap_settlement_records              | GET  | Add     |  Added “Query historical settlement records of the platform” interface    | 
+| 2020-10-29 | private |   positions.$contract_code                                | SUB  | Update  |  Return parameters added “switch_lever_rate” event type to represent switching leverages. When the leverage is successfully switched, a latest information on positions will be pushed with event “switch_lever_rate" (the information will not be pushed when the user's position is 0).  | 
+| 2020-10-29 | private |   accounts.$contract_code                                 | SUB  | Update  |  Return parameters added “switch_lever_rate” event type to represent switching leverages. When the leverage is successfully switched, a latest information on assets will be pushed with event “switch_lever_rate".  | 
+| 2020-10-26 | all     |   all                                                     | all  | 上线     |  14:00(GMT+8)USDT本位永续合约上线   | 
 
-### 1. Modified Query Swap Info interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, pair, business_type, delivery_date(contract delivery date, this field is an empty string when it is swap contract))
- - Interface Name: [General]Query Swap Info 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_contract_info
-
-### 2. Modified Query Swap Price Limitation interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, business_type, pair)
- - Interface Name: [General]Query Swap Price Limitation
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_price_limit
-
-### 3. Modified Get Swap Open Interest Information interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Get Swap Open Interest Information 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_open_interest
-
-### 4. Modified Query information on contract insurance fund balance and estimated clawback rate interface(Add optional parameters in request: business_type. Add fields in return parameter "data": business_type, pair)
- - Interface Name: [General]Query information on contract insurance fund balance and estimated clawback rate 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_risk_info
-
-### 5. Modified Query history records of insurance fund balance interface( Add fields in return parameter "data": business_type, pair)
- - Interface Name: [General]Query history records of insurance fund balance 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_insurance_fund
-
-### 6. Modified Query Information On Tiered Adjustment Factor(Cross) interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query Information On Tiered Adjustment Factor 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_cross_adjustfactor
-
-### 7. Modified Query information on open interest interface(Add optional parameters in request: contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query information on open interest 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_his_open_interest
-
-### 8. Modified Query Top Trader Sentiment Index Function-Account interface(Add fields in return parameter "data": business_type, pair)
- - Interface Name: [General]Query Top Trader Sentiment Index Function-Account 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_elite_account_ratio
-
-### 9. Modified Query Top Trader Sentiment Index Function-Position interface(Add fields in return parameter "data": business_type, pair)
- - Interface Name: [General]Query Top Trader Sentiment Index Function-Position 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_elite_position_ratio
-
-### 10. Modified Query Liquidation Orders interface(Add optional parameters in request: pair. Add fields in return parameter "data.orders": business_type, pair)
- - Interface Name: [General]Query Liquidation Orders 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_liquidation_orders
-
-### 11. Modified Query historical settlement records of the platform interface(Add fields in return parameter "data.settlement_record": business_type, pair)
- - Interface Name: [General]Query historical settlement records of the platform 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_settlement_records
-
-### 12. Modified Get the estimated settlement price interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Get the estimated settlement price 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_estimated_settlement_price
-
-### 13. Modified Query Information On Trade State(Cross) interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query Information On Trade State
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_cross_trade_state
-
-### 14. Modified Get Market Depth interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Get Market Depth 
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/depth
-
-### 15. Modified Get KLine Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Get KLine Data 
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/history/kline
-
-### 16. Modified Query information on Tiered Margin (Cross) interface(Add optional parameters in request: business_type, contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query information on Tiered Margin 
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_cross_ladder_margin
-
-### 17. Modified Get Market BBO Data interface(Add one optional parameter in request: business_type. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly). Add one field in return parameter "ticks": business_type)
- - Interface Name: [General]Get Market BBO Data 
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/bbo
-
-### 18. Modified Get Market Data Overview interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Get Market Data Overview
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/detail/merged
-
-### 19. Modified Get a Batch of Market Data Overview interface(Add one optional parameter in request: business_type. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly). Add one field in return parameter "data": business_type)
- - Interface Name: [General]Get a Batch of Market Data Overview
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/detail/batch_merged
-
-### 20. Modified Query Basis Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Query Basis Data
- - Interface Type: public
- - Interface URL: /index/market/history/linear_swap_basis
-
-### 21. Modified Get Kline Data of Mark Price interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Get Kline Data of Mark Price
- - Interface Type: public
- - Interface URL: /index/market/history/linear_swap_mark_price_kline
-
-### 22. Modified Query The Last Trade of a Contract interface(Add one optional parameter in request: business_type. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly). Add one field in return parameter "data": business_type)
- - Interface Name: [General]Query The Last Trade of a Contract
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/trade
-
-### 23. Modified Query a Batch of Trade Records of a Contract interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Query a Batch of Trade Records of a Contract
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/history/trade
-
-### 24. Modified Query User's Account Information(Cross) interface( added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameter "contract_detail","futures_contract_detail": contract_type, business_type, pair)
- - Interface Name: [General]Query User's Account Information
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_account_info
-
-### 25. Modified Query User's Position Information(Cross) interface(Add optional parameters in request: contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query User's Position Information
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_position_info
-
-### 26. Modified Query A Sub-Account's Assets Information(Cross) interface( added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameter "contract_detail","futures_contract_detail": contract_type, business_type, pair)
- - Interface Name: [General]Query A Sub-Account's Assets Information
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_sub_account_info
-
-### 27. Modified Query A Sub-Account's Position Information(Cross) interface(Add optional parameters in request: contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query A Sub-Account's Position Information
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_sub_position_info
-
-### 28. Modified Query account financial recordsinterface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-211225)
- - Interface Name: [General]Query account financial records
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_financial_record
-
-### 29. Modified Query account financial records via Multiple Fieldsinterface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-211225)
- - Interface Name: [General]Query account financial records via Multiple Fields
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_financial_record_exact
-
-### 30. Modified Query swap information on order limit interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query swap information on order limit
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_order_limit
-
-### 31. Modified Query information on swap trading fee interface(Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, business_type, pair, delivery_fee)
- - Interface Name: [General]Query information on swap trading fee 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_fee
-
-### 32. Modified Query Information On Position Limit (Cross) interface(Add optional parameters in request: business_type, contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in return parameter "data": business_type, contract_type, pair,lever_rate, buy_limit_value, sell_limit_value, mark_price)
- - Interface Name: [General]Query Information On Position Limit 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_position_limit
-
-### 33. Modified Query Assets And Positions(Cross) interface(added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameters "positions"，"contract_detail" and "futures_contract_detail": contract_type, business_type, pair)
- - Interface Name: [General]Query Assets And Positions
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_account_position_info
-
-### 34. Modified Query Settlement Records of Users(Cross) interface(Add one field in return parameters "contract_detail" and "positions": pair)
- - Interface Name: [General]Query Settlement Records of Users
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_user_settlement_records
-
-### 35. Modified Query User’s Available Leverage(Cross) interface(Add optional parameters in request: business_type, contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query User’s Available Leverage
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_available_level_rate
-
-### 36. Modified Switch Leverage(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Switch Leverage
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_switch_lever_rate
-
-### 37. Modified Place An Order(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Place An Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order
-
-### 38. Modified Place a Batch of Orders(Cross) interface(orders_data下Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Place a Batch of Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_batchorder
-
-### 39. Modified Cancel An Order(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel An Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_cancel
-
-### 40. Modified Cancel All Orders(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel All Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_cancelall
-
-### 41. Modified Get Information of order(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Get Information of order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order_info
-
-### 42. Modified Get Detail Information of order(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Get Detail Information of order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order_detail
-
-### 43. Modified Current unfilled order acquisition(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair)
- - Interface Name: [General]Current unfilled order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_openorders
-
-### 44. Modified Get History Orders(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair)
- - Interface Name: [General]Get History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_hisorders
-
-### 45. Modified Get History Match Results(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter. Add fields in return parameter "data.trades": contract_type, business_type, pair)
- - Interface Name: [General]Get History Match Results
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_matchresults
-
-### 46. Modified Get History Orders via Multiple Fields(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair)
- - Interface Name: [General]Get History Orders via Multiple Fields
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_hisorders_exact
-
-### 47. Modified Get History Match Results via Multiple Fields(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter. Add fields in return parameter "data.trades": contract_type, business_type, pair)
- - Interface Name: [General]Get History Match Results via Multiple Fields
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_matchresults_exact
-
-### 48. Modified Place Lightning Close Position(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Place Lightning Close Position
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_lightning_close_position
-
-### 49. Modified Place Trigger Order(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Place Trigger Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_order
-
-### 50. Modified Cancel Trigger Order(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel Trigger Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_cancel
-
-### 51. Modified Cancel All Trigger Orders(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel All Trigger Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_cancelall
-
-### 52. Modified Query Trigger Order Open Orders(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair)
- - Interface Name: [General]Query Trigger Order Open Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_openorders
-
-### 53. Modified Query Trigger Order History(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair)
- - Interface Name: [General]Query Trigger Order History
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_hisorders
-
-### 54. Modified Set a Take-profit and Stop-loss Order for an Existing Position(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Set a Take-profit and Stop-loss Order for an Existing Position
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_order
-
-### 55. Modified Cancel a Take-profit and Stop-loss Order(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel a Take-profit and Stop-loss Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_cancel
-
-### 56. Modified Cancel all Take-profit and Stop-loss Orders(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel all Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_cancelall
-
-### 57. Modified Query Open Take-profit and Stop-loss Orders(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair)
- - Interface Name: [General]Query Open Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_openorders
-
-### 58. Modified Query Take-profit and Stop-loss History Orders(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data.orders": contract_type, business_type, pair)
- - Interface Name: [General]Query Take-profit and Stop-loss History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_hisorders
-
-### 59. Modified Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_relation_tpsl_order
-
-### 60. Modified Place a Trailing Order(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Place a Trailing Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_order
-
-### 61. Modified Cancel a Trailing Order(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel a Trailing Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_cancel
-
-### 62. Modified Cancel All Trailing Orders(Cross) interface(Add optional parameters in request: contract_type, pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter)
- - Interface Name: [General]Cancel All Trailing Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_cancelall
-
-### 63. Modified Current unfilled trailing order acquisition(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Current unfilled trailing order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_openorders
-
-### 64. Modified Get History Trailing Orders(Cross) interface(Add one optional parameter in request: pair. The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101 and it has be changed to be optional parameter.Add fields in return parameter "data": business_type, contract_type, pair)
- - Interface Name: [General]Get History Trailing Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_hisorders
-
-### 65. Modified Subscribe Kline data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe Kline data 
- - Interface Type: public
- - Subscription topic: market.$contract_code.kline.$period
-
-### 66. Modified Request Kline data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Request Kline data 
- - Interface Type: public
- - Subscription topic: market.$contract_code.kline.$period
-
-### 67. Modified Subscribe Market Depth Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe Market Depth Data 
- - Interface Type: public
- - Subscription topic: market.$contract_code.depth.$type
-
-### 68. Modified Subscribe Incremental Market Depth Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe Incremental Market Depth Data 
- - Interface Type: public
- - Subscription topic: market.$contract_code.depth.size_${size}.high_freq
-
-### 69. Modified Subscribe market BBO data push interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe market BBO data push
- - Interface Type: public
- - Subscription topic: market.$contract_code.bbo
-
-### 70. Modified Subscribe Market Detail Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe Market Detail Data
- - Interface Type: public
- - Subscription topic: market.$contract_code.detail
-
-### 71. Modified Request Trade Detail Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Request Trade Detail Data
- - Interface Type: public
- - Subscription topic: market.$contract_code.trade.detail
-
-### 72. Modified Subscribe Trade Detail Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe Trade Detail Data
- - Interface Type: public
- - Subscription topic: market.$contract_code.trade.detail
-
-### 73. Modified Subscribe Basis Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe Basis Data 
- - Interface Type: public
- - Subscription topic: market.$contract_code.basis.$period.$basis_price_type
-
-### 74. Modified Request Basis Data interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Request Basis Data 
- - Interface Type: public
- - Subscription topic: market.$contract_code.basis.$period.$basis_price_type
-
-### 75. Modified Subscribe Liquidation Orders(no authentication)(sub) interface(Add one optional field in the outer layer of subscription parameters: business_type, which is at the same level as topic. Add fields in the return parameter "data": pair, contract_type, business_type. All of that is at the same level as contract_code. business_type should be filled when unsubscribed)
- - Interface Name: [General]Subscribe Liquidation Orders(no authentication)(sub) 
- - Interface Type: private
- - Subscription topic: public.$contract_code.liquidation_orders
-
-### 76. Modified Subscribe Contract Info(no authentication)(sub) interface(Add one optional field in the outer layer of subscription parameters: business_type, which is at the same level as topic.Add fields in the return parameter "data": pair, contract_type, business_type, delivery_date. All of that is at the same level as contract_code. business_type should be filled when unsubscribed)
- - Interface Name: [General]Subscribe Contract Info(no authentication)(sub) 
- - Interface Type: private
- - Subscription topic: public.$contract_code.contract_info
-
-### 77. Modified Subscribe Kline Data of Mark Priceinterface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Subscribe Kline Data of Mark Price
- - Interface Type: public
- - Subscription topic: market.$contract_code.mark_price.$period
-
-### 78. Modified Request Kline Data of Mark Price interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101; at the same time, it supports the contract identifier, in that the format is BTC-USDT(swap), BTC-USDT-CW(current week), BTC-USDT-NW(next week), BTC-USDT-CQ(current quarterly), BTC-USDT-NQ(next quarterly))
- - Interface Name: [General]Request Kline Data of Mark Price 
- - Interface Type: public
- - Subscription topic: market.$contract_code.mark_price.$period
-
-### 79. Modified Subscribe Account Equity Updates Data(sub)(Cross) interface( added a field futures_contract_detail under the data field, indicating the relevant fields of all delivery contracts in the cross margin model. the member fields of futures_contract_detail are as same as the contract_detail. Add fields in return parameter "contract_detail","futures_contract_detail": contract_type, business_type, pair)
- - Interface Name: [General]Subscribe Account Equity Updates Data(sub)
- - Interface Type: private
- - Subscription topic: accounts_cross.$margin_account
-
-### 80. Modified Subscribe Order Data(sub)(Cross) interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code)
- - Interface Name: [General]Subscribe Order Data(sub)
- - Interface Type: private
- - Subscription topic: orders_cross.$contract_code
-
-### 81. Modified Subscribe Position Updates(sub)(Cross) interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code)
- - Interface Name: [General]Subscribe Position Updates(sub)
- - Interface Type: private
- - Subscription topic: positions_cross.$contract_code
-
-### 82. Modified Subscribe Match Order Data(sub)(Cross) interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code)
- - Interface Name: [General]Subscribe Match Order Data(sub)
- - Interface Type: private
- - Subscription topic: matchOrders_cross.$contract_code
-
-### 83. Modified Subscribe trigger orders updates(sub)(Cross) interface(The request parameter "contract_code" supports the contract code of futures, in that the format is BTC-USDT-201101. Add fields in the return data: pair, contract_type, business_type. All of that is at the same level as contract_code)
- - Interface Name: [General]Subscribe trigger orders updates(sub)
- - Interface Type: private
- - Subscription topic: trigger_order_cross.$contract_code
-
-### 84, Modified Query Information On Position Limit(isolated) interface(add returning parameters: lever_rate, buy_limit_value, sell_limit_value, mark_price)
- - Interface Name: [Isolated]Query Information On Position Limit
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_position_limit
-
-### 85, Added Query Users' Position Limit for All Leverages(isolated) interface
- - Interface Name: [Isolated]Query Users' Position Limit for All Leverages 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_lever_position_limit
-
-### 86, Added Query Users' Position Limit for All Leverages(cross) interface
- - Interface Name: [Cross]Query Users' Position Limit for All Leverages 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_lever_position_limit
-
-## 1.1.3 2021-5-17 【Transfer between master and sub account（Added parameters in request: client_order_id）。Transfer between different margin accounts under the same account（Added parameters in request: client_order_id）】
-
-### 1、Transfer between master and sub account（Added parameters in request: client_order_id）
- - Interface Name：[General]Transfer between master and sub account
- - Interface Type：private
- - Interface URL：/linear-swap-api/v1/swap_master_sub_transfer
-
-### 2、Transfer between different margin accounts under the same account（Added parameters in request: client_order_id）
- - Interface Name：[General]Transfer between different margin accounts under the same account
- - Interface Type：private
- - Interface URL：/linear-swap-api/v1/swap_transfer_inner
-
-## 1.1.2 2021-05-12 【Added: Trailing Order interface. 】 
-
-### 1. Added Place a Trailing Order(isolated) interface
- - Interface Name: [Isolated]Place a Trailing Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_track_order
-
-### 2. Added Place a Trailing Order(cross) interface
- - Interface Name: [Cross]Place a Trailing Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_order
-
-### 3. Added Cancel a Trailing Order(isolated) interface
- - Interface Name: [Isolated]Cancel a Trailing Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_track_cancel
-
-### 4. Added Cancel a Trailing Order(cross) interface
- - Interface Name: [Cross]Cancel a Trailing Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_cancel
-
-### 5. Added Cancel All Trailing Orders(isolated) interface
- - Interface Name: [Isolated]Cancel All Trailing Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_track_cancelall
-
-### 6. Added Cancel All Trailing Orders(cross) interface
- - Interface Name: [Cross]Cancel All Trailing Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_cancelall
-
-### 7. Added Current unfilled trailing order acquisition(isolated) interface
- - Interface Name: [Isolated]Current unfilled trailing order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_track_openorders
-
-### 8. Added Current unfilled trailing order acquisition(cross) interface
- - Interface Name: [Cross]Current unfilled trailing order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_openorders
-
-### 9. Added Get History Trailing Orders(isolated) interface
- - Interface Name: [Isolated]Get History Trailing Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_track_hisorders
-
-### 10. Added Get History Trailing Orders(cross) interface
- - Interface Name: [Cross]Get History Trailing Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_track_hisorders
-
-## 1.1.1 2021-04-29 【Modified Cancel an Order(Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours). Modified Get Information of an Order(Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours.Client can query the order info which has been cancelled within 2 hours(original is 4 hours)）】
-
-### 1. Modified Cancel an Order(isolated) interface(Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours)
- - Interface Name: [Isolated]Cancel an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cancel
-
-### 2. Modified Cancel an Order(cross) interface(Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours)
- - Interface Name: [Cross]Cancel an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_cancel
-
-### 3. Modified Get Information of an Order(isolated) interface(Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours. Client can query the order info which has been cancelled within 2 hours(original is 4 hours)）
- - Interface Name: [Isolated]Get Information of an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_order_info
-
-### 4. Modified Get Information of an Order(cross) interface(Change the valid time of the client_order_id from 24 hours to 8 hours. Clients can't get the order info with client_order_id which order placed beyond 8 hours. Client can query the order info which has been cancelled within 2 hours(original is 4 hours)）
- - Interface Name: [Cross]Get Information of an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order_info
-
-## 1.1.0 2021-4-28 【Added: Get Market BBO Data interface. 】 
-
-### 1. Added Get Market BBO Data interface
- - Interface Name: [General]Get Market BBO Data
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/bbo
-
-## 1.0.9 2021-2-26 【Added: Query Asset Valuation interface, Query a Batch of Funding Rate interface. Modified Query Swap Price Limitation interface(Support users not to fill in all input parameters, and the interface returns the price limit data of all available contracts). Modified Query The Last Trade of a Contract interface(Support users not to fill in all input parameters, the interface returns the latest transaction data of all available contracts; And in that case, the return parameter "ch" value is "market.*trade.detail". Added one field in return "tick" parameter: "contract_code")】
-
-### 1. Added Query Asset Valuation interface
- - Interface Name: [General]Query Asset Valuation
- - Interface Type: private
- - interface URL: /linear-swap-api/v1/swap_balance_valuation
-
-### 2. Added Query a Batch of Funding Rate interface
- - Interface Name: [General]Query a Batch of Funding Rate
- - Interface Type: public
- - interface URL: /linear-swap-api/v1/swap_batch_funding_rate
-
-### 3. Modified Query Swap Price Limitation interface(Support users not to fill in all input parameters, and the interface returns the price limit data of all available contracts)
- - Interface Name: [General]Query Swap Price Limitation
- - Interface Type: public
- - interface URL: /linear-swap-api/v1/swap_price_limit
-
-### 4. Modified Query The Last Trade of a Contract interface(Support users not to fill in all input parameters, the interface returns the latest transaction data of all available contracts; And in that case, the return parameter "ch" value is "market.*trade.detail". Added one field in return "data" parameter: "contract_code")
- - Interface Name: [General]Query The Last Trade of a Contract
- - Interface Type: public
- - interface URL: /linear-swap-ex/market/trade
-
-## 1.0.8 2021-2-5 【Added: Get History Orders via Multiple Fields(cross margin and isolated margin), Get History Match Results via Multiple Fields(cross margin and isolated margin), Query account financial records via Multiple Fields, Query information on Tiered Margin(cross margin and isolated margin), Set a Batch of Sub-Account Trading Permissions, Query a Batch of Sub-Account's Assets Information(cross margin and isolated margin)。11-14 Modified the existing interfaces and added new parameters】
-
-### 1. Added Get History Orders via Multiple Fields interface[Isolated]
- -  Interface Name: [Isolated]Get History Orders via Multiple Fields
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_hisorders_exact
-
-### 2. Added Get History Orders via Multiple Fields interface[Cross]
- -  Interface Name: [Cross]Get History Orders via Multiple Fields
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_cross_hisorders_exact
-
-### 3. Added Get History Match Results via Multiple Fields interface[Isolated]
- -  Interface Name: [Isolated]Get History Match Results via Multiple Fields
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_matchresults_exact
-
-### 4. Added Get History Match Results via Multiple Fields interface[Cross]
- -  Interface Name: [Cross]Get History Match Results via Multiple Fields
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_cross_matchresults_exact
-
-### 5. Added Query account financial records via Multiple Fields interface 
- -  Interface Name: [General]Query account financial records via Multiple Fields
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_financial_record_exact
-
-### 6. Added Query information on Tiered Margin interface[Isolated]
- -  Interface Name: [Isolated]Query information on Tiered Margin
- -  Interface Type: public 
- -  interface URL: /linear-swap-api/v1/swap_ladder_margin
-
-### 7. Added Query information on Tiered Margin interface[Cross]
- -  Interface Name: [Cross]Query information on Tiered Margin
- -  Interface Type: public 
- -  interface URL: /linear-swap-api/v1/swap_cross_ladder_margin
-
-### 8. Added Set a Batch of Sub-Account Trading Permissions interface 
- -  Interface Name: [General]Set a Batch of Sub-Account Trading Permissions
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_sub_auth
-
-### 9. Added Query a Batch of Sub-Account's Assets Information interface[Isolated]
- -  Interface Name: [Isolated]Query a Batch of Sub-Account's Assets Information
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_sub_account_info_list
-
-### 10. Added Query a Batch of Sub-Account's Assets Information interface[Cross]
- -  Interface Name: [Cross]Query a Batch of Sub-Account's Assets Information
- -  Interface Type: private 
- -  interface URL: /linear-swap-api/v1/swap_cross_sub_account_info_list
-
-### 11. Modified Query The Last Trade of a Contract interface(Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.)
- -  Interface Name: [General]Query The Last Trade of a Contract
- -  Interface Type: public 
- -  interface URL: /linear-swap-ex/market/trade
-
-### 12. Modified Query a Batch of Trade Records of a Contract interface(Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.)
- -  Interface Name: [General]Query a Batch of Trade Records of a Contract
- -  Interface Type: public 
- -  interface URL: /linear-swap-ex/market/history/trade
-
-### 13. Modified Subscribe Trade Detail Data interface(Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.)
- -  Interface Name: [General]Subscribe Trade Detail Data
- -  Interface Type: public 
- - Subscription topic: market.$contract_code.trade.detail
-
-### 14. Modified Request Trade Detail Data interface(Added "quantity" in return parameter "data", which means the trading quantity(coin), Calculation formula: quantity(coin) = trading quantity(cont) * contract size. Added "trade_turnover" in return parameter "data", which represents the trading amount(quoted currency). Calculation formula: trade_turnover(quoted currency) = trading quantity(cont) * contract size * trading price.)
- -  Interface Name: [General]Request Trade Detail Data
- -  Interface Type: public 
- -  Subscription topic: market.$contract_code.trade.detail
-
-
-## 1.0.7 2021-1-29 【Added:Get a Batch of Market Data Overview、Get Kline Data of Mark Price、Subscribe Kline Data of Mark Price、Request Kline Data of Mark Price、Query Settlement Records of Users(Isolated and Cross). 7-28 Added fields to modify interface. The order_id of submitted trigger order response has been changed from the original natural number self-incrementing ID to a unique identification ID with a length of 18 digits. It is recommended to use the order_id_str (order_id in string type) of submitted order response  to avoid the occurrence of truncation by the system because excessive length.】
-
-### 1. Added Get a Batch of Market Data Overview
- - Interface Name: [General]Get a Batch of Market Data Overview
- - Interface Type: public
- - Interface URL: /linear-swap-ex/market/detail/batch_merged
-
-### 2. Added Get Kline Data of Mark Price
- - Interface Name: [General]Get Kline Data of Mark Price
- - Interface Type: public
- - Interface URL: /index/market/history/linear_swap_mark_price_kline
-
-### 3. Added Subscribe Kline Data of Mark Price
- - Interface Name: [General]Subscribe Kline Data of Mark Price
- - Interface Type: public
- - Subscription topic: market.$contract_code.mark_price.$period
-
-### 4. Added Request Kline Data of Mark Price
- - Interface Name: [General]Request Kline Data of Mark Price
- - Interface Type: public
- - Subscription topic: market.$contract_code.mark_price.$period
-
-### 5. Added [Isolated]Query Settlement Records of Users
- - Interface Name: [Isolated]Query Settlement Records of Users
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_user_settlement_records
-
-### 6. Added [Cross]Query Settlement Records of Users
- - Interface Name: [Cross]Query Settlement Records of Users
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_user_settlement_records
-
-### 7. Modified [Isolated]Cancel All Orders(Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”; offset, order offset, if not filled in means both with available values: “open”, “close”.)
- - Interface Name: [Isolated]Cancel All Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cancelall
-
-### 8. Modified [Cross]Cancel All Orders(Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”. offset, order offset, if not filled in means both with available values: “open”, “close”.)
- - Interface Name: [Cross]Cancel All Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_cancelall
-
-### 9. Modified [Isolated]Get Information of an Order(Added one field in return "data": real_profit(real profit when close position).)
- - Interface Name: [Isolated]Get Information of an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_order_info
-
-### 10. Modified [Cross]Get Information of an Order(Added one field in return "data": real_profit(real profit when close position).)
- - Interface Name: [Cross]Get Information of an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order_info
-
-### 11. Modified [Isolated]Order details acquisition(Added field in return parameters both "data" and "trades": real_profit(real profit when close position). And added one filed in "trades" to indicates each trade profit：profit(profit when close position))
- - Interface Name: [Isolated]Order details acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_order_detail
-
-### 12. Modified [Cross]Order details acquisition(Added field in return parameters both "data" and "trades": real_profit(real profit when close position). And added one filed in "trades" to indicates each trade profit：profit(profit when close position))
- - Interface Name: [Cross]Order details acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order_detail
-
-### 13. Modified [Isolated]Current unfilled order acquisition(Added two optional parameters in request: sort_by, is sort field, if not filled in means order by create_at descending, with available values “created_at”(descending order), “update_time”(descending order); trade_type, indicates trade type, if not filled in means all, with available values: 0:all, 1:open long, 2:open short, 3:close short, 4:close long. Added two fields in return parameter "orders": update_time(order updated time, in milliseconds), real_profit(real profit when close position).)
- - Interface Name: [Isolated]Current unfilled order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_openorders
-
-### 14. Modified [Cross]Current unfilled order acquisition(Added two optional parameters in request: sort_by, is sort field, if not filled in means order by create_at descending, with available values “created_at”(descending order), “update_time”(descending order); trade_type, indicates trade type, if not filled in means all, with available values: 0:all, 1:open long, 2:open short, 3:close short, 4:close long. Added two fields in return parameter "orders": update_time(order updated time, in milliseconds); real_profit(real profit when close position).)
- - Interface Name: [Cross]Current unfilled order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_openorders
-
-### 15. Modified [Isolated]Get History Orders(Added one field in return parameter "orders": real_profit(real profit when close position).)
- - Interface Name: [Isolated]Get History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_hisorders
-
-### 16. Modified [Cross]Get History Orders(Added one field in return parameter "orders": real_profit(real profit when close position).)
- - Interface Name: [Cross]Get History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_hisorders
-
-### 17. Modified [Isolated]Acquire History Match Results(Added one field in return parameter "trades": real_profit(real profit when close position).)
- - Interface Name: [Isolated]Acquire History Match Results
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_matchresults
-
-### 18. Modified [Cross]Acquire History Match Results(Added one field in return parameter "trades": real_profit(real profit when close position).)
- - Interface Name: [Cross]Acquire History Match Results
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_matchresults
-
-### 19. Modified [Isolated]Subscribe Order Data(sub)(Added one field in return data: real_profit(real profit when close position). added field in return parameter "trade": profit(profit when close position),  real_profit(real profit when close position))
- - Interface Name: [Isolated]Subscribe Order Data(sub)
- - Interface Type: private
- - Subscription topic: orders.$contract_code
-
-### 20. Modified [Cross]Subscribe Order Data(sub)(Added one field in return data: real_profit(real profit when close position). added field in return parameter "trade": profit(profit when close position),  real_profit(real profit when close position))
- - Interface Name: [Cross]Subscribe Order Data(sub)
- - Interface Type: private
- - Subscription topic: orders_cross.$contract_code
-
-### 21. Modified [Isolated]Cancel All Trigger Orders(Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”; offset, order offset, if not filled in means both with available values: “open”, “close”.)
- - Interface Name: [Isolated]Cancel All Trigger Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_trigger_cancelall
-
-### 22. Modified [Cross]Cancel All Trigger Orders(Added two optional parameters in request: direction, indicates order direction, if not filled in means both with available values: “buy”, “sell”; offset, order offset, if not filled in means both with available values: “open”, “close”.)
- - Interface Name: [Cross]Cancel All Trigger Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_cancelall
-
-### 23. Modified [Isolated]Cancel all Take-profit and Stop-loss Orders(Added one option parameter in request: direction, indicates order direction, if not filled in means cancel all)
- - Interface Name: [Isolated]Cancel all Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_tpsl_cancelall
-
-### 24. Modified [Cross]Cancel all Take-profit and Stop-loss Orders(Added one option parameter in request: direction, indicates order direction, if not filled in means cancle all)
- - Interface Name: [Cross]Cancel all Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_cancelall
-
-### 25. Modified [Isolated]Query Trigger Order Open Orders(Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 1:open long, 2:open short, 3:close short, 4:close long.)
- - Interface Name: [Isolated]Query Trigger Order Open Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_trigger_openorders
-
-### 26. Modified [Cross]Query Trigger Order Open Orders(Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 1:open long, 2:open short, 3:close short, 4:close long.)
- - Interface Name: [Cross]Query Trigger Order Open Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_openorders
-
-### 27. Modified [Isolated]Query Open Take-profit and Stop-loss Orders(Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 3:close short, 4:close long.)
- - Interface Name: [Isolated]Query Open Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_tpsl_openorders
-
-### 28. Modified [Cross]Query Open Take-profit and Stop-loss Orders(Added one optional parameter in request: trade_type, order trade type, if not filled in means all with available values 0:all, 3:close short, 4:close long.)
- - Interface Name: [Cross]Query Open Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_openorders
-
-
-## 1.0.6 2021-01-12 【1 Added Get the estimated settlement price. 2-13 Added ”Set a Take-profit and Stop-loss Order“ interfaces. 14-35 Added fields to modify interface. Added the first-level menu of [Contract Trigger Order], and add take-profit and stop-loss related interfaces and move the original contract trigger order related interfaces to this menu 】
-
-### 1. Added Get the estimated settlement price
- - Interface Name: [General]Get the estimated settlement price
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_estimated_settlement_price
-
-### 2. Added Set a Take-profit and Stop-loss Order for an Existing Position(Isolated)
- - Interface Name: [Isolated]Set a Take-profit and Stop-loss Order for an Existing Position
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_tpsl_order
-
-### 3. Added Set a Take-profit and Stop-loss Order for an Existing Position(Cross)
- - Interface Name: [Cross]Set a Take-profit and Stop-loss Order for an Existing Position
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_order
-
-### 4. Added Cancel a Take-profit and Stop-loss Order(Isolated)
- - Interface Name: [Isolated]Cancel a Take-profit and Stop-loss Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_tpsl_cancel
-
-### 5. Added Cancel a Take-profit and Stop-loss Order(Cross)
- - Interface Name: [Cross]Cancel a Take-profit and Stop-loss Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_cancel
-
-### 6. Added Cancel all Take-profit and Stop-loss Orders(Isolated)
- - Interface Name: [Isolated]Cancel all Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_tpsl_cancelall
-
-### 7. Added Cancel all Take-profit and Stop-loss Orders(Cross)
- - Interface Name: [Cross]Cancel all Take-profit and Stop-loss Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_cancelall
-
-### 8. Added Query Open Take-profit and Stop-loss Orders (Isolated)
- - Interface Name: [Isolated]Query Open Take-profit and Stop-loss Orders 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_tpsl_openorders
-
-### 9. Added Query Open Take-profit and Stop-loss Orders(Cross)
- - Interface Name: [Cross]Query Open Take-profit and Stop-loss Orders 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_openorders
-
-### 10. Added Query Take-profit and Stop-loss History Orders(Isolated)
- - Interface Name: [Isolated]Query Take-profit and Stop-loss History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_tpsl_hisorders
-
-### 11. Added Query Take-profit and Stop-loss History Orders(Cross)
- - Interface Name: [Cross]Query Take-profit and Stop-loss History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_tpsl_hisorders
-
-### 12. Added Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order(Isolated)
- - Interface Name: [Isolated]Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_relation_tpsl_order
-
-### 13. Added Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order(Cross)
- - Interface Name: [Cross]Query Info Of Take-profit and Stop-loss Order That Related To Position Opening Order 
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_relation_tpsl_order
-
-### 14. Modifed "Place an order" Interface(Isolated)（added optional parameters: tp_trigger_price (Trigger price of take-profit order), tp_order_price (Order price of take-profit order), tp_order_price_type (Order type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)）
- - Interface Name: [Isolated]Place an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_order
-
-### 15. Modifed "Place an order" Interface(Cross)（added optional parameters: tp_trigger_price (Trigger price of take-profit order), tp_order_price (Order price of take-profit order), tp_order_price_type (Order type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)）
- - Interface Name: [Cross]Place an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order
-
-### 16. Modified "Place a batch of orders"Interface(Isolated) (added optional parameters in parameters "orders_data": tp_trigger_price (Trigger price of take-profit order)，tp_order_price (Order price of take-profit order), tp_order_price_typeOrder type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)）
- - Interface Name: [Isolated]Place a Batch of Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_batchorder
-
-### 17. Modified "Place a batch of orders"Interface(Cross) (added optional parameters in parameters "orders_data": tp_trigger_price (Trigger price of take-profit order)，tp_order_price (Order price of take-profit order), tp_order_price_typeOrder type of take-profit order), sl_trigger_price (Trigger price of stop-loss order), sl_order_price (Order price of stop-loss order), sl_order_price_type (Order type of stop-loss order)）
- - Interface Name: [Cross]Place a Batch of Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_batchorder
-
-### 18. Modified "Get Information of an Order" Interface(Isolated)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Isolated]Get Information of an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_order_info
-
-### 19. Modified "Get Information of an Order" Interface(Cross)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Cross]Get Information of an Order
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order_info
-
-### 20. Modified "Order details acquisition" Interface(Isolated)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Isolated]Order details acquisition	
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_order_detail
-
-### 21. Modified "Order details acquisition" Interface(Cross)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Cross]Order details acquisition	
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_order_detail
-
-### 22. Modified "Query Open Orders" Interface(Isolated)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values"in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Isolated]Current unfilled order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_openorders
-
-### 23. Modified "Query Open Orders" Interface(Cross)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values"in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Cross]Current unfilled order acquisition
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_openorders
-
-### 24. Modified "Get History Orders" Interface(Isolated)（Added paprameter "sort_by" to represent "sort fields" with optional value“create_date” and “update_time"; added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no), and "update_time" to indicate order's update time）; and "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit or stop-loss））
- - Interface Name: [Isolated]Get History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_hisorders
-
-### 25. Modified "Get History Orders" Interface(Cross)（Added paprameter "sort_by" to represent "sort fields" with optional value“create_date” and “update_time"; added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no), and "update_time" to indicate order's update time）; and "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit or stop-loss））
- - Interface Name: [Cross]Get History Orders
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_hisorders
-
-### 26. Modified "Subscribe Order Data(sub)" Interface(Isolated)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Isolated]Subscribe Order Data(sub)
- - Interface Type: private
- - Subscription Topic: orders.$contract_code
-
-### 27. Modified "Subscribe Order Data(sub)" Interface(Cross)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Cross]Subscribe Order Data(sub)
- - Interface Type: private
- - Subscription Topic: orders_cross.$contract_code
-
-### 28. Modified "Subscribe Match Order Data（sub）" Interface(Isolated)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Isolated]Subscribe Match Order Data（sub)	
- - Interface Type: private
- - Subscription Topic: matchOrders.$contract_code
-
-### 29. Modified "Subscribe Match Order Data（sub）" Interface(Cross)（Added return parameter "is_tpsl" to indicate whether to set take-profit and stop-loss order, 1: yes, 0: no); added "enumerated values" in return parameter "order_source"（“tpsl” indicates triggered by take-profit and stop-loss））
- - Interface Name: [Cross]Subscribe Match Order Data（sub)	
- - Interface Type: private
- - Subscription Topic: matchOrders_cross.$contract_code
-
-### 30. Modified "Query Trigger Order History" Interface(Isolated)（Added paprameter "sort_by" to represent "sort fields" with optional values “created_at” and “update_time”). added "update_time" to indicate order's update time））
- - Interface Name: [Isolated]Query Trigger Order History	
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_trigger_hisorders
-
-### 31. Modified "Query Trigger Order History" Interface(Cross)（Added paprameter "sort_by" to represent "sort fields" with optional values “created_at” and “update_time”). added "update_time" to indicate order's update time））
- - Interface Name: [Cross]Query Trigger Order History	
- - Interface Type: private
- - Interface URL: /linear-swap-api/v1/swap_cross_trigger_hisorders
-
-### 32. Modified "Get Swap Open Interest Information" Interface (Added "trade_volume" in return parameter "data" to indicate trading volume within the last 24 hours (cont),  and "trade_amount" to indicate trading volume within the last 24 hours (coin), and "trade_turnover" to represent trading amount within the last 24 hours.)
- - Interface Name: [General]Get Swap Open Interest Information
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_open_interest
-
-### 33. Modified "Subscribe Market Detail Data" Interface (Added "ask" in return parameter “tick” to represent “sell one” and “bid” to represent "buy one".)
- - Interface Name: [General]Subscribe Market Detail Data
- - Interface Type: public
- - Subscription Topic: market.$contract_code.detail
-
-### 34. Modified "Query Swap Info" Interface（Added "delivery_time" in return parameter "data" to represent delivery time（millesecond timestamp））
- - Interface Name: [General]Query Swap Info
- - Interface Type: public
- - Interface URL: /linear-swap-api/v1/swap_contract_info
-
-### 35. Modified "Subscribe Contract Info" Interface（Added "delivery_time" in return parameter "data" to represent delivery time（millesecond timestamp））
- - Interface Name: [General] Subscribe Contract Info (no authentication)（sub）
- - Interface Type: public
- - Subscription Topic: public.$contract_code.contract_info
-
-## 1.0.5 2020-12-18 【Newly added：Added WS interface for subscribing system status updates push】
-
-### 1.Added WS interface for subscribing system status updates push
-  - Interface name: [General]subscribe system status updates
-  - Interface type: public
-  - Subscription topic：public.$service.heartbeat
-
-## 1.0.4 2020-12-11 【1-33 Added interfaces for cross margin mode. 34-60 Added fields to modify interface】
-
-### 1、Added Cross Margin Mode Query Information On Tiered Adjustment Factor
-
-  - Interface Name：[Cross]Query Information On Tiered Adjustment Factor
-
-  - Interface Type：public
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_adjustfactor
-
-### 1、Added Cross Margin Mode Query Information On Transfer State
-
-  - Interface Name：[Cross]Query Information On Transfer State
-
-  - Interface Type：public
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_transfer_state  
-
-### 1、Added Cross Margin Mode Query Information On Trade State
-
-  - Interface Name：[Cross]Query Information On Trade State
-
-  - Interface Type：public
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_trade_state 
-
-### 1、Added Cross Margin Mode Query User's Account Information
-
-  - Interface Name：[Cross]Query User's Account Information
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_account_info     
-
-### 1、Added Cross Margin Mode Query User's Position Information
-
-  - Interface Name：[Cross]Query User's Position Information
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_position_info 
-
-### 1、Added Cross Margin Mode Query Assets Information Of All Sub-Accounts Under The Master Account
-
-  - Interface Name：[Cross]Query Assets Information Of All Sub-Accounts Under The Master Account
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_sub_account_list  
-
-### 7、Added Cross Margin Mode Query A Sub-Account's Assets Information
-
-  - Interface Name：[Cross]Query A Sub-Account's Assets Information
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_sub_account_info 
-
-### 8、Added Cross Margin Mode Query A Sub-Account's Position Information
-
-  - Interface Name：[Cross]Query A Sub-Account's Position Information
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_sub_position_info   
-
-### 9、Added Cross Margin Mode Query Information On Transfer Limit
-
-  - Interface Name：[Cross]Query Information On Transfer Limit
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_transfer_limit 
-
-### 10、Added Cross Margin Mode Query Information On Position Limit
-
-  - Interface Name：[Cross]Query Information On Position Limit
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_position_limit
-
-### 11、Added Cross Margin Mode Query Assets And Positions
-
-  - Interface Name：[Cross]Query Assets And Positions
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_account_position_info 
-
-### 12、Added Cross Margin Mode Query User’s Available Leverage
-
-  - Interface Name：[Cross]Query User’s Available Leverage
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_available_level_rate  
-
-### 13、Added Cross Margin Mode Switch Leverage
-
-  - Interface Name：[Cross]Switch Leverage
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_switch_lever_rate  
-
-### 14、Added Cross Margin Mode Place An Order 
-
-  - Interface Name：[Cross]Place An Order
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_order  
-
-### 15、Added Cross Margin Mode Place A Batch Of Orders
-
-  - Interface Name：[Cross]Place A Batch Of Orders
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_batchorder 
-
-### 16、Added Cross Margin Mode Cancel An Order
-
-  - Interface Name：[Cross]Cancel An Order
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_cancel  
-
-### 17、Added Cross Margin Mode Cancel All Orders
-
-  - Interface Name：[Cross]Cancel All Orders
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_cancelall 
-
-### 18、Added Cross Margin Mode Get Information of order
-
-  - Interface Name：[Cross]Get Information of order
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_order_info  
-
-### 19、Added Cross Margin ModeGet Detail Information of order
-
-  - Interface Name：[Cross]Get Detail Information of order
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_order_detail  
-
-### 20、Added Cross Margin Mode Current unfilled order acquisition
-
-  - Interface Name：[Cross]Current unfilled order acquisition
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_openorders  
-
-### 21、Added Cross Margin Mode Get History Orders
-
-  - Interface Name：[Cross]Get History Orders
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_hisorders 
-
-### 22、Added Cross Margin Mode Get History Match Results
-
-  - Interface Name：[Cross]Get History Match Results
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_matchresults   
-
-### 23、Added Cross Margin Mode Place Lightning Close Position
-
-  - Interface Name：[Cross]Place Lightning Close Position
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_lightning_close_position 
-
-### 24、Added Cross Margin Mode Place Trigger Order
-
-  - Interface Name：[Cross]Place Trigger Order
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_trigger_order   
-
-### 25、Added Cross Margin Mode Cancel Trigger Order
-
-  - Interface Name：[Cross]Cancel Trigger Order
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_trigger_cancel 
-
-### 26、Added Cross Margin Mode Cancel All Trigger Orders
-
-  - Interface Name：[Cross]Cancel All Trigger Orders
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_trigger_cancelall  
-
-### 27、Added Cross Margin Mode Query Open Trigger Order
-
-  - Interface Name：[Cross]Query Open Trigger Order
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_trigger_openorders  
-
-### 28、Added Cross Margin Mode Query Trigger Order History
-
-  - Interface Name：[Cross]Query Trigger Order History
-
-  - Interface Type：private
-
-  - Interface URL：/linear-swap-api/v1/swap_cross_trigger_hisorders 
-
-### 29、Added Cross Margin Mode Subscribe Order Data
-
-  - Interface Name：[Cross]Subscribe Order Data
-
-  - Interface Type：private
-
-  - Subscription topic：orders_cross.$contract_code 
-
-### 30、Added Cross Margin Mode Subscribe Account Equity Updates Data
-
-  - Interface Name：[Cross]Subscribe Account Equity Updates Data
-
-  - Interface Type：private
-
-  - Subscription topic：accounts_cross.$margin_account  
-
-### 31、Added Cross Margin Mode Subscribe Position Updates
-
-  - Interface Name：[Cross]Subscribe Position Updates
-
-  - Interface Type：private
-
-  - Subscription topic：positions_cross.$contract_code   
-
-### 32、Added Cross Margin Mode Subscribe Match Order Data
-
-  - Interface Name：[Cross]Subscribe Match Order Data
-
-  - Interface Type：private
-
-  - Subscription topic：matchOrders_cross.$contract_code 
-
-### 33、Added Cross Margin Mode Subscribe trigger orders updates
-
-  - Interface Name：[Cross]Subscribe trigger orders updates
-
-  - Interface Type：private
-
-  - Subscription topic：trigger_order_cross.$contract_code
-
-### 34、Query Swap Info Added fields (added “support_margin_mode” parameter; added “support_margin_mode” in return parameter “data” to represent the margin mode that a contract supports.)
-
-  - Interface Name：Query Swap Info
-
-  - Interface Type：public
-
-  - Interface URL：linear-swap-api/v1/swap_contract_info
-
-### 35、Query information on Tiered Adjustment Factor Added fields for return parameters ( added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query information on Tiered Adjustment Factor
-
-  - Interface Type：public
-
-  - Interface URL：/linear-swap-api/v1/swap_adjustfactor
-
-### 36、Query information on system status Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query information on system status
-
-  - Interface Type：public
-
-  - Interface URL：/linear-swap-api/v1/swap_api_state
-
-### 37、Query User’s Account Information Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query User’s Account Information
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_account_info
-
-### 38、Query a single sub-account's assets information Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query a single sub-account's assets information
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_sub_account_info
-
-### 39、Query Assets And Positions Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query Assets And Positions
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_account_position_info
-
-### 40、Query assets information of all sub-accounts under the master account Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query assets information of all sub-accounts under the master account
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_sub_account_list
-
-### 41、Query User’s Position Information Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query User’s Position Information
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_position_info
-
-### 42、Query a single sub-account's position information Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query a single sub-account's position information
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_sub_position_info
-
-### 43、Query account financial records Added fields (added “contract_code” to represent contract code) 
-
-  - Interface Name：Query account financial records
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_financial_record
-
-### 44、Order details acquisition Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Order details acquisition
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_order_detail
-
-### 45、Current unfilled order acquisition Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Current unfilled order acquisition
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_openorders
-
-### 46、Get History Orders Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Get History Orders
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_hisorders
-
-### 47、Acquire History Match Results Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Acquire History Match Results
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_matchresults
-
-### 48、Query Trigger Order Open Orders Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query Trigger Order Open Orders
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_trigger_openorders
-
-### 49、Query Trigger Order History Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query Trigger Order History
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_trigger_hisorders
-
-### 50、Query information on Transfer Limit Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query information on Transfer Limit
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_transfer_limit  
-
-### 51、Query information on position limit Added fields for return parameters ( added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query information on position limit
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_position_limit
-
-### 52、Query user’s available leverage Added fields for return parameters ( added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Query user’s available leverage
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_available_level_rate  
-
-### 53、Switch Leverage Added fields for return parameters ( added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Switch Leverage
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_switch_lever_rate
-
-### 54、Subscribe Order Data Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Subscribe Order Data
-
-  - Interface Type：private
-
-  - Subscription topic：orders.$contract_code
-
-### 55、Subscribe Match Order Data Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Subscribe Match Order Data
-
-  - Interface Type：private
-
-  - Subscription topic：matchOrders.$contract_code
-
-### 56、Subscribe trigger orders updates Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Subscribe trigger orders updates
-
-  - Interface Type：private
-
-  - Subscription topic：trigger_order.$contract_code
-
-### 57、Subscribe Position Updates Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Subscribe Position Updates
-
-  - Interface Type：private
-
-  - Subscription topic：positions.$contract_code
-
-### 58、Subscribe Account Equity Updates Data Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Subscribe Account Equity Updates Data
-
-  - Interface Type：private
-
-  - Subscription topic：accounts.$contract_code
-
-### 59、Subscribe Contract Info (no authentication) Added fields for return parameters ( added “support_margin_mode” to represent support margin mode) 
-
-  - Interface Name：Subscribe Contract Info (no authentication)
-
-  - Interface Type：public
-
-  - Subscription topic：public.$contract_code.contract_info
-
-### 60、Get Information of an Order Added fields for return parameters (added “margin_account” for return parameters to represent margin account; added “margin_mode” to represent margin mode) 
-
-  - Interface Name：Get Information of an Order
-
-  - Interface Type：private
-
-  - Interface URL：linear-swap-api/v1/swap_order_info
-
-
-## 1.0.3 2020-12-02 【Modified “Order details acquisition” interface (When querying cancelation data of orders that have not been partially filled, if “created_at” and “order_type” parameters are not uploaded, the data that can be queried reduced from last 12 hours to last 2 hours.); modified “Query history orders” interface (When querying cancelation data of orders that have not been partially filled, the data that can be retained reduced from last 24 hours to last 2 hours.)】
-
-### 1、Modified “Order details acquisition” interface (When querying cancelation data of orders that have not been partially filled, if “created_at” and “order_type” parameters are not uploaded, the data that can be queried reduced from last 12 hours to last 2 hours.)
-
-   - Interface Name：Order details acquisition
-
-   - Interface Type：private
-
-   - Interface URL：linear-swap-api/v1/swap_order_detail
-
-### 2、modified “Query history orders” interface (When querying cancelation data of orders that have not been partially filled, the data that can be retained reduced from last 24 hours to last 2 hours.)
-
-   - Interface Name：Get History Orders
-
-   - Interface Type：private
-
-   - Interface URL：linear-swap-api/v1/swap_hisorders
-
-## 1.0.2 2020-11-24 【 Added: Query historical settlement records of the platform interface. Modified:  Added fields of return parameter for "Query Liquidation Orders" interface and "Subscribe Liquidation Order Data" interface】
-
-### 1、Added “Query historical settlement records of the platform” interface 
-
-  - Interface Name: Query historical settlement records of the platform
-  
-  - Interface Type: public
-  
-  - Interface URL: linear-swap-api/v1/swap_settlement_records
-
-### 2、Added fields of return parameter for "Query Liquidation Orders" interface（“amount” and “trade_turnover”  are added for return parameter “data". "amount" represents the liquidation amount (token); “trade_turnover” represents the liquidation amount (quotation token) ）
- 
-  - Interface Name: Query Liquidation Orders
- 
-  - Interface Type: public
- 
-  - Interface URL: linear-swap-api/v1/swap_liquidation_orders
-
-
-### 3、Added fields of return parameter for "Subscribe Liquidation Order Data" interface（“amount” and “trade_turnover”  are added for return parameter “data". "amount" represents the liquidation amount (token); “trade_turnover” represents the liquidation amount (quotation token)）
- 
-  - Interface Name: Subscribe Liquidation Order Data
- 
-  - Interface Type: public
- 
-  - Subscription topic: public.$contract_code.liquidation_orders
-
-## 1.0.1 2020-10-29 【Updated: websocket messages of account topic will be pushed when leverage switch succeeds; websocket messages of position topic will be pushed when leverage switch succeeds;】
-
-### 1、Subscribe Account Equity Updates Data（Return parameters added “switch_lever_rate” event type to represent switching leverages. When the leverage is successfully switched, a latest information on assets will be pushed with event “switch_lever_rate".）
-   
-   -  Interface Name：Subscribe Account Equity Updates Data
-
-   - Interface Type：private
-
-   - Subscribe topic：accounts.$contract_code
-
-### 2、Subscribe Position Updates（Return parameters added “switch_lever_rate” event type to represent switching leverages. When the leverage is successfully switched, a latest information on positions will be pushed with event “switch_lever_rate" (the information will not be pushed when the user's position is 0).）
-   
-   - Interface Name：Subscribe Position Updates
-
-   - Interface Type：private
-
-   - Subscribe topic：positions.$contract_code
-
-## 1.0.0 2020-10-26 14:00(GMT+8)
  
 # Swap API Access Guide
 

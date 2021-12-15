@@ -36,1499 +36,263 @@ search: true
 
 # 更新日志
 
-## 1.1.4 2021年6月15日 【新增USDT交割合约接口内容】
+| 生效时间<br>(UTC +8) | 接口属性 | 接口URL                     | 接口类型 | 变化   | 摘要    | 
+| 2021-12-17 |     |                                                           |      |      |  USDT交割合约上线   | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_contract_info                  | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：contract_type（合约类型），pair（交易对），business_type（业务类型），delivery_date（合约交割日期，永续无需交割时该字段为空字符串）   | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_price_limit                    | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_open_interest                  | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_risk_info                      | GET  | 修改  |  新增选填入参：business_type（业务类型）。返回参数data下新增字段：business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_insurance_fund                 | GET  | 修改  |  返回参数data下新增字段：business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_cross_adjustfactor             | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_his_open_interest              | GET  | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_elite_account_ratio            | GET  | 修改  |  返回参数data下新增字段：business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_elite_position_ratio           | GET  | 修改  |  返回参数data下新增字段：business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_liquidation_orders             | GET  | 修改  |  新增选填入参：pair（交易对）。返回参数data下的orders里新增字段：business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_settlement_records             | GET  | 修改  |  返回参数data下settlement_record内新增字段：business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_estimated_settlement_price     | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_cross_trade_state              | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-ex/market/depth                            | GET  | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-ex/market/history/kline                    | GET  | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_cross_ladder_margin            | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-ex/market/bbo                              | GET  | 修改  |  新增选填入参：business_type（业务类型）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。返回参数ticks下新增business_type字段，表示业务类型。  | 
+| 2021-12-17 | 公共 |   /linear-swap-ex/market/detail/merged                    | GET  | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-ex/market/detail/batch_merged              | GET  | 修改  |  新增选填入参：business_type（业务类型）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。返回参数data下新增字段：business_type（业务类型）。  | 
+| 2021-12-17 | 公共 |   /index/market/history/linear_swap_basis                 | GET  | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   /index/market/history/linear_swap_mark_price_kline      | GET  | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-ex/market/trade                            | GET  | 修改  |  新增选填入参，business_type(业务类型)。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。返回参数data下新增字段：business_type（业务类型）。  | 
+| 2021-12-17 | 公共 |   /linear-swap-ex/market/history/trade                    | GET  | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_account_info             | POST | 修改  |  在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数contract_detail，futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_position_info            | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_sub_account_info         | POST | 修改  |  在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数contract_detail、futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_sub_position_info        | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_financial_record               | POST | 修改  |  请求参数contract_code支持交割合约代码调用，格式为：BTC-USDT-211225。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_financial_record_exact         | POST | 修改  |  请求参数contract_code支持交割合约代码调用，格式为：BTC-USDT-211225。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_order_limit                    | POST | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_fee                            | POST | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）、delivery_fee（交割的手续费费率）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_position_limit           | POST | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）、lever_rate（杠杆倍数）、buy_limit_value（多仓持仓价值上限）、sell_limit_value（空仓持仓价值上限）、mark_price（品种标记价格）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_account_position_info    | POST | 修改  |  在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数positions和contract_detail，futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_user_settlement_records  | POST | 修改  |  返回参数需在contract_detail和positions下新增pair字段（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_available_level_rate     | POST | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_switch_lever_rate        | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_order                    | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_batchorder               | POST | 修改  |  orders_data下新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_cancel                   | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_cancelall                | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_order_info               | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_order_detail             | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_openorders               | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_hisorders                | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_matchresults             | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下trades内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_hisorders_exact          | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_matchresults_exact       | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下trades内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_lightning_close_position | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_order            | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_cancel           | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_cancelall        | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_openorders       | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_hisorders        | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_order               | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_cancel              | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_cancelall           | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_openorders          | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_hisorders           | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_relation_tpsl_order      | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_track_order              | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_track_cancel             | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_track_cancelall          | POST | 修改  |  新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_track_openorders         | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_track_hisorders          | POST | 修改  |  新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.kline.$period                     | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.kline.$period                     | 请求 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.depth.$type                       | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.depth.size_${size}.high_freq      | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.bbo                               | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.detail                            | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.trade.detail                      | 请求 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.trade.detail                      | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.basis.$period.$basis_price_type   | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.basis.$period.$basis_price_type   | 请求 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 私有 |   public.$contract_code.liquidation_orders                | 订阅 | 修改  |  订阅参数外层新增选填字段：business_type（业务类型），与topic同级。返回参数data下新增字段：pair（交易对）、contract_type（合约类型）、business_type（业务类型），新增的字段与contract_code同级。取消订阅时也需要business_type参数  | 
+| 2021-12-17 | 私有 |   public.$contract_code.contract_info                     | 订阅 | 修改  |  订阅参数外层新增选填字段：business_type（业务类型），与topic同级。返回参数data下新增字段：pair（交易对）、contract_type（合约类型）、business_type（业务类型）、delivery_date（合约交割日期）。取消订阅时也需要business_type参数  | 
+| 2021-12-17 | 公共 |   market.$contract_code.mark_price.$period                | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 公共 |   market.$contract_code.mark_price.$period                | 请求 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。  | 
+| 2021-12-17 | 私有 |   accounts_cross.$margin_account                          | 订阅 | 修改  |  在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数contract_detail、futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 
+| 2021-12-17 | 私有 |   orders_cross.$contract_code                             | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。  | 
+| 2021-12-17 | 私有 |   positions_cross.$contract_code                          | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。  | 
+| 2021-12-17 | 私有 |   matchOrders_cross.$contract_code                        | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。  | 
+| 2021-12-17 | 私有 |   trigger_order_cross.$contract_code                      | 订阅 | 修改  |  请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_position_limit                 | POST | 修改  |  新增返参：lever_rate（杠杆倍数）、buy_limit_value（多仓持仓价值上限）、sell_limit_value（空仓持仓价值上限）、mark_price（品种标记价格）  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_lever_position_limit           | POST | 新增  |  新增查询用户所有杠杆持仓量限制（逐仓）接口  | 
+| 2021-12-17 | 私有 |   /linear-swap-api/v1/swap_cross_lever_position_limit     | POST | 新增  |  新增查询用户所有杠杆持仓量限制（全仓）接口  | 
+| 2021-05-17 | 私有 |   /linear-swap-api/v1/swap_master_sub_transfer            | POST | 修改  |  新增选填入参：client_order_id   | 
+| 2021-05-17 | 私有 |   /linear-swap-api/v1/swap_transfer_inner                 | POST | 修改  |  新增选填入参：client_order_id   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_track_order                    | POST | 新增  |  新增跟踪委托订单下单（逐仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_cross_track_order              | POST | 新增  |  新增跟踪委托订单下单（全仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_track_cancel                   | POST | 新增  |  新增跟踪委托订单撤单（逐仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_cross_track_cancel             | POST | 新增  |  新增跟踪委托订单撤单（全仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_track_cancelall                | POST | 新增  |  新增跟踪委托订单全部撤单（逐仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_cross_track_cancelall          | POST | 新增  |  新增跟踪委托订单全部撤单（全仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_track_openorders               | POST | 新增  |  新增跟踪委托订单当前委托（逐仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_cross_track_openorders         | POST | 新增  |  新增跟踪委托订单当前委托（全仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_track_hisorders                | POST | 新增  |  新增跟踪委托订单历史委托（逐仓）接口   | 
+| 2021-05-12 | 私有 |   /linear-swap-api/v1/swap_cross_track_hisorders          | POST | 新增  |  新增跟踪委托订单历史委托（全仓）接口   | 
+| 2021-04-29 | 私有 |   /linear-swap-api/v1/swap_cancel                         | POST | 修改  |  将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。   | 
+| 2021-04-29 | 私有 |   /linear-swap-api/v1/swap_cross_cancel                   | POST | 修改  |  将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。   | 
+| 2021-04-29 | 私有 |   /linear-swap-api/v1/swap_order_info                     | POST | 修改  |  将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。将原来只能查询最近4小时内的撤单信息改为只可以查询最近2小时内的撤单信息。   | 
+| 2021-04-29 | 私有 |   /linear-swap-api/v1/swap_cross_order_info               | POST | 修改  |  将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。将原来只能查询最近4小时内的撤单信息改为只可以查询最近2小时内的撤单信息。   | 
+| 2021-04-28 | 公共 |   /linear-swap-ex/market/bbo                              | GET  | 新增  |  新增获取市场最优挂单接口   | 
+| 2021-02-26 | 私有 |   /linear-swap-api/v1/swap_balance_valuation              | POST | 新增  |  新增获取账户总资产估值接口    | 
+| 2021-02-26 | 公共 |   /linear-swap-api/v1/swap_batch_funding_rate             | GET  | 新增  |  新增批量获取合约资金费率接口   | 
+| 2021-02-26 | 公共 |   /linear-swap-api/v1/swap_price_limit                    | GET  | 修改  |  支持用户所有入参都不填，接口返回所有当前上市合约的限价数据。   | 
+| 2021-02-26 | 公共 |   /linear-swap-ex/market/trade                            | GET  | 修改  |  支持用户所有入参都不填，接口返回所有当前上市合约的最近成交数据；当用户不传入参时， 返参ch值为market.*trade.detail。在返参data下新增字段：contract_code。   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_hisorders_exact                | POST | 新增  |  新增组合查询合约历史委托接口（逐仓）   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_cross_hisorders_exact          | POST | 新增  |  新增组合查询合约历史委托接口（全仓）   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_matchresults_exact             | POST | 新增  |  新增组合查询用户历史成交记录接口（逐仓）   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_cross_matchresults_exact       | POST | 新增  |  新增组合查询用户历史成交记录接口（全仓）   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_financial_record_exact         | POST | 新增  |  新增组合查询用户财务记录接口   | 
+| 2021-02-05 | 公共 |   /linear-swap-api/v1/swap_ladder_margin                  | GET  | 新增  |  新增获取平台阶梯保证金（逐仓）   | 
+| 2021-02-05 | 公共 |   /linear-swap-api/v1/swap_cross_ladder_margin            | GET  | 新增  |  新增获取平台阶梯保证金（全仓）   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_sub_auth                       | POST | 新增  |  新增批量设置子账户交易权限接口   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_sub_account_info_list          | POST | 新增  |  新增批量获取子账户资产信息接口（逐仓）   | 
+| 2021-02-05 | 私有 |   /linear-swap-api/v1/swap_cross_sub_account_info_list    | POST | 新增  |  新增批量获取子账户资产信息接口（全仓）   | 
+| 2021-02-05 | 公共 |   /linear-swap-ex/market/trade                            | GET  | 修改  |  返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。   | 
+| 2021-02-05 | 公共 |   /linear-swap-ex/market/history/trade                    | GET  | 修改  |  返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。   | 
+| 2021-02-05 | 公共 |   market.$contract_code.trade.detail                      | 订阅 | 修改  |  返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。   | 
+| 2021-02-05 | 公共 |   market.$contract_code.trade.detail                      | 请求 | 修改  |  返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。   | 
+| 2021-01-29 | 公共 |   /linear-swap-ex/market/detail/batch_merged              | GET  | 新增  |  新增批量获取聚合行情接口   | 
+| 2021-01-29 | 公共 |   /index/market/history/linear_swap_mark_price_kline      | GET  | 新增  |  新增获取标记价格的 K 线数据接口   | 
+| 2021-01-29 | 公共 |   market.$contract_code.mark_price.$period                | 订阅 | 新增  |  新增订阅标记价格 K 线数据 WS 接口   | 
+| 2021-01-29 | 公共 |   market.$contract_code.mark_price.$period                | 请求 | 新增  |  新增请求标记价格 K 线数据 WS 接口   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_user_settlement_records        | POST | 新增  |  新增查询用户结算记录(逐仓)接口   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_user_settlement_records  | POST | 新增  |  新增查询用户结算记录(全仓)接口   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cancelall                      | POST | 修改  |  请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_cancelall                | POST | 修改  |  请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_order_info                     | POST | 修改  |  返参data中新增real_profit字段，表示真实收益，类型decimal   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_order_info               | POST | 修改  |  返参data中新增real_profit字段，表示真实收益，类型decimal   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_order_detail                   | POST | 修改  |  返回参数中的 data 和 trades 下各新增以下字段:real_profit(真实收益)。同时 trades 下新增每笔成交收益字段：profit（平仓盈亏）   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_order_detail             | POST | 修改  |  返回参数中的 data 和 trades 下各新增以下字段:real_profit(真实收益)。同时 trades 下新增每笔成交收益字段：profit（平仓盈亏）   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_openorders                     | POST | 修改  |  请求参数新增 2 个选填字段:sort_by，表示排序字段，不填默认按创建时间倒序。参数可选值为“created_at”(按照创建时间倒序)，“update_time”(按照更新时间倒 序)。trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。 返回参数中的 orders 下新增以下字段:update_time(订单更新时间，单位毫秒)、real_profit(真实收益)。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_openorders               | POST | 修改  |  请求参数新增 2 个选填字段:sort_by，表示排序字段，不填默认按创建时间倒序。参数可选值为“created_at”(按照创建时间倒序)，“update_time”(按照更新时间倒 序)。trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。 返回参数中的 orders 下新增以下字段:update_time(订单更新时间，单位毫秒)、real_profit(真实收益)。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_hisorders                      | POST | 修改  |  返参orders中新增real_profit字段，表示真实收益，类型decimal   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_hisorders                | POST | 修改  |  返参orders中新增real_profit字段，表示真实收益，类型decimal   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_matchresults                   | POST | 修改  |  返参trades中新增real_profit字段，表示真实收益，类型decimal   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_matchresults             | POST | 修改  |  返参trades中新增real_profit字段，表示真实收益，类型decimal   | 
+| 2021-01-29 | 私有 |   orders.$contract_code                                   | 订阅 | 修改  |  返参外层新增real_profit字段，表示真实收益，类型decimal. 返参trade中新增：real_profit字段，表示真实收益、profit字段，表示平仓盈亏。   | 
+| 2021-01-29 | 私有 |   orders_cross.$contract_code                             | 订阅 | 修改  |  返参外层新增real_profit字段，表示真实收益，类型decimal. 返参trade中新增：real_profit字段，表示真实收益、profit字段，表示平仓盈亏。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_trigger_cancelall              | POST | 修改  |  请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_cancelall        | POST | 修改  |  请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_tpsl_cancelall                 | POST | 修改  |  请求参数新增选填字段:direction，表示买卖方向，不填默认撤销全部   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_cancelall           | POST | 修改  |  请求参数新增选填字段:direction，表示买卖方向，不填默认撤销全部   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_trigger_openorders             | POST | 修改  |  请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_openorders       | POST | 修改  |  请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_tpsl_openorders                | POST | 修改  |  请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,3: 买入平空,4: 卖出平多。   | 
+| 2021-01-29 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_openorders          | POST | 修改  |  请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,3: 买入平空,4: 卖出平多。   | 
+| 2021-01-12 | 公共 |   /linear-swap-api/v1/swap_estimated_settlement_price     | GET  | 新增  |  新增获取预估结算价   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_tpsl_order                     | POST | 新增  |  新增对仓位设置止盈止损订单(逐仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_order               | POST | 新增  |  新增对仓位设置止盈止损订单(全仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_tpsl_cancel                    | POST | 新增  |  新增止盈止损订单撤单接口(逐仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_cancel              | POST | 新增  |  新增止盈止损订单撤单接口(全仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_tpsl_cancelall                 | POST | 新增  |  新增止盈止损订单全部撤单接口(逐仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_cancelall           | POST | 新增  |  新增止盈止损订单全部撤单接口(全仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_tpsl_openorders                | POST | 新增  |  新增查询止盈止损订单当前委托接口(逐仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_openorders          | POST | 新增  |  新增查询止盈止损订单当前委托接口(全仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_tpsl_hisorders                 | POST | 新增  |  新增查询止盈止损订单历史委托接口(逐仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_tpsl_hisorders           | POST | 新增  |  新增查询止盈止损订单历史委托接口(全仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_relation_tpsl_order            | POST | 新增  |  新增查询开仓单关联的止盈止损订单详情接口(逐仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_relation_tpsl_order      | POST | 新增  |  新增查询开仓单关联的止盈止损订单详情接口(全仓)   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_order                          | POST | 修改  |  新增选填入参：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_order                    | POST | 修改  |  新增选填入参：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_batchorder                     | POST | 修改  |  在入参orders_data中新增选填参数：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_batchorder               | POST | 修改  |  在入参orders_data中新增选填参数：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_order_info                     | POST | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_order_info               | POST | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_order_detail                   | POST | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_order_detail             | POST | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_openorders                     | POST | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_openorders               | POST | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_hisorders                      | POST | 修改  |  新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),update_time（表示：订单的更新时间）,在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_hisorders                | POST | 修改  |  新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),update_time（表示：订单的更新时间）,在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   orders.$contract_code                                   | 订阅 | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   orders_cross.$contract_code                             | 订阅 | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   matchOrders.$contract_code                              | 订阅 | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   matchOrders_cross.$contract_code                        | 订阅 | 修改  |  新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_trigger_hisorders              | POST | 修改  |  新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：update_time（表示：订单的更新时间）   | 
+| 2021-01-12 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_hisorders        | POST | 修改  |  新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：update_time（表示：订单的更新时间）   | 
+| 2021-01-12 | 公共 |   /linear-swap-api/v1/swap_open_interest                  | GET  | 修改  |  在返回参数data中新增trade_volume：最近24小时成交量（张），trade_amount：最近24小时成交量（币）trade_turnover：最近24小时成交额、这三个字段   | 
+| 2021-01-12 | 公共 |   market.$contract_code.detail                            | 订阅 | 修改  |  在返参tick中新增ask表示卖一，bid表示买一。    | 
+| 2021-01-12 | 公共 |   /linear-swap-api/v1/swap_contract_info                  | GET  | 修改  |  在返参data下新增delivery_time，表示交割时间（毫秒时间戳）    | 
+| 2021-01-12 | 公共 |   public.$contract_code.contract_info                     | 订阅 | 修改  |  在返参data下新增delivery_time，表示交割时间（毫秒时间戳）   | 
+| 2020-12-18 | 公共 |   public.$service.heartbeat                               | 订阅 | 新增  |  新增订阅系统状态更新推送的 WebSocket 接口   | 
+| 2020-12-11 |     |                                                           |      |      |  USDT全仓合约上线   | 
+| 2020-12-11 | 公共 |   /linear-swap-api/v1/swap_cross_adjustfactor             | GET  | 新增  |  新增全仓模式查询平台阶梯调整系数   | 
+| 2020-12-11 | 公共 |   /linear-swap-api/v1/swap_cross_transfer_state           | GET  | 新增  |  新增全仓模式查询系统划转权限   | 
+| 2020-12-11 | 公共 |   /linear-swap-api/v1/swap_cross_trade_state              | GET  | 新增  |  新增全仓模式查询系统交易权限   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_account_info             | POST | 新增  |  新增全仓模式获取用户账户信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_position_info            | POST | 新增  |  新增全仓模式获取用户持仓信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_sub_account_list         | POST | 新增  |  新增全仓模式查询母账户下所有子账户资产信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_sub_account_info         | POST | 新增  |  新增全仓模式查询单个子账户资产信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_sub_position_info        | POST | 新增  |  新增全仓模式查询单个子账户持仓信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_transfer_limit           | POST | 新增  |  新增全仓模式查询用户当前的划转限制   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_position_limit           | POST | 新增  |  新增全仓模式用户持仓量限制的查询   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_account_position_info    | POST | 新增  |  新增全仓模式获取用户资产和持仓信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_available_level_rate     | POST | 新增  |  新增全仓模式查询用户可用杠杆倍数   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_switch_lever_rate        | POST | 新增  |  新增全仓模式切换杠杆   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_order                    | POST | 新增  |  新增全仓模式合约下单   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_batchorder               | POST | 新增  |  新增全仓模式合约批量下单   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_cancel                   | POST | 新增  |  新增全仓模式撤销订单    | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_cancelall                | POST | 新增  |  新增全仓模式全部撤单   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_order_info               | POST | 新增  |  新增全仓模式获取合约订单信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_order_detail             | POST | 新增  |  新增全仓模式获取订单明细信息   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_openorders               | POST | 新增  |  新增全仓模式获取合约当前未成交委托   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_hisorders                | POST | 新增  |  新增全仓模式获取合约历史委托   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_matchresults             | POST | 新增  |  新增全仓模式获取历史成交记录    | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_lightning_close_position | POST | 新增  |  新增全仓模式闪电平仓下单   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_order            | POST | 新增  |  新增全仓模式合约计划委托下单   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_cancel           | POST | 新增  |  新增全仓模式合约计划委托撤单   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_cancelall        | POST | 新增  |  新增全仓模式合约计划委托全部撤单   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_openorders       | POST | 新增  |  新增全仓模式获取计划委托当前委托   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_cross_trigger_hisorders        | POST | 新增  |  新增全仓模式获取计划委托历史委托   | 
+| 2020-12-11 | 私有 |   orders_cross.$contract_code                             | 订阅  | 新增  |  新增全仓模式订阅订单成交数据    | 
+| 2020-12-11 | 私有 |   accounts_cross.$margin_account                          | 订阅  | 新增  |  新增全仓模式订阅资产变动数据   | 
+| 2020-12-11 | 私有 |   positions_cross.$contract_code                          | 订阅  | 新增  |  新增全仓模式订阅持仓变动更新数据   | 
+| 2020-12-11 | 私有 |   matchOrders_cross.$contract_code                        | 订阅  | 新增  |  新增全仓模式订阅撮合订单成交数据   | 
+| 2020-12-11 | 私有 |   trigger_order_cross.$contract_code                      | 订阅  | 新增  |  新增全仓模式订阅计划委托订单变动   | 
+| 2020-12-11 | 公共 |   /linear-swap-api/v1/swap_contract_info                  | GET  | 修改  |  新增入参support_margin_mode；返参data中也新增support_margin_mode字段；表示合约支持的保证金模式   | 
+| 2020-12-11 | 公共 |   /linear-swap-api/v1/swap_adjustfactor                   | GET  | 修改  |  在返参中新增margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 公共 |   /linear-swap-api/v1/swap_api_state                      | GET  | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_account_info                   | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_sub_account_info               | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_account_position_info          | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_sub_account_list               | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_position_info                  | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式    | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_sub_position_info              | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式    | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_financial_record               | POST | 修改  |  新增入参contract_code：表示合约代码    | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_order_detail                   | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_openorders                     | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式    | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_hisorders                      | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_matchresults                   | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_trigger_openorders             | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_trigger_hisorders              | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_transfer_limit                 | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式    | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_position_limit                 | POST | 修改  |  在返参中新增margin_mode字段，表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_available_level_rate           | POST | 修改  |  在返参中新增margin_mode字段，表示保证金模式   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_switch_lever_rate              | POST | 修改  |  在返参中新增margin_mode字段，表示保证金模式   | 
+| 2020-12-11 | 私有 |   orders.$contract_code                                   | 订阅 | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   matchOrders.$contract_code                              | 订阅 | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   trigger_order.$contract_code                            | 订阅 | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   positions.$contract_code                                | 订阅 | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式   | 
+| 2020-12-11 | 私有 |   accounts.$contract_code                                 | 订阅 | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式    | 
+| 2020-12-11 | 公共 |   public.$contract_code.contract_info                     | 订阅 | 修改  |  返参中新增support_margin_mode字段，表示合约支持的保证金模式。   | 
+| 2020-12-11 | 私有 |   /linear-swap-api/v1/swap_order_info                     | POST | 修改  |  在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式    | 
+| 2020-12-02 | 私有 |   linear-swap-api/v1/swap_hisorders                       | POST | 修改  |  查询无成交撤单数据时，由原来的只保留最近24小时数据，改为只保留最近2小时数据。   |  
+| 2020-12-02 | 私有 |   linear-swap-api/v1/swap_order_detail                    | POST | 修改  |  查询无成交撤单数据时，如果不传“created_at”和“order_type”参数，由原来的只能查询到最近12小时数据，改为只能查询到最近2小时数据    | 
+| 2020-11-24 | 公共 |   public.$contract_code.liquidation_orders                | 订阅 |  修改  |  返回参数中的 data 参数下增加以下字段:amount 表示强平数量(币);trade_turnover 表示强平金额。   | 
+| 2020-11-24 | 公共 |   linear-swap-api/v1/swap_liquidation_orders              | GET |  修改  |  返回参数中的 orders 参数下增加以下字段:amount 表示强平数量(币);trade_turnover 表示强平金额   | 
+| 2020-11-24 | 公共 |   linear-swap-api/v1/swap_settlement_records              | GET |  新增  |  新增查询平台历史结算记录接口   | 
+| 2020-10-29 | 私有 |   positions.$contract_code                                | 订阅 |  修改  |  返参event新增事件类型，switch_lever_rate表示切换杠杆。在用户切换杠杆倍数成功时，需推送一次最新的持仓信息（若用户持仓量为0，则不会触发推送），event 为 switch_lever_rate。   | 
+| 2020-10-29 | 私有 |   accounts.$contract_code                                 | 订阅 |  修改  |  返参event新增事件类型，switch_lever_rate表示切换倍数。在用户切换倍数成功时，需推送一次最新的资产信息，event为switch_lever_rate。   | 
+| 2020-10-26 | 全部 |   全部                                                     | 全部 |  上线  |  14:00(GMT+8)USDT本位永续合约上线   | 
 
-### 1、修改获取合约信息接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：contract_type（合约类型），pair（交易对），business_type（业务类型），delivery_date（合约交割日期，永续无需交割时该字段为空字符串））
- - 接口名称：【通用】获取合约信息
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_contract_info
-
-### 2、修改获取合约最高限价和最低限价接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【通用】获取合约最高限价和最低限价
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_price_limit
-
-### 3、修改获取当前可用合约总持仓量接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【通用】获取当前可用合约总持仓量
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_open_interest
-
-### 4、修改查询合约风险准备金和预估分摊比例接口（新增选填入参：business_type（业务类型）。返回参数data下新增字段：business_type（业务类型）、pair（交易对）。）
- - 接口名称：【通用】查询合约风险准备金和预估分摊比例
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_risk_info
-
-### 5、修改获取风险准备金历史数据接口（返回参数data下新增字段：business_type（业务类型）、pair（交易对）。）
- - 接口名称：【通用】获取风险准备金历史数据
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_insurance_fund
-
-### 6、修改查询平台阶梯调整系数（全仓）接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【全仓】查询平台阶梯调整系数
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_cross_adjustfactor
-
-### 7、修改获取平台持仓量接口（新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【通用】获取平台持仓量
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_his_open_interest
-
-### 8、修改精英账户多空持仓对比-账户数接口（返回参数data下新增字段：business_type（业务类型）、pair（交易对）。）
- - 接口名称：【通用】精英账户多空持仓对比-账户数
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_elite_account_ratio
-
-### 9、修改精英账户多空持仓对比-持仓量接口（返回参数data下新增字段：business_type（业务类型）、pair（交易对）。）
- - 接口名称：【通用】精英账户多空持仓对比-持仓量
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_elite_position_ratio
-
-### 10、修改获取强平订单接口（新增选填入参：pair（交易对）。返回参数data下的orders里新增字段：business_type（业务类型）、pair（交易对）。）
- - 接口名称：【通用】获取强平订单
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_liquidation_orders
-
-### 11、修改查询平台历史结算记录接口（返回参数data下settlement_record内新增字段：business_type（业务类型）、pair（交易对）。）
- - 接口名称：【通用】查询平台历史结算记录
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_settlement_records
-
-### 12、修改获取预估结算价接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【通用】获取预估结算价
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_estimated_settlement_price
-
-### 13、修改查询系统交易权限（全仓）接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【全仓】查询系统交易权限
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trade_state
-
-### 14、修改获取行情深度数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】获取行情深度数据
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/depth
-
-### 15、修改获取K线数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】获取K线数据
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/history/kline
-
-### 16、修改查询阶梯保证金（全仓）接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】查询阶梯保证金
- - 接口类型：共公接口
- - 接口URL：/linear-swap-api/v1/swap_cross_ladder_margin
-
-### 17、修改获取市场最优挂单接口（新增选填入参：business_type（业务类型）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。返回参数ticks下新增business_type字段，表示业务类型。）
- - 接口名称：【通用】获取市场最优挂单
- - 接口类型：共公接口
- - 接口URL：/linear-swap-ex/market/bbo
-
-### 18、修改获取聚合行情接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】获取聚合行情
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/detail/merged
-
-### 19、修改批量获取聚合行情接口（新增选填入参：business_type（业务类型）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。返回参数data下新增字段：business_type（业务类型）。）
- - 接口名称：【通用】批量获取聚合行情
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/detail/batch_merged
-
-### 20、修改获取基差数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】获取基差数据
- - 接口类型：公共接口
- - 接口URL：/index/market/history/linear_swap_basis
-
-### 21、修改获取标记价格的K线数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】获取标记价格的K线数据
- - 接口类型：公共接口
- - 接口URL：/index/market/history/linear_swap_mark_price_kline
-
-### 22、修改获取市场最近成交记录接口（新增选填入参，business_type(业务类型)。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。返回参数data下新增字段：business_type（业务类型）。）
- - 接口名称：【通用】获取市场最近成交记录
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/trade
-
-### 23、修改批量获取市场最近成交记录接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】批量获取市场最近成交记录
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/history/trade
-
-### 24、修改获取用户的合约账户信息（全仓）接口（在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数contract_detail，futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户的合约账户信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_account_info
-
-### 25、修改获取用户的合约持仓信息（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户的合约持仓信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_position_info
-
-### 26、修改查询母账户下的单个子账户资产信息（全仓）接口（在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数contract_detail、futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】查询母账户下的单个子账户资产信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_sub_account_info
-
-### 27、修改查询母账户下的单个子账户持仓信息（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【全仓】查询母账户下的单个子账户持仓信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_sub_position_info
-
-### 28、修改查询用户财务记录接口（请求参数contract_code支持交割合约代码调用，格式为：BTC-USDT-211225。）
- - 接口名称：【通用】查询用户财务记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_financial_record
-
-### 29、修改组合查询财务记录接口（请求参数contract_code支持交割合约代码调用，格式为：BTC-USDT-211225。）
- - 接口名称：【通用】组合查询财务记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_financial_record_exact
-
-### 30、修改获取用户的合约下单量限制接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【通用】获取用户的合约下单量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_order_limit
-
-### 31、修改获取用户的合约手续费费率接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）、delivery_fee（交割的手续费费率）。）
- - 接口名称：【通用】获取用户的合约手续费费率
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_fee
-
-### 32、修改获取用户的合约持仓量限制（全仓）接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）、lever_rate（杠杆倍数）、buy_limit_value（多仓持仓价值上限）、sell_limit_value（空仓持仓价值上限）、mark_price（品种标记价格）。）
- - 接口名称：【全仓】获取用户的合约持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_position_limit
-
-### 33、修改获取用户资产和持仓信息（全仓）接口（在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数positions和contract_detail，futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户资产和持仓信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_account_position_info
-
-### 34、修改查询用户结算记录（全仓）接口（返回参数需在contract_detail和positions下新增pair字段（交易对）。）
- - 接口名称：【全仓】查询用户结算记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_user_settlement_records
-
-### 35、修改获取用户当前可用杠杆倍数（全仓）接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户当前可用杠杆倍数
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_available_level_rate
-
-### 36、修改切换杠杆（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【全仓】切换杠杆
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_switch_lever_rate
-
-### 37、修改合约下单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】合约下单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_order
-
-### 38、修改合约批量下单（全仓）接口（orders_data下新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】合约批量下单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_batchorder
-
-### 39、修改撤销订单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填）
- - 接口名称：【全仓】撤销订单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_cancel
-
-### 40、修改全部撤单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_cancelall
-
-### 41、修改获取用户的合约订单信息（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户的合约订单信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_order_info
-
-### 42、修改获取用户的合约订单明细信息（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户的合约订单明细信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_order_detail
-
-### 43、修改获取用户的合约当前未成交委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户的合约当前未成交委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_openorders
-
-### 44、修改获取用户的合约历史委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户的合约历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_hisorders
-
-### 45、修改获取用户的合约历史成交记录（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下trades内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取用户的合约历史成交记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_matchresults
-
-### 46、修改组合查询合约历史委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】组合查询合约历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_hisorders_exact
-
-### 47、修改组合查询历史成交记录（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下trades内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】组合查询历史成交记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_matchresults_exact
-
-### 48、修改合约闪电平仓下单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】合约闪电平仓下单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_lightning_close_position
-
-### 49、修改合约计划委托下单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】合约计划委托下单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_order
-
-### 50、修改合约计划委托撤单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】合约计划委托撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_cancel
-
-### 51、修改合约计划委托全部撤单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】合约计划委托全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_cancelall
-
-### 52、修改获取计划委托当前委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取计划委托当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_openorders
-
-### 53、修改获取计划委托历史委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取计划委托历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_hisorders
-
-### 54、修改对仓位设置止盈止损订单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】对仓位设置止盈止损订单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_order
-
-### 55、修改止盈止损撤单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】止盈止损撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_cancel
-
-### 56、修改止盈止损全部撤单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】止盈止损全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_cancelall
-
-### 57、修改获取止盈止损当前委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取止盈止损当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_openorders
-
-### 58、修改获取止盈止损历史委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下orders内新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】获取止盈止损历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_hisorders
-
-### 59、修改查询开仓单关联的止盈止损订单详情（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】查询开仓单关联的止盈止损订单详情
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_relation_tpsl_order
-
-### 60、修改跟踪委托订单下单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】跟踪委托订单下单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_order
-
-### 61、修改跟踪委托订单撤单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】跟踪委托订单撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_cancel
-
-### 62、修改跟踪委托订单全部撤单（全仓）接口（新增选填入参：contract_type（合约类型）、pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。）
- - 接口名称：【全仓】跟踪委托订单全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_cancelall
-
-### 63、修改查询跟踪委托订单当前委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】查询跟踪委托订单当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_openorders
-
-### 64、修改查询跟踪委托订单历史委托（全仓）接口（新增选填入参：pair（交易对）。请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时contract_code改为非必填。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】查询跟踪委托订单历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_hisorders
-
-### 65、修改订阅 KLine 数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】订阅 KLine 数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.kline.$period
-
-### 66、修改请求 KLine 数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】请求 KLine 数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.kline.$period
-
-### 67、修改订阅 Market Depth 数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】订阅 Market Depth 数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.depth.$type
-
-### 68、修改订阅 Market Depth增量推送数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】订阅 Market Depth增量推送数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.depth.size_${size}.high_freq
-
-### 69、修改买一卖一逐笔行情推送接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】买一卖一逐笔行情推送
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.bbo
-
-### 70、修改订阅 Market detail 数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】订阅 Market detail 数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.detail
-
-### 71、修改请求 Trade detail 数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】请求 Trade detail 数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.trade.detail
-
-### 72、修改订阅 Trade Detail 数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】订阅 Trade Detail 数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.trade.detail
-
-### 73、修改订阅基差数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】订阅基差数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.basis.$period.$basis_price_type
-
-### 74、修改请求基差数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】请求基差数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.basis.$period.$basis_price_type
-
-### 75、修改订阅强平订单数据（免鉴权）接口（订阅参数外层新增选填字段：business_type（业务类型），与topic同级。返回参数data下新增字段：pair（交易对）、contract_type（合约类型）、business_type（业务类型），新增的字段与contract_code同级。取消订阅时也需要business_type参数）
- - 接口名称：【通用】订阅强平订单数据（免鉴权）
- - 接口类型：私有接口
- - 订阅地址：public.$contract_code.liquidation_orders
-
-### 76、修改订阅合约信息变动数据（免鉴权）接口（订阅参数外层新增选填字段：business_type（业务类型），与topic同级。返回参数data下新增字段：pair（交易对）、contract_type（合约类型）、business_type（业务类型）、delivery_date（合约交割日期）。取消订阅时也需要business_type参数）
- - 接口名称：【通用】订阅合约信息变动数据（免鉴权）
- - 接口类型：私有接口
- - 订阅地址：public.$contract_code.contract_info
-
-### 77、修改订阅标记价格K线数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】订阅标记价格K线数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.mark_price.$period
-
-### 78、修改请求标记价格K线数据接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。）
- - 接口名称：【通用】请求标记价格K线数据
- - 接口类型：共公接口
- - 订阅地址：market.$contract_code.mark_price.$period
-
-### 79、修改订阅资产变动数据（全仓）接口（在data下新增futures_contract_detail字段，表示支持全仓的所有交割合约的相关字段。然后内部参数和contract_detail内部参数一样。返回参数contract_detail、futures_contract_detail下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。）
- - 接口名称：【全仓】订阅资产变动数据
- - 接口类型：私有接口
- - 订阅地址：accounts_cross.$margin_account
-
-### 80、修改订阅订单成交数据（全仓）接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。）
- - 接口名称：【全仓】订阅订单成交数据
- - 接口类型：私有接口
- - 订阅地址：orders_cross.$contract_code
-
-### 81、修改订阅持仓变动更新数据（全仓）接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。）
- - 接口名称：【全仓】订阅持仓变动更新数据
- - 接口类型：私有接口
- - 订阅地址：positions_cross.$contract_code
-
-### 82、修改订阅撮合订单成交数据（全仓）接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。）
- - 接口名称：【全仓】订阅撮合订单成交数据
- - 接口类型：私有接口
- - 订阅地址：matchOrders_cross.$contract_code
-
-### 83、修改订阅计划委托订单更新ws推送（全仓）接口（请求参数contract_code支持交割合约代码，格式为BTC-USDT-201101。返回参数新增字段：business_type（业务类型）、pair（交易对）、contract_type（合约类型），与contract_code同级。）
- - 接口名称：【全仓】订阅计划委托订单更新ws推送
- - 接口类型：私有接口
- - 订阅地址：trigger_order_cross.$contract_code
-
-### 84、修改获取用户的合约持仓量限制（逐仓）接口（新增返参：lever_rate（杠杆倍数）、buy_limit_value（多仓持仓价值上限）、sell_limit_value（空仓持仓价值上限）、mark_price（品种标记价格））
- - 接口名称：【逐仓】获取用户的合约持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_position_limit
-
-### 85、新增查询用户所有杠杆持仓量限制（逐仓）接口
- - 接口名称：【逐仓】查询用户所有杠杆持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_lever_position_limit
-
-### 86、新增查询用户所有杠杆持仓量限制（全仓）接口
- - 接口名称：【全仓】查询用户所有杠杆持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_lever_position_limit
-
-## 1.1.3 2021年5月17日 【修改：母子账户划转（新增选填入参：client_order_id）。同账号不同保证金账户的划转（新增选填入参：client_order_id）】
-
-### 1、修改母子账户划转接口（新增选填入参：client_order_id）
- - 接口名称：【通用】母子账户划转
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_master_sub_transfer
-
-### 2、修改同账号不同保证金账户的划转接口（新增选填入参：client_order_id）
- - 接口名称：【通用】同账号不同保证金账户的划转
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_transfer_inner
-
-## 1.1.2 2021年05月12日 【新增：跟踪委托订单接口。】 
-
-### 1、新增跟踪委托订单下单（逐仓）接口
- - 接口名称：【逐仓】跟踪委托订单下单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_track_order
-
-### 2、新增跟踪委托订单下单（全仓）接口
- - 接口名称：【全仓】跟踪委托订单下单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_order
-
-### 3、新增跟踪委托订单撤单（逐仓）接口
- - 接口名称：【逐仓】跟踪委托订单撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_track_cancel
-
-### 4、新增跟踪委托订单撤单（全仓）接口
- - 接口名称：【全仓】跟踪委托订单撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_cancel
-
-### 5、新增跟踪委托订单全部撤单（逐仓）接口
- - 接口名称：【逐仓】跟踪委托订单全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_track_cancelall
-
-### 6、新增跟踪委托订单全部撤单（全仓）接口
- - 接口名称：【全仓】跟踪委托订单全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_cancelall
-
-### 7、新增跟踪委托订单当前委托（逐仓）接口
- - 接口名称：【逐仓】跟踪委托订单当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_track_openorders
-
-### 8、新增跟踪委托订单当前委托（全仓）接口
- - 接口名称：【全仓】跟踪委托订单当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_openorders
-
-### 9、新增跟踪委托订单历史委托（逐仓）接口
- - 接口名称：【逐仓】跟踪委托订单历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_track_hisorders
-
-### 10、新增跟踪委托订单历史委托（全仓）接口
- - 接口名称：【全仓】跟踪委托订单历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_track_hisorders
-
-## 1.1.1 2021年04月29日 【修改撤销订单接口（将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。）、修改获取合约订单信息接口（将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。将原来只能查询最近4小时内的撤单信息改为只可以查询最近2小时内的撤单信息。）】
-
-### 1、修改撤销订单（逐仓）接口（将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。）
- - 接口名称：【逐仓】撤销订单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cancel
-
-### 2、修改撤销订单（全仓）接口（将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。）
- - 接口名称：【全仓】撤销订单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_cancel
-
-### 3、修改获取合约订单信息（逐仓）接口（将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。将原来只能查询最近4小时内的撤单信息改为只可以查询最近2小时内的撤单信息。）
- - 接口名称：【逐仓】获取合约订单信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_order_info
-
-### 4、修改获取合约订单信息（全仓）接口（将原来的 client_order_id 有效时间从24小时改为8小时。超过8小时的订单根据client_order_id将查询不到。将原来只能查询最近4小时内的撤单信息改为只可以查询最近2小时内的撤单信息。）
- - 接口名称：【全仓】获取合约订单信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_order_info
-
-## 1.1.0 2021年4月28日 【新增:获取市场最优挂单接口。】 
-
-### 1、新增获取市场最优挂单接口
- - 接口名称：【通用】获取市场最优挂单
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/bbo
-
-## 1.0.9 2021年2月26日 【新增：获取账户总资产估值接口、批量获取合约资金费率接口。修改获取合约最高限价和最低限价接口（支持用户所有入参都不填，接口返回所有当前上市合约的限价数据。）、修改获取市场最近成交记录接口（支持用户所有入参都不填，接口返回所有当前上市合约的最近成交数据；当用户不传入参时， 返参ch值为market.*trade.detail。在返参tick下新增字段：contract_code。）】
-
-### 1、新增获取账户总资产估值接口
- - 接口名称：【通用】获取账户总资产估值
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_balance_valuation
-
-### 2、新增批量获取合约资金费率接口
- - 接口名称：【通用】批量获取合约资金费率
- - 接口类型：共公接口
- - 接口URL：/linear-swap-api/v1/swap_batch_funding_rate
-
-### 3、修改获取合约最高限价和最低限价接口（支持用户所有入参都不填，接口返回所有当前上市合约的限价数据。）
- - 接口名称：【通用】获取合约最高限价和最低限价
- - 接口类型：共公接口
- - 接口URL：/linear-swap-api/v1/swap_price_limit
-
-### 4、修改获取市场最近成交记录接口（支持用户所有入参都不填，接口返回所有当前上市合约的最近成交数据；当用户不传入参时， 返参ch值为market.*trade.detail。在返参data下新增字段：contract_code。）
- - 接口名称：【通用】获取市场最近成交记录
- - 接口类型：共公接口
- - 接口URL：/linear-swap-ex/market/trade
-
-## 1.0.8 2021年2月5日【新增：组合查询合约历史委托（全仓和逐仓）、组合查询用户历史成交记录（全仓和逐仓）、组合查询用户财务记录、获取平台阶梯保证金（全仓和逐仓）、批量设置子账户交易权限、批量获取子账户资产信息（全仓和逐仓）。11-14 修改接口，新增字段。】
-
-### 1、新增组合查询合约历史委托接口（逐仓）
- - 接口名称：【逐仓】组合查询合约历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_hisorders_exact
-
-### 2、新增组合查询合约历史委托接口（全仓）
- - 接口名称：【全仓】组合查询合约历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_hisorders_exact
-
-### 3、新增组合查询用户历史成交记录接口（逐仓）
- - 接口名称：【逐仓】组合查询用户历史成交记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_matchresults_exact
-
-### 4、新增组合查询用户历史成交记录接口（全仓）
- - 接口名称：【全仓】组合查询用户历史成交记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_matchresults_exact
-
-### 5、新增组合查询用户财务记录接口
- - 接口名称：【通用】组合查询用户财务记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_financial_record_exact
-
-### 6、新增获取平台阶梯保证金（逐仓）
- - 接口名称：【逐仓】获取平台阶梯保证金
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_ladder_margin
-
-### 7、新增获取平台阶梯保证金（全仓）
- - 接口名称：【全仓】获取平台阶梯保证金
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_cross_ladder_margin
-
-### 8、新增批量设置子账户交易权限接口
- - 接口名称：【通用】批量设置子账户交易权限
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_sub_auth
-
-### 9、新增批量获取子账户资产信息接口（逐仓）
- - 接口名称：【逐仓】批量获取子账户资产信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_sub_account_info_list
-
-### 10、新增批量获取子账户资产信息接口（全仓）
- - 接口名称：【全仓】批量获取子账户资产信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_sub_account_info_list
-
-### 11、修改获取市场最近成交记录接口（返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。）
- - 接口名称：【通用】获取市场最近成交记录
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/trade
-
-### 12、修改批量获取最近的交易记录接口（返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。）
- - 接口名称：【通用】批量获取最近的交易记录
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/history/trade
-
-### 13、修改订阅 Trade Detail 数据接口（返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。）
- - 接口名称：【通用】订阅 Trade Detail 数据
- - 接口类型：公共接口
- - 订阅地址：market.$contract_code.trade.detail
-
-### 14、修改请求 Trade Detail 数据接口（返参data参数下新增quantity，表示成交量（币）。计算公式：成交量（币） = 成交量（张）* 合约面值。返参data参数下新增trade_turnover，表示成交额（计价币种）。计算公式：成交额（计价币种） = 成交量（张）* 合约面值 * 成交价格。）
- - 接口名称：【通用】请求 Trade Detail 数据
- - 接口类型：公共接口
- - 订阅地址：market.$contract_code.trade.detail
-
-
-## 1.0.7 2021年1月29日 【新增：批量获取聚合行情接口、获取标记价格的 K 线数据、查询用户结算记录（全仓和逐仓）、订阅标记价格 K 线数据（sub）、请求标记价格 K 线数据（req）。7-28 修改接口，新增字段。修改：计划委托订单的订单ID由原本的自然数自增ID 改为长度为 18 位的唯一标识ID。推荐使用下单后返回的 order_id_str（字符串类型的订单 ID），避免发生长度过大而被系统截断的情况。】
-
-### 1、新增批量获取聚合行情接口
- - 接口名称：【通用】批量获取聚合行情
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/detail/batch_merged
-
-### 2、新增获取标记价格的 K 线数据接口
- - 接口名称：【通用】获取标记价格的 K 线数据
- - 接口类型：公共接口
- - 接口URL：/index/market/history/linear_swap_mark_price_kline
-
-### 3、新增订阅标记价格 K 线数据 WS 接口
- - 接口名称：【通用】订阅标记价格 K 线数据
- - 接口类型：公共接口
- - 订阅地址：market.$contract_code.mark_price.$period
-
-### 4、新增请求标记价格 K 线数据 WS 接口
- - 接口名称：【通用】请求标记价格 K 线数据
- - 接口类型：公共接口
- - 订阅地址：market.$contract_code.mark_price.$period
-
-### 5、新增查询用户结算记录(逐仓)接口
- - 接口名称：【逐仓】查询用户结算记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_user_settlement_records
-
-### 6、新增查询用户结算记录(全仓)接口
- - 接口名称：【全仓】查询用户结算记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_user_settlement_records
-
-### 7、修改全部撤单(逐仓)接口（请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。）
- - 接口名称：【逐仓】全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cancelall
-
-### 8、修改全部撤单(全仓)接口（请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。）
- - 接口名称：【全仓】全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_cancelall
-
-### 9、修改获取合约订单信息(逐仓)接口（返参data中新增real_profit字段，表示真实收益，类型decimal）
- - 接口名称：【逐仓】获取合约订单信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_order_info
-
-### 10、修改获取合约订单信息(全仓)接口（返参data中新增real_profit字段，表示真实收益，类型decimal）
- - 接口名称：【全仓】获取合约订单信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_order_info
-
-### 11、修改获取订单明细信息(逐仓)接口（返回参数中的 data 和 trades 下各新增以下字段:real_profit(真实收益)。同时 trades 下新增每笔成交收益字段：profit（平仓盈亏））
- - 接口名称：【逐仓】获取订单明细信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_order_detail
-
-### 12、修改获取订单明细信息(全仓)接口（返回参数中的 data 和 trades 下各新增以下字段:real_profit(真实收益)。同时 trades 下新增每笔成交收益字段：profit（平仓盈亏））
- - 接口名称：【全仓】获取订单明细信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_order_detail
-
-### 13、修改获取合约当前未成交委托(逐仓)接口（请求参数新增 2 个选填字段:sort_by，表示排序字段，不填默认按创建时间倒序。参数可选值为“created_at”(按照创建时间倒序)，“update_time”(按照更新时间倒 序)。trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。 返回参数中的 orders 下新增以下字段:update_time(订单更新时间，单位毫秒)、real_profit(真实收益)。）
- - 接口名称：【逐仓】获取合约当前未成交委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_openorders
-
-### 14、修改获取合约当前未成交委托(全仓)接口（请求参数新增 2 个选填字段:sort_by，表示排序字段，不填默认按创建时间倒序。参数可选值为“created_at”(按照创建时间倒序)，“update_time”(按照更新时间倒 序)。trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。 返回参数中的 orders 下新增以下字段:update_time(订单更新时间，单位毫秒)、real_profit(真实收益)。）
- - 接口名称：【全仓】获取合约当前未成交委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_openorders
-
-### 15、修改获取合约历史委托(逐仓)接口（返参orders中新增real_profit字段，表示真实收益，类型decimal）
- - 接口名称：【逐仓】获取合约历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_hisorders
-
-### 16、修改获取合约历史委托(全仓)接口（返参orders中新增real_profit字段，表示真实收益，类型decimal）
- - 接口名称：【全仓】获取合约历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_hisorders
-
-### 17、修改获取历史成交记录(逐仓)接口（返参trades中新增real_profit字段，表示真实收益，类型decimal）
- - 接口名称：【逐仓】获取历史成交记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_matchresults
-
-### 18、修改获取历史成交记录(全仓)接口（返参trades中新增real_profit字段，表示真实收益，类型decimal）
- - 接口名称：【全仓】获取历史成交记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_matchresults
-
-### 19、修改订阅订单成交数据(逐仓)接口（返参外层新增real_profit字段，表示真实收益，类型decimal. 返参trade中新增：real_profit字段，表示真实收益、profit字段，表示平仓盈亏。）
- - 接口名称：【逐仓】订阅订单成交数据
- - 接口类型：私有接口
- - 订阅地址：orders.$contract_code
-
-### 20、修改订阅订单成交数据(全仓)接口（返参外层新增real_profit字段，表示真实收益，类型decimal. 返参trade中新增：real_profit字段，表示真实收益、profit字段，表示平仓盈亏。）
- - 接口名称：【全仓】订阅订单成交数据
- - 接口类型：私有接口
- - 订阅地址：orders_cross.$contract_code
-
-### 21、修改计划委托全部撤单(逐仓)接口（请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。）
- - 接口名称：【逐仓】计划委托全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_trigger_cancelall
-
-### 22、修改计划委托全部撤单(全仓)接口（请求参数新增 2 个选填字段:direction，表示买卖方向，不填默认撤销全部。参数可选值为“buy”:买，“sell”:卖。offset，表示开平方向，不填默认撤销全部。参数可 选值为“open”:开仓，“close”:平仓。）
- - 接口名称：【全仓】计划委托全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_cancelall
-
-### 23、修改止盈止损订单全部撤单(逐仓)接口（请求参数新增选填字段:direction，表示买卖方向，不填默认撤销全部）
- - 接口名称：【逐仓】止盈止损订单全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_tpsl_cancelall
-
-### 24、修改止盈止损订单全部撤单(全仓)接口（请求参数新增选填字段:direction，表示买卖方向，不填默认撤销全部）
- - 接口名称：【全仓】止盈止损订单全部撤单
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_cancelall
-
-### 25、修改查询计划委托当前委托(逐仓)接口（请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多。）
- - 接口名称：【逐仓】查询计划委托当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_trigger_openorders
-
-### 26、修改查询计划委托当前委托(全仓)接口（请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多。）
- - 接口名称：【全仓】查询计划委托当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_openorders
-
-### 27、修改查询止盈止损订单当前委托(逐仓)接口（请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,3: 买入平空,4: 卖出平多。）
- - 接口名称：【逐仓】查询止盈止损订单当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_tpsl_openorders
-
-### 28、修改查询止盈止损订单当前委托(全仓)接口（请求参数新增选填字段:trade_type，表示交易类型，不填默认查询全部。参数可选值为 0:全部,3: 买入平空,4: 卖出平多。）
- - 接口名称：【全仓】查询止盈止损订单当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_openorders
-
-
-## 1.0.6 2021年01月12号 【1 新增获取预估结算价接口。2-13 新增止盈止损订单接口。14-35 修改接口,新增字段。 新增【合约策略订单】一级菜单，将本次新增的双向止盈止损相关接口以及原有的计划委托相关接口挪到该菜单下】
-
-### 1、新增获取预估结算价
- - 接口名称: 【通用】获取预估结算价
- - 接口类型: 公共接口
- - 接口URL: /linear-swap-api/v1/swap_estimated_settlement_price
-
-### 2、新增对仓位设置止盈止损订单(逐仓)
- - 接口名称: 【逐仓】对仓位设置止盈止损订单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_tpsl_order
-
-### 3、新增对仓位设置止盈止损订单(全仓)
- - 接口名称: 【全仓】对仓位设置止盈止损订单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_tpsl_order
-
-### 4、新增止盈止损订单撤单接口(逐仓)
- - 接口名称: 【逐仓】止盈止损订单撤单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_tpsl_cancel
-
-### 5、新增止盈止损订单撤单接口(全仓)
- - 接口名称: 【全仓】止盈止损订单撤单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_tpsl_cancel
-
-### 6、新增止盈止损订单全部撤单接口(逐仓)
- - 接口名称: 【逐仓】止盈止损订单全部撤单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_tpsl_cancelall
-
-### 7、新增止盈止损订单全部撤单接口(全仓)
- - 接口名称: 【全仓】止盈止损订单全部撤单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_tpsl_cancelall
-
-### 8、新增查询止盈止损订单当前委托接口(逐仓)
- - 接口名称: 【逐仓】查询止盈止损订单当前委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_tpsl_openorders
-
-### 9、新增查询止盈止损订单当前委托接口(全仓)
- - 接口名称: 【全仓】查询止盈止损订单当前委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_tpsl_openorders
-
-### 10、新增查询止盈止损订单历史委托接口(逐仓)
- - 接口名称: 【逐仓】查询止盈止损订单历史委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_tpsl_hisorders
-
-### 11、新增查询止盈止损订单历史委托接口(全仓)
- - 接口名称: 【全仓】查询止盈止损订单历史委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_tpsl_hisorders
-
-### 12、新增查询开仓单关联的止盈止损订单详情接口(逐仓)
- - 接口名称: 【逐仓】查询开仓单关联的止盈止损订单详情
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_relation_tpsl_order
-
-### 13、新增查询开仓单关联的止盈止损订单详情接口(全仓)
- - 接口名称: 【全仓】查询开仓单关联的止盈止损订单详情
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_relation_tpsl_order
-
-### 14、修改合约下单接口(逐仓)（新增选填入参：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。）
- - 接口名称: 【逐仓】合约下单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_order
-
-### 15、修改合约下单接口(全仓)（新增选填入参：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。）
- - 接口名称: 【全仓】合约下单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_order
-
-### 16、修改合约批量下单接口(逐仓)（在入参orders_data中新增选填参数：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。）
- - 接口名称: 【逐仓】合约批量下单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_batchorder
-
-### 17、修改合约批量下单接口(全仓)（在入参orders_data中新增选填参数：tp_trigger_price（止盈触发价格）、tp_order_price（止盈委托价格）、tp_order_price_type（止盈委托类型）、sl_trigger_price（止损触发价格）、sl_order_price（止损委托价格）、sl_order_price_type（止损委托类型）。）
- - 接口名称: 【全仓】合约批量下单
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_batchorder
-
-### 18、修改获取合约订单信息接口(逐仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【逐仓】获取合约订单信息
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_order_info
-
-### 19、修改获取合约订单信息接口(���仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【全仓】获取合约订单信息
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_order_info
-
-### 20、修改获取订单明细信息接口(逐仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【逐仓】获取订单明细信息	
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_order_detail
-
-### 21、修改获取订单明细信息接口(全仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【全仓】获取订单明细信息	
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_order_detail
-
-### 22、修改获取合约当前未成交委托接口(逐仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【逐仓】获取合约当前未成交委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_openorders
-
-### 23、修改获取合约当前未成交委托接口(全仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【全仓】获取合约当前未成交委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_openorders
-
-### 24、修改获取合约历史委托接口(逐仓)（新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),update_time（表示：订单的更新时间）,在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【逐仓】获取合约历史委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_hisorders
-
-### 25、修改获取合约历史委托接口(全仓)（新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),update_time（表示：订单的更新时间）,在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【全仓】获取合约历史委托
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_hisorders
-
-### 26、修改订阅订单成交数据接口(逐仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【逐仓】订阅订单成交数据
- - 接口类型: 私有接口
- - 订阅主题: orders.$contract_code
-
-### 27、修改订阅订单成交数据接口(全仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【全仓】订阅订单成交数据
- - 接口类型: 私有接口
- - 订阅主题: orders_cross.$contract_code
-
-### 28、修改订阅订单撮合数据接口(逐仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【逐仓】订阅订单撮合数据	
- - 接口类型: 私有接口
- - 订阅主题: matchOrders.$contract_code
-
-### 29、修改订阅订单撮合数据接口(全仓)（新增返回参数：is_tpsl(表示是否设置止盈止损，1：是；0：否),在返回参数order_source订单来源新增枚举值（tpsl:止盈止损触发））
- - 接口名称: 【全仓】订阅订单撮合数据	
- - 接口类型: 私有接口
- - 订阅主题: matchOrders_cross.$contract_code
-
-### 30、修改获取计划委托历史委托接口(逐仓)（新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：update_time（表示：订单的更新时间））
- - 接口名称: 【逐仓】获取计划委托历史委托	
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_trigger_hisorders
-
-### 31、修改获取计划委托历史委托接口(全仓)（新增入参：sort_by(表示：排序字段，可选值为“create_date”，“update_time”)。新增返回参数：update_time（表示：订单的更新时间））
- - 接口名称: 【全仓】获取计划委托历史委托	
- - 接口类型: 私有接口
- - 接口URL: /linear-swap-api/v1/swap_cross_trigger_hisorders
-
-### 32、修改获取当前可用合约总持仓量（在返回参数data中新增trade_volume：最近24小时成交量（张），trade_amount：最近24小时成交量（币）trade_turnover：最近24小时成交额、这三个字段 ）
- - 接口名称: 【通用】获取当前可用合约总持仓量
- - 接口类型: 公共接口
- - 接口URL: /linear-swap-api/v1/swap_open_interest
-
-### 33、修改订阅Market Detail数据（在返参tick中新增ask表示卖一，bid表示买一。）
- - 接口名称: 【通用】订阅Market Detail数据
- - 接口类型: 公共接口
- - 订阅主题: market.$contract_code.detail
-
-### 34、修改获取合约信息（在返参data下新增delivery_time，表示交割时间（毫秒时间戳））
- - 接口名称: 【通用】获取合约信息
- - 接口类型: 公共接口
- - 接口URL: /linear-swap-api/v1/swap_contract_info
-
-### 35、修改订阅合约信息变动（在返参data下新增delivery_time，表示交割时间（毫秒时间戳））
- - 接口名称: 【通用】订阅合约信息变动
- - 接口类型: 公共接口
- - 订阅主题: public.$contract_code.contract_info
-
-
-## 1.0.5 2020年12月18日 【新增：订阅系统状态更新推送的 WebSocket 接口】
-
-### 1、新增订阅系统状态更新推送的 WebSocket 接口
-  - 接口名称：【通用】订阅系统状态更新
-  - 接口类型: 公共接口
-  - 订阅主题：public.$service.heartbeat
-
-## 1.0.4 2020年12月11日 【1-33 新增全仓模式接口。34-60 修改接口,新增字段】
-
-### 1、新增全仓模式查询平台阶梯调整系数
-
-  - 接口名称：【全仓】查询平台阶梯调整系数
-
-  - 接口类型：公共接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_adjustfactor
-
-### 2、新增全仓模式查询系统划转权限
-
-  - 接口名称：【全仓】查询系统划转权限
-
-  - 接口类型：公共接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_transfer_state  
-
-### 3、新增全仓模式查询系统交易权限
-
-  - 接口名称：【全仓】查询系统交易权限
-
-  - 接口类型：公共接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_trade_state 
-
-### 4、新增全仓模式获取用户账户信息
-
-  - 接口名称：【全仓】获取用户账户信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_account_info     
-
-### 5、新增全仓模式获取用户持仓信息
-
-  - 接口名称：【全仓】获取用户持仓信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_position_info 
-
-### 6、新增全仓模式查询母账户下所有子账户资产信息
-
-  - 接口名称：【全仓】查询母账户下所有子账户资产信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_sub_account_list  
-
-### 7、新增全仓模式查询单个子账户资产信息
-
-  - 接口名称：【全仓】查询单个子账户资产信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_sub_account_info 
-
-### 8、新增全仓模式查询单个子账户持仓信息
-
-  - 接口名称：【全仓】查询单个子账户持仓信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_sub_position_info   
-
-### 9、新增全仓模式查询用户当前的划转限制
-
-  - 接口名称：【全仓】查询用户当前的划转限制
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_transfer_limit 
-
-### 10、新增全仓模式用户持仓量限制的查询
-
-  - 接口名称：【全仓】用户持仓量限制的查询
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_position_limit
-
-### 11、新增全仓模式获取用户资产和持仓信息
-
-  - 接口名称：【全仓】获取用户资产和持仓信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_account_position_info 
-
-### 12、新增全仓模式查询用户可用杠杆倍数
-
-  - 接口名称：【全仓】查询用户可用杠杆倍数
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_available_level_rate  
-
-### 13、新增全仓模式切换杠杆
-
-  - 接口名称：【全仓】切换杠杆
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_switch_lever_rate  
-
-### 14、新增全仓模式合约下单
-
-  - 接口名称：【全仓】合约下单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_order  
-
-### 15、新增全仓模式合约批量下单
-
-  - 接口名称：【全仓】合约批量下单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_batchorder 
-
-### 16、新增全仓模式撤销订单
-
-  - 接口名称：【全仓】撤销订单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_cancel  
-
-### 17、新增全仓模式全部撤单
-
-  - 接口名称：【全仓】全部撤单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_cancelall 
-
-### 18、新增全仓模式获取合约订单信息
-
-  - 接口名称：【全仓】获取合约订单信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_order_info  
-
-### 19、新增全仓模式获取订单明细信息
-
-  - 接口名称：【全仓】获取订单明细信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_order_detail  
-
-### 20、新增全仓模式获取合约当前未成交委托
-
-  - 接口名称：【全仓】获取合约当前未成交委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_openorders  
-
-### 21、新增全仓模式获取合约历史委托
-
-  - 接口名称：【全仓】获取合约历史委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_hisorders 
-
-### 22、新增全仓模式获取历史成交记录
-
-  - 接口名称：【全仓】获取历史成交记录
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_matchresults   
-
-### 23、新增全仓模式闪电平仓下单
-
-  - 接口名称：【全仓】闪电平仓下单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_lightning_close_position 
-
-### 24、新增全仓模式合约计划委托下单
-
-  - 接口名称：【全仓】合约计划委托下单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_trigger_order   
-
-### 25、新增全仓模式合约计划委托撤单
-
-  - 接口名称：【全仓】合约计划委托撤单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_trigger_cancel 
-
-### 26、新增全仓模式合约计划委托全部撤单
-
-  - 接口名称：【全仓】合约计划委托全部撤单
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_trigger_cancelall  
-
-### 27、新增全仓模式获取计划委托当前委托
-
-  - 接口名称：【全仓】获取计划委托当前委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_trigger_openorders  
-
-### 28、新增全仓模式获取计划委托历史委托
-
-  - 接口名称：【全仓】获取计划委托历史委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_cross_trigger_hisorders 
-
-### 29、新增全仓模式订阅订单成交数据
-
-  - 接口名称：【全仓】订阅订单成交数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：orders_cross.$contract_code 
-
-### 30、新增全仓模式订阅资产变动数据
-
-  - 接口名称：【全仓】订阅资产变动数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：accounts_cross.$margin_account  
-
-### 31、新增全仓模式订阅持仓变动更新数据
-
-  - 接口名称：【全仓】订阅持仓变动更新数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：positions_cross.$contract_code   
-
-### 32、新增全仓模式订阅撮合订单成交数据
-
-  - 接口名称：【全仓】订阅撮合订单成交数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：matchOrders_cross.$contract_code 
-
-### 33、新增全仓模式订阅计划委托订单变动
-
-  - 接口名称：【全仓】订阅计划委托订单变动
-
-  - 接口类型：私有接口
-
-  - 订阅主题：trigger_order_cross.$contract_code
-
-### 34、查询合约信息接口新增字段（新增入参support_margin_mode；返参data中也新增support_margin_mode字段；表示合约支持的保证金模式）
-
-  - 接口名称：查询合约信息
-
-  - 接口类型：公共接口
-
-  - 接口URL：linear-swap-api/v1/swap_contract_info
-
-### 35、查询平台阶梯调整系数新增返回字段（在返参中新增margin_mode字段：表示保证金模式）
-
-  - 接口名称：查询平台阶梯调整系数
-
-  - 接口类型：公共接口
-
-  - 接口URL：/linear-swap-api/v1/swap_adjustfactor
-
-### 36、查询系统状态接口新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：查询系统状态
-
-  - 接口类型：公共接口
-
-  - 接口URL：/linear-swap-api/v1/swap_api_state
-
-### 37、获取用户账户信息接口新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取用户账户信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_account_info
-
-### 38、查询单个子账户资产信息接口新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：查询单个子账户资产信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_sub_account_info
-
-### 39、查询用户账户和持仓信息新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：查询用户账户和持仓信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_account_position_info
-
-### 40、查询母账户下所有子账户资产信息新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：查询母账户下所有子账户资产信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_sub_account_list
-
-### 41、获取用户持仓信息新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取用户持仓信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_position_info
-
-### 42、获取单个子账户持仓信息新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取单个子账户持仓信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_sub_position_info
-
-### 43、查询财务记录接口新增入参字段（新增入参contract_code：表示合约代码）
-
-  - 接口名称：查询财务记录
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_financial_record
-
-### 44、获取订单明细信息新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取订单明细信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_order_detail
-
-### 45、获取合约当前未成交委托新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取合约当前未成交委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_openorders
-
-### 46、获取合约历史委托新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取合约历史委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_hisorders
-
-### 47、获取历史成交记录新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取历史成交记录
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_matchresults
-
-### 48、获取计划委托当前委托新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取计划委托当前委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_trigger_openorders
-
-### 49、获取计划委托历史委托新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取计划委托历史委托
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_trigger_hisorders
-
-### 50、获取用户合约划转限制新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取用户合约划转限制
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_transfer_limit  
-
-### 51、获取用户合约持仓量限制新增返回字段（在返参中新增margin_mode字段，表示保证金模式）
-
-  - 接口名称：获取用户合约持仓量限制
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_position_limit
-
-### 52、获取用户当前合约杠杆倍数新增返回字段（在返参中新增margin_mode字段，表示保证金模式）
-
-  - 接口名称：获取用户当前合约杠杆倍数
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_available_level_rate  
-
-### 53、切换杠杆新增返回字段（在返参中新增margin_mode字段，表示保证金模式）
-
-  - 接口名称：切换杠杆
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_switch_lever_rate
-
-### 54、订阅订单成交数据新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：订阅订单成交数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：orders.$contract_code
-
-### 55、订阅撮合订单成交数据新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：订阅撮合订单成交数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：matchOrders.$contract_code
-
-### 56、订阅计划委托订单更新新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：订阅计划委托订单更新
-
-  - 接口类型：私有接口
-
-  - 订阅主题：trigger_order.$contract_code
-
-### 57、订阅持仓变动数据新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：订阅持仓变动数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：positions.$contract_code
-
-### 58、订阅资产变动数据新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：订阅资产变动数据
-
-  - 接口类型：私有接口
-
-  - 订阅主题：accounts.$contract_code
-
-### 59、订阅合约信息变动数据新增返回字段（返参中新增support_margin_mode字段，表示合约支持的保证金模式。）
-
-  - 接口名称：订阅合约信息变动数据
-
-  - 接口类型：公共接口
-
-  - 订阅主题：public.$contract_code.contract_info 
-
-### 60、获取合约订单信息新增返回字段（在返参中新增margin_account字段：表示保证金账户；以及margin_mode字段：表示保证金模式）
-
-  - 接口名称：获取合约订单信息
-
-  - 接口类型：私有接口
-
-  - 接口URL：/linear-swap-api/v1/swap_order_info
-
-## 1.0.3 2020年12月2日 【修改获取订单明细信息接口（查询无成交撤单数据时，如果不传“created_at”和“order_type”参数，由原来的只能查询到最近12小时数据，改为只能查询到最近2小时数据）；修改获取合约历史委托接口（查询无成交撤单数据时，由原来的只保留最近24小时数据，改为只保留2小时数据。）】
-
-### 1、修改获取订单明细信息接口（查询无成交撤单数据时，如果不传“created_at”和“order_type”参数，由原来的只能查询到最近12小时数据，改为只能查询到最近2小时数据）
-
-   - 接口名称：获取订单明细信息
-
-   - 接口类型：私有接口
-
-   - 接口URL：linear-swap-api/v1/swap_order_detail
-
-### 2、修改获取合约历史委托接口（查询无成交撤单数据时，由原来的只保留最近24小时数据，改为只保留最近2小时数据。）
-
-   - 接口名称：获取合约历史委托
-
-   - 接口类型：私有接口
-
-   - 接口URL：linear-swap-api/v1/swap_hisorders
-
-## 1.0.2 2020年11月24日 【新增：查询平台历史结算记录；修改：获取强平订单接口新增返参字段，订阅强平订单数据接口新增返参字段】
-
-### 1、新增查询平台历史结算记录接口
-
-  - 接口名称：查询平台历史结算记录
-  
-  - 接口类型：公共接口
-  
-  - 接口URL：linear-swap-api/v1/swap_settlement_records
-
-### 2、获取强平订单接口新增返参字段（返回参数中的 orders 参数下增加以下字段:amount 表示强平数量(币);trade_turnover 表示强平金额）
-
-  - 接口名称：获取强平订单接口
-  
-  - 接口类型：公共接口
-  
-  - 接口URL：linear-swap-api/v1/swap_liquidation_orders
-
-### 3、订阅强平订单数据接口新增返参字段（返回参数中的 data 参数下增加以下字段:amount 表示强平数量(币);trade_turnover 表示强平金额。）
-
-  - 接口名称：订阅强平订单数据
-  
-  - 接口类型：公共接口
-  
-  - 订阅主题：public.$contract_code.liquidation_orders
-
-## 1.0.1 2020年10月29日 【修改：切换杠杆成功时 WS 资产接口推送更新信息，切换杠杆成功时 WS 持仓接口推送更新信息】
-
-### 1、订阅资产接口推送更新（返参event新增事件类型，switch_lever_rate表示切换倍数。在用户切换倍数成功时，需推送一次最新的资产信息，event为switch_lever_rate。）
-
-   - 接口名称：订阅资产变动数据
-
-   - 接口类型：私有接口
-
-   - 订阅主题：accounts.$contract_code
-
-### 2、订阅持仓接口推送更新（返参event新增事件类型，switch_lever_rate表示切换杠杆。在用户切换杠杆倍数成功时，需推送一次最新的持仓信息（若用户持仓量为0，则不会触发推送），event 为 switch_lever_rate。）
-   
-   - 接口名称：订阅持仓变动数据
-
-   - 接口类型：私有接口
-
-   - 订阅主题：positions.$contract_code
-
-## 1.0.0 2020年10月26日14:00(GMT+8)
 
 # 合约交易接入说明
 
