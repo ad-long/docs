@@ -35,8 +35,8 @@ search: true
 
 
 # 更新日志
-
 | 生效时间<br>(UTC +8) | 接口属性 | 接口URL                     | 接口类型 | 变化   | 摘要    | 
+| ------------------- | ------ | --------------------------  | ------ | -----  | ------ |
 | 2021-12-17 |     |                                                           |      |      |  USDT交割合约上线   | 
 | 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_contract_info                  | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：contract_type（合约类型），pair（交易对），business_type（业务类型），delivery_date（合约交割日期，永续无需交割时该字段为空字符串）   | 
 | 2021-12-17 | 公共 |   /linear-swap-api/v1/swap_price_limit                    | GET  | 修改  |  新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：contract_type（合约类型）、business_type（业务类型）、pair（交易对）。  | 

@@ -39,6 +39,7 @@ Welcome users, who are dedicated to maker strategy and have created large tradin
 # Changelog
 
 | Release Time<br>(UTC +8) | Interface Type | Interface URL                     | Interface Type | Change   | 摘要    | 
+| ------------------- | ------ | --------------------------  | ------ | -----  | ------ |
 | 2021-12-17 |     |                                                           |      |      |  USDT交割合约上线   | 
 | 2021-12-17 | public  |   /linear-swap-api/v1/swap_contract_info                  | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, pair, business_type, delivery_date(contract delivery date, this field is an empty string when it is swap contract)   | 
 | 2021-12-17 | public  |   /linear-swap-api/v1/swap_price_limit                    | GET  | Update  |  Add optional parameters in request: business_type, contract_type, pair. Add fields in return parameter "data": contract_type, business_type, pair  | 
