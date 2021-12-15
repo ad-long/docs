@@ -1,6 +1,7 @@
 apt update
 apt install -y --no-install-recommends pkg-config build-essential nodejs git libxml2-dev libxslt-dev
 apt install software-properties-common
+apt install gpg gpg-agent
 apt-add-repository ppa:brightbox/ruby-ng
 apt install ruby2.4 ruby-dev2.4
 ruby --version
