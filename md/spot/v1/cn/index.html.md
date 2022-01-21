@@ -1311,37 +1311,37 @@ API Key 权限：读取
 |------|-----|-----|-----|
 | status | status | string| 返回状态 | 
 | data  | \<data\> | Object |    |
-| sc    | symbol_code | string | 交易对（外）
-| dn    | display_name | string | 交易对显示名称
-| bc    | base_currency | string | 基础币种
-| bcdn  | base_currency_display_name | string | 基础币种显示名称
-| qc    | quote_currency | string | 计价币种
-| qcdn  | quote_currency_display_name | string | 计价币种显示名称
-| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制）
-| whe   | white_enabled | boolean | 是否白名单
-| cd    | country_disabled | boolean | 是否在国家黑名单
+| sc    | symbol_code | string | 交易对（外）|
+| dn    | display_name | string | 交易对显示名称 |
+| bc    | base_currency | string | 基础币种 |
+| bcdn  | base_currency_display_name | string | 基础币种显示名称 |
+| qc    | quote_currency | string | 计价币种 |
+| qcdn  | quote_currency_display_name | string | 计价币种显示名称 |
+| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制） |
+| whe   | white_enabled | boolean | 是否白名单 |
+| cd    | country_disabled | boolean | 是否在国家黑名单 |
 | te    | trade_enabled | boolean | 是否可交易 |
-| toa   | trade_open_at | long | 交易开始时间
-| sp    | symbol_partition | string | 交易对分区
-| w     | weight | int | 排序权重
-| ttp   | trade_total_precision | decimal(10,6) | 交易总精度
-| tap   | trade_amount_precision | decimal(10,6) | 交易数量精度
-| tpp   | trade_price_precision | decimal(10,6) | 交易价格精度
-| fp    | fee_precision | decimal(10,6) | 费用精度
-| suspend_desc | suspend_desc | string | 暂停文案
-| transfer_board_desc | transfer_board_desc | string | 转板文案
-| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
-| lr    | leverage_ratio | decimal | 杠杆率，如：3.5，如果交易对不支持杠杆，则为null
-| smlr  | super_margin_leverage_ratio | decimal | 全仓杠杆率，如：3，如果交易对不支持全仓杠杆，则为null
-| flr   | funding_leverage_ratio | String | C2C杠杆率，如："3"，如果交易对不支持C2C，则为null
-| wr    | withdraw_risk | string | 提币风险率，如：3，如果交易对不支持全仓杠杆，则为null
-| d     | direction | int	| 多空方向：1多2空
-| elr   | etp_leverage_ratio | string | ETP交易对杠杆倍数 	
+| toa   | trade_open_at | long | 交易开始时间 |
+| sp    | symbol_partition | string | 交易对分区 |
+| w     | weight | int | 排序权重 |
+| ttp   | trade_total_precision | decimal(10,6) | 交易总精度 |
+| tap   | trade_amount_precision | decimal(10,6) | 交易数量精度 |
+| tpp   | trade_price_precision | decimal(10,6) | 交易价格精度 |
+| fp    | fee_precision | decimal(10,6) | 费用精度 |
+| suspend_desc | suspend_desc | string | 暂停文案 |
+| transfer_board_desc | transfer_board_desc | string | 转板文案 |
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax |
+| lr    | leverage_ratio | decimal | 杠杆率，如：3.5，如果交易对不支持杠杆，则为null |
+| smlr  | super_margin_leverage_ratio | decimal | 全仓杠杆率，如：3，如果交易对不支持全仓杠杆，则为null |
+| flr   | funding_leverage_ratio | String | C2C杠杆率，如："3"，如果交易对不支持C2C，则为null |
+| wr    | withdraw_risk | string | 提币风险率，如：3，如果交易对不支持全仓杠杆，则为null |
+| d     | direction | int	| 多空方向：1多2空 |
+| elr   | etp_leverage_ratio | string | ETP交易对杠杆倍数 |
 | p     | partitions | Object | 
-| castate   | ca state | string | 非必须. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2" 
-| ca1oa   | ca1 open at	 | long | 非必须. 配置了配置集合竞价的交易对才有改信息，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 
-| ca2oa	   | ca2 open at | long | 非必须. 配置了配置集合竞价的交易对才有改信息，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数  
-|       | \</data\> |  |    |
+| castate   | ca state | string | 非必须. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2" |
+| ca1oa   | ca1 open at	 | long | 非必须. 配置了配置集合竞价的交易对才有改信息，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 |
+| ca2oa	   | ca2 open at | long | 非必须. 配置了配置集合竞价的交易对才有改信息，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 |
+| \</data\> |  |    |  |
 | ts    | ts    | String | 增量接口数据时间戳 | 
 | full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
 | err_code | err_code |string| 错误码 (接口报错时返回) | 
@@ -1479,7 +1479,7 @@ API Key 权限：读取
 | dd    | deposit_desc | string | 充币文案 | 
 | svd   | suspend_visible_desc | string |  挂起时资产文案 | 
 | tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax | 
-|       | \</data\> |  |    |
+| \</data\> |  |    |  |
 | ts    | ts    | String | 增量接口数据时间戳 | 
 | full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
 | err_code | err_code |string| 错误码 (接口报错时返回) | 
@@ -1556,39 +1556,39 @@ API Key 权限：读取
 | data  | \<data\> | Object |    |
 | name  | name | string| 币种名称
 | dn    | display-name |string| 币种显示名称
-| vat   | visible-assets-timestamp | long | 资产可见开始时间
-| det   | deposit-enable-timestamp | long | 充币开启时间
-| wet   | withdraw-enable-timestamp| long | 提币开放时间
-| wp    | withdraw-precision| int | 提币精度
-| ct    | currency-type | string | 手续费类型，eth是固定手续费，btc是区间手续费
-| cp    | currency-partition| string|  支持的分区。 INVALID：无效分区，all：PRO and HADAX ， pro：PRO ， hadax：HADAX 
-| ss    | support-sites| array | 支持的站点。unknown：未知类型，spot：现货，otc：OTC法币站，futures：币本位交割合约，minepool：矿池 （mulan不支持），institution：机构，swap：币本位永续合约，asset：资管（mulan不支持划转，仅用于对账），cfd：日本站cfd合约，chat：火信(IM)，option：合约期权，linear-swap：U本位合约，custody：香港站资金账户，turbine：涡轮，margin：逐仓杠杆，super-margin：全仓杠杆
-| oe    | otc-enable| integer|  0-没有开启， 1-开启
-| dma   | deposit-min-amount | string | 最小充币额度
-| wma   | withdraw-min-amount|string | 最小提币额度
-| sp    | show-precision| string | 显示精度
-| w     | weight |string | 权重
-| qc    | quote-currency | boolean | 是否是计价货币
-| state | state | string | 币种状态类型。  unkown：未知，not-online：未上线 ，online：已上线 ，offline：已下线
-| v     | visible | boolean | 是否可见
-| whe   | white-enabled |  boolean |  用户是否属于币种白名单
-| cd    | country-disabled | boolean |  用户所属国家是否在币种黑名单中
-| de    | deposit-enabled | boolean | 充值是否开启 
-| we    | withdraw-enabled | boolean | 提币是否开启
-| cawt  | currency-addr-with-tag |  boolean |  币种地址是否带tag
-| cao   | currency-addr-oneoff | boolean | 币种地址是否是一次性地址
-| fc    | fast-confirms | int |  快速上账区块确认次数
-| sc    | safe-confirms |  int |  安全上账区块确认次数
-| swd   | suspend-withdraw-desc | string | 挂起时提币文案
-| wd    | withdraw-desc | string | 提币文案
-| sdd   | suspend-deposit-desc | string | 挂起时充币文案
-| dd    | deposit-desc | string | 充币文案
-| svd   | suspend-visible-desc| string |  挂起时资产文案
-| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
+| vat   | visible-assets-timestamp | long | 资产可见开始时间 |
+| det   | deposit-enable-timestamp | long | 充币开启时间 |
+| wet   | withdraw-enable-timestamp| long | 提币开放时间 |
+| wp    | withdraw-precision| int | 提币精度 |
+| ct    | currency-type | string | 手续费类型，eth是固定手续费，btc是区间手续费 |
+| cp    | currency-partition| string|  支持的分区。 INVALID：无效分区，all：PRO and HADAX ， pro：PRO ， hadax：HADAX |
+| ss    | support-sites| array | 支持的站点。unknown：未知类型，spot：现货，otc：OTC法币站，futures：币本位交割合约，minepool：矿池 （mulan不支持），institution：机构，swap：币本位永续合约，asset：资管（mulan不支持划转，仅用于对账），cfd：日本站cfd合约，chat：火信(IM)，option：合约期权，linear-swap：U本位合约，custody：香港站资金账户，turbine：涡轮，margin：逐仓杠杆，super-margin：全仓杠杆 |
+| oe    | otc-enable| integer|  0-没有开启， 1-开启 |
+| dma   | deposit-min-amount | string | 最小充币额度 |
+| wma   | withdraw-min-amount|string | 最小提币额度 |
+| sp    | show-precision| string | 显示精度 |
+| w     | weight |string | 权重 |
+| qc    | quote-currency | boolean | 是否是计价货币 |
+| state | state | string | 币种状态类型。  unkown：未知，not-online：未上线 ，online：已上线 ，offline：已下线 |
+| v     | visible | boolean | 是否可见 |
+| whe   | white-enabled |  boolean |  用户是否属于币种白名单 |
+| cd    | country-disabled | boolean |  用户所属国家是否在币种黑名单中 |
+| de    | deposit-enabled | boolean | 充值是否开启 |
+| we    | withdraw-enabled | boolean | 提币是否开启 |
+| cawt  | currency-addr-with-tag |  boolean |  币种地址是否带tag |
+| cao   | currency-addr-oneoff | boolean | 币种地址是否是一次性地址 |
+| fc    | fast-confirms | int |  快速上账区块确认次数 |
+| sc    | safe-confirms |  int |  安全上账区块确认次数 |
+| swd   | suspend-withdraw-desc | string | 挂起时提币文案 |
+| wd    | withdraw-desc | string | 提币文案 |
+| sdd   | suspend-deposit-desc | string | 挂起时充币文案 |
+| dd    | deposit-desc | string | 充币文案 |
+| svd   | suspend-visible-desc| string |  挂起时资产文案 |
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax |
 | fn    | full-name | string | 币种全称 | | |
 | bc    | block-chains |  | 
 | iqc   | is-quote-currency | |
-|       | \</data\> |  |    |
+| \</data\> |  |    |  |
 | ts    | ts    | String | 增量接口数据时间戳 | 
 | full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
 | err-code| err-code |string| 错误码 (接口报错时返回) | 
@@ -1656,40 +1656,40 @@ API Key 权限：读取
 |------|-----|-----|-----|
 | status | status | string| 返回状态 | 
 | data  | \<data\> | Object |    |
-| symbol| symbol | string | 交易对（外）
-| sn    | symbol-name | string | 交易对显示名称
-| bc    | base-currency | string | 基础币种
-| qc    | quote-currency | string | 计价币种
-| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制）
-| ve    | visible-enabled | boolean | 是否可见
-| we    | white-enabled | boolean | 是否白名单
-| dl    | delist | boolean | 是否去除
-| cd    | country-disabled | boolean | 是否在国家黑名单
-| te    | trade-enabled | boolean | 是否可交易
-| ce    | cancel-enabled | boolean | 是否可撤单
-| tet   | trade-enable-timestamp | long | 可交易时间
-| toa   | trade-open-at | long | 交易开始时间
-| tca   | trade-close-at | long | 交易结束时间
-| voa   | visible-open-at | long | 可见开始时间
-| vca   | visible-close-at | long | 可见结束时间
-| sp    | symbol-partition | string | 交易对分区
-| tm    | trade-market | string | 交易对分区
-| w     | weight | int | 排序权重
-| ttp   | trade-total-precision | decimal(10,6) | 交易总精度
-| tap   | trade-amount-precision | decimal(10,6) | 交易数量精度
-| tpp   | trade-price-precision | decimal(10,6) | 交易价格精度
-| fp    | fee-precision | decimal(10,6) | 费用精度
-| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
+| symbol| symbol | string | 交易对（外） |
+| sn    | symbol-name | string | 交易对显示名称 |
+| bc    | base-currency | string | 基础币种 |
+| qc    | quote-currency | string | 计价币种 |
+| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制） |
+| ve    | visible-enabled | boolean | 是否可见 |
+| we    | white-enabled | boolean | 是否白名单 |
+| dl    | delist | boolean | 是否去除 |
+| cd    | country-disabled | boolean | 是否在国家黑名单 |
+| te    | trade-enabled | boolean | 是否可交易 |
+| ce    | cancel-enabled | boolean | 是否可撤单 |
+| tet   | trade-enable-timestamp | long | 可交易时间 |
+| toa   | trade-open-at | long | 交易开始时间 |
+| tca   | trade-close-at | long | 交易结束时间 |
+| voa   | visible-open-at | long | 可见开始时间 |
+| vca   | visible-close-at | long | 可见结束时间 |
+| sp    | symbol-partition | string | 交易对分区 |
+| tm    | trade-market | string | 交易对分区 |
+| w     | weight | int | 排序权重 |
+| ttp   | trade-total-precision | decimal(10,6) | 交易总精度 |
+| tap   | trade-amount-precision | decimal(10,6) | 交易数量精度 |
+| tpp   | trade-price-precision | decimal(10,6) | 交易价格精度 |
+| fp    | fee-precision | decimal(10,6) | 费用精度 |
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax |
 | d     | direction | | 
-| bcdn  | base_currency_display_name | string | 基础币种显示名称
-| qcdn  | quote_currency_display_name | string | 计价币种显示名称
-| elr   |	etp_leverage_ratio | string | ETP交易对杠杆倍数
-| castate   | ca state | string | 非必须. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2" 
-| ca1oa   | ca1 open at	 | long | 非必须. 集合竞价第1阶段开始时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
-| ca1ca   | ca1 close at	 | long | 非必须. 集合竞价第1阶段结束时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
-| ca2oa	   | ca2 open at | long | 非必须. 集合竞价第2阶段开始时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
-| ca2ca	   | ca2 close at | long | 非必须. 集合竞价第2阶段结束时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
-|       | \</data\> |  |    |
+| bcdn  | base_currency_display_name | string | 基础币种显示名称 |
+| qcdn  | quote_currency_display_name | string | 计价币种显示名称 |
+| elr   |	etp_leverage_ratio | string | ETP交易对杠杆倍数 |
+| castate   | ca state | string | 非必须. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2"  |
+| ca1oa   | ca1 open at	 | long | 非必须. 集合竞价第1阶段开始时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 |
+| ca1ca   | ca1 close at	 | long | 非必须. 集合竞价第1阶段结束时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 |
+| ca2oa	   | ca2 open at | long | 非必须. 集合竞价第2阶段开始时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 |
+| ca2ca	   | ca2 close at | long | 非必须. 集合竞价第2阶段结束时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 |
+| \</data\> |  |    |  |
 | ts    | ts    | String | 增量接口数据时间戳 | 
 | full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
 | err-code | err-code |string| 错误码 (接口报错时返回) | 
@@ -1753,38 +1753,38 @@ API Key 权限：读取
 |------|-----|-----|-----|
 | status | status | string| 返回状态 | 
 | data  | \<data\> | Object |    |
-| symbol | symbol | string | 交易对（外）
-| bc    | base-currency | string | 基础币种
-| qc    | quote-currency | string | 计价币种
-| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制）
-| sp    | symbol-partition | string | 交易对分区
-| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
-| lr    | leverage_ratio | decimal | 支持逐仓杠杆的交易对，对应的倍数。Global提供
-| smlr  | super_margin_leverage_ratio | decimal | 支持全仓杠杆的交易对，对应的倍数。Global提供
-| pp    | price-precision | integer | 交易对价格精度
-| ap    | amount-precision | integer | 交易对数量精度
-| vp    | value-precision | integer | 金额精度
-| minoa | min-order-amt | decimal | 最小下单梳理
-| maxoa | max-order-amt | decimal | 最大下单数量
-| minov | min-order-value | decimal | 最小下单金额
-| lominoa | limit-order-min-order-amt | decimal | 现价买最小订单数量
-| lomaxoa | limit-order-max-order-amt | decimal | 现价买最大订单数量
-| lomaxba | limit-order-max-buy-amt | decimal | 现价买最大可买数量
-| lomaxsa | limit-order-max-sell-amt | decimal | 现价买最大可买数量
-| smminoa | sell-market-min-order-amt | decimal | 市价卖最小订单数量
-| smmaxoa | sell-market-max-order-amt | decimal | 市价卖最大订单数量
-| bmmaxov | buy-market-max-order-value | decimal | 市价买最大金额
-| at    | api-trading | string | 是否允许api交易
-| u     | underlying | string | ETP：标的
+| symbol | symbol | string | 交易对（外） |
+| bc    | base-currency | string | 基础币种 |
+| qc    | quote-currency | string | 计价币种 |
+| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制） |
+| sp    | symbol-partition | string | 交易对分区 |
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax |
+| lr    | leverage_ratio | decimal | 支持逐仓杠杆的交易对，对应的倍数。Global提供 |
+| smlr  | super_margin_leverage_ratio | decimal | 支持全仓杠杆的交易对，对应的倍数。Global提供 |
+| pp    | price-precision | integer | 交易对价格精度 |
+| ap    | amount-precision | integer | 交易对数量精度 |
+| vp    | value-precision | integer | 金额精度 |
+| minoa | min-order-amt | decimal | 最小下单梳理 |
+| maxoa | max-order-amt | decimal | 最大下单数量 |
+| minov | min-order-value | decimal | 最小下单金额 |
+| lominoa | limit-order-min-order-amt | decimal | 现价买最小订单数量 |
+| lomaxoa | limit-order-max-order-amt | decimal | 现价买最大订单数量 |
+| lomaxba | limit-order-max-buy-amt | decimal | 现价买最大可买数量 |
+| lomaxsa | limit-order-max-sell-amt | decimal | 现价买最大可买数量 |
+| smminoa | sell-market-min-order-amt | decimal | 市价卖最小订单数量 |
+| smmaxoa | sell-market-max-order-amt | decimal | 市价卖最大订单数量 |
+| bmmaxov | buy-market-max-order-value | decimal | 市价买最大金额 |
+| at    | api-trading | string | 是否允许api交易 |
+| u     | underlying | string | ETP：标的 |
 | mfr   | mgmt-fee-rate | decimal | 
-| ct    | charge-time | string | 持仓管理费收取时间 (unix time in millisecond, 仅对杠杆ETP币对有效
-| rt    | rebal-time | string | 每日调仓时间 (unix time in millisecond, 仅对杠杆ETP币对有效)
-| rthr  | rebal-threshold | decimal | 临时调仓阈值 (实际杠杆率，仅对杠杆ETP币对有效
-| in    | init-nav | decimal | ETP：初始净值
-| maxov | max-order-value | decimal | 市价单最大下单金额	
-| flr   | funding-leverage-ratio | decimal | C2C杠杆倍数	
-| castate | ca state | string | 非必需. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2"
-|       | \</data\> |  |    |
+| ct    | charge-time | string | 持仓管理费收取时间 (unix time in millisecond, 仅对杠杆ETP币对有效 |
+| rt    | rebal-time | string | 每日调仓时间 (unix time in millisecond, 仅对杠杆ETP币对有效) |
+| rthr  | rebal-threshold | decimal | 临时调仓阈值 (实际杠杆率，仅对杠杆ETP币对有效 |
+| in    | init-nav | decimal | ETP：初始净值 |
+| maxov | max-order-value | decimal | 市价单最大下单金额	 |
+| flr   | funding-leverage-ratio | decimal | C2C杠杆倍数	 |
+| castate | ca state | string | 非必需. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2" |
+| \</data\> |  |    |  |
 | ts    | ts    | String | 增量接口数据时间戳 | 
 | full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
 | err-code| err-code |string| 错误码 (接口报错时返回) | 
@@ -1799,8 +1799,8 @@ API Key 权限：读取
 ### 请求参数
 | 参数名称 | 数据类型  | 是否必填 | 说明 |
 |-----|-----|-----|----- |
-| show-desc	| string | false | 全量列表时文案参数, 0:无文案 1:全部文案 2:暂停充提和换链文案
-| currency	| string | false | 币种
+| show-desc	| string | false | 全量列表时文案参数, 0:无文案 1:全部文案 2:暂停充提和换链文案 |
+| currency	| string | false | 币种 |
 | ts | long | false | 增量时间戳 |
 
 #### 备注
@@ -1854,39 +1854,39 @@ API Key 权限：读取
 |------|-----|-----|-----|
 | status | status | string| 返回状态 | 
 | data  | \<data\> | Object |    |
-| adt   | addr-deposit-tag | boolean | 充值地址是否有tag
-| ac    | address-chain | string | 地址复用哪个链，比如ERC20各链都使用eth地址
-| ao    | addr-oneoff | boolean | 是否一次性地址
-| awt   | addr-with-tag | boolean | 链上地址是否支持tag
-| chain | chain | string | 链名
-| ct    | chain-type | string | 链类型 plain普通 live多链有效 old换链中老链 new换链中新链 legal法币通道 tooold换链已结束老链
-| code  | code | string | 已废弃，等同于链名chain
-| currency | currency | string | 所属币种
-| deposit-desc | deposit-desc | string | 充值描述文案
-| de    | deposit-enable | boolean | 是否可充值
-| dma   | deposit-min-amount | string | 充值上账最小金额，小于此金额会：1.小额累计超过deposit-min-amount再上账 2. 小额不累计，永不上账
-| deposit-tips-desc | deposit-tips-desc | string | 充值描述信息tips
-| dn    | display-name | string | 链显示名，一般大写
-| fc    | fast-confirms | integer | 充值快速上账次数，当前交易所在链节点的高度距离链尾距离长度大于此数时，充提通知清算给用户上账，此充值订单视为不安全充值，在提币和账户划转时可用金额需排除此订单等价金额
-| ft    | fee-type | string | 手续费类型 eth btc husd 可能是指链上手续费类型，具体含义请前端和产品解释 DW程序未使用此参数
-| default | is-default | integer | 是否默认链
-| replace-chain-info-desc | replace-chain-info-desc | string | 换链描述信息
-| replace-chain-notification-desc | replace-chain-notification-desc | string | 换链提示信息
-| replace-chain-popup-desc | replace-chain-popup-desc | string | 换链弹窗信息
-| sc    | safe-confirms | integer | 充值安全上账次数，当前交易所在链节点的高度距离链尾距离长度大于此数时，资管DW标记此订单为安全充值，在提币和账户划转时视为可用金额
-| sda   | suspend-deposit-announcement | string | 暂停充值公告信息
-| suspend-deposit-desc | suspend-deposit-desc | string | 暂停充值描述信息
-| swa   | suspend-withdraw-announcement | string | 暂停提币公告信息
-| suspend-withdraw-desc | suspend-withdraw-desc | string | 暂停提币描述信息
-| v     | visible | boolean | 是否可见
-| withdraw-desc | withdraw-desc | string | 提币描述文案
-| we    | withdraw-enable | boolean | 是否可提币
-| wma   | withdraw-min-amount | string | 提币最小金额，小于此金额拒绝提币
-| wp    | withdraw-precision | integer | 提币数值精度，金额大于此精度拒绝提币
+| adt   | addr-deposit-tag | boolean | 充值地址是否有tag |
+| ac    | address-chain | string | 地址复用哪个链，比如ERC20各链都使用eth地址 |
+| ao    | addr-oneoff | boolean | 是否一次性地址 |
+| awt   | addr-with-tag | boolean | 链上地址是否支持tag |
+| chain | chain | string | 链名 |
+| ct    | chain-type | string | 链类型 plain普通 live多链有效 old换链中老链 new换链中新链 legal法币通道 tooold换链已结束老链 |
+| code  | code | string | 已废弃，等同于链名chain |
+| currency | currency | string | 所属币种 |
+| deposit-desc | deposit-desc | string | 充值描述文案 |
+| de    | deposit-enable | boolean | 是否可充值 |
+| dma   | deposit-min-amount | string | 充值上账最小金额，小于此金额会：1.小额累计超过deposit-min-amount再上账 2. 小额不累计，永不上账 |
+| deposit-tips-desc | deposit-tips-desc | string | 充值描述信息tips |
+| dn    | display-name | string | 链显示名，一般大写 |
+| fc    | fast-confirms | integer | 充值快速上账次数，当前交易所在链节点的高度距离链尾距离长度大于此数时，充提通知清算给用户上账，此充值订单视为不安全充值，在提币和账户划转时可用金额需排除此订单等价金额 |
+| ft    | fee-type | string | 手续费类型 eth btc husd 可能是指链上手续费类型，具体含义请前端和产品解释 DW程序未使用此参数 |
+| default | is-default | integer | 是否默认链 |
+| replace-chain-info-desc | replace-chain-info-desc | string | 换链描述信息 |
+| replace-chain-notification-desc | replace-chain-notification-desc | string | 换链提示信息 |
+| replace-chain-popup-desc | replace-chain-popup-desc | string | 换链弹窗信息 |
+| sc    | safe-confirms | integer | 充值安全上账次数，当前交易所在链节点的高度距离链尾距离长度大于此数时，资管DW标记此订单为安全充值，在提币和账户划转时视为可用金额 |
+| sda   | suspend-deposit-announcement | string | 暂停充值公告信息 |
+| suspend-deposit-desc | suspend-deposit-desc | string | 暂停充值描述信息 |
+| swa   | suspend-withdraw-announcement | string | 暂停提币公告信息 |
+| suspend-withdraw-desc | suspend-withdraw-desc | string | 暂停提币描述信息 |
+| v     | visible | boolean | 是否可见 |
+| withdraw-desc | withdraw-desc | string | 提币描述文案 |
+| we    | withdraw-enable | boolean | 是否可提币 |
+| wma   | withdraw-min-amount | string | 提币最小金额，小于此金额拒绝提币 |
+| wp    | withdraw-precision | integer | 提币数值精度，金额大于此精度拒绝提币 |
 | fn    | full-name | string | 
-| withdraw-tips-desc | withdraw-tips-desc | string | 提币弹窗提示
-| suspend-visible-desc | suspend-visible-desc | string | 暂停可见文案
-|       | \</data\> |  |    |
+| withdraw-tips-desc | withdraw-tips-desc | string | 提币弹窗提示 |
+| suspend-visible-desc | suspend-visible-desc | string | 暂停可见文案 |
+| \</data\> |  |    |  |
 | ts    | ts    | String | 增量接口数据时间戳 | 
 | full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
 | err-code| err-code |string| 错误码 (接口报错时返回) | 
