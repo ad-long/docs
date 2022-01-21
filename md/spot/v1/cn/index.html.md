@@ -26,6 +26,11 @@ table th {
 
 | 生效时间<br>(UTC +8) | 接口     | 变化      | 摘要         |
 | ---------- | --------- | --------- | --------------- |
+| 2022.02.21 | `GET v1/common/symbols`,<br>`GET v1/common/currencys` | 优化 | 新增返回参数: ca-state 集合竞价当前状态 |
+| 2022.02.21 | `GET /v2/settings/common/symbols`,<br>`GET /v1/settings/common/currencys` | 新增 | 新增接口 |
+| 2022.02.21 | `GET /v1/settings/common/symbols`,<br>`GET /v1/settings/common/market-symbols` | 新增 | 新增接口 |
+| 2022.02.21 | `GET /v1/settings/common/chains` | 新增 | 新增接口 |
+| 2022.01.08 | `POST /v1/order/batch-orders`,<br>`POST /v1/order/orders/place` | 优化 | 新增请求参数"self-match-prevent" |
 | 2021.11.30 | `POST /v1/dw/withdraw/api/create` | 优化 | 新增请求参数"client-order-id" |
 | 2021.11.30 | `GET /v1/query/withdraw/client-order-id` | 新增 | 通过clientOrderId查询提币订单 |
 | 2021.8.19 | `accounts.update#${mode}` | 优化 | 增加“账户变更的序号”参数“seqNum” |
@@ -1139,7 +1144,7 @@ curl "https://api.huobi.pro/v2/market-status"
 |	affectedSymbols	|	string	|	FALSE	|	市场暂停影响的交易对列表，以逗号分隔，如影响所有交易对返回"all"，仅对marketStatus=halted或cancel-only有效	|
 |	\</data\>	|	 	|	 	|		|
 
-## 获取所有交易对
+## 获取所有交易对(V1)
 
 此接口返回所有火币全球站支持的交易对。
 
@@ -1239,10 +1244,110 @@ curl "https://api.huobi.pro/v1/common/symbols"
 | rebal-threshold            | false    | float    | 临时调仓阈值 (以实际杠杆率计，仅对杠杆ETP交易对有效)         |
 | init-nav                   | false    | float    | 初始净值（仅对杠杆ETP交易对有效）                            |
 | api-trading                | true     | string   | API交易使能标记（有效值：enabled, disabled）                 |
+| ca-state                   | false     | string   | 集合竞价当前状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2"  |
 | \</data\>             |      |    |                                         |
 
+## 获取所有交易对(V2)
 
-## 获取所有币种
+API Key 权限：读取
+
+ - GET `/v2/settings/common/symbols`
+
+### 请求参数
+| 参数名称 | 数据类型  | 是否必填 | 说明 |
+|-----|-----|-----|----- |
+| ts | long | false | 增量时间戳 |
+
+#### 备注
+ - 传 ts 后查询出来的数据，是这个时间到当前时间这个接口更新的数据。如果没有更新查询出来的data为"[]"。
+
+> response
+
+```json
+{
+    "status":"ok",
+    "data":[
+        {
+            "tags": "",
+            "state": "online",
+            "wr": "1.5",
+            "sc": "ethusdt",
+            "p": [
+                {
+                    "id": 9,
+                    "name": "Grayscale",
+                    "weight": 91
+                }
+            ],
+            "bcdn": "ETH",
+            "qcdn": "USDT",
+            "elr": null,
+            "tpp": 2,
+            "tap": 4,
+            "fp": 8,
+            "smlr": null,
+            "flr": null,
+            "whe": false,
+            "cd": false,
+            "te": true,
+            "sp": "main",
+            "d": null,
+            "bc": "eth",
+            "qc": "usdt",
+            "toa": 1514779200000,
+            "ttp": 8,
+            "w": 999400000,
+            "lr": 5,
+            "dn": "ETH/USDT"
+        }
+    ],
+    "ts":"1641870869718",
+    "full":1
+}
+```
+
+### 响应参数
+| 参数名称 | 全名 | 数据类型 | 说明 | 
+|------|-----|-----|-----|
+| status | status | string| 返回状态 | 
+| data  | \<data\> | Object |    |
+| sc    | symbol_code | string | 交易对（外）
+| dn    | display_name | string | 交易对显示名称
+| bc    | base_currency | string | 基础币种
+| bcdn  | base_currency_display_name | string | 基础币种显示名称
+| qc    | quote_currency | string | 计价币种
+| qcdn  | quote_currency_display_name | string | 计价币种显示名称
+| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制）
+| whe   | white_enabled | boolean | 是否白名单
+| cd    | country_disabled | boolean | 是否在国家黑名单
+| te    | trade_enabled | boolean | 是否可交易 |
+| toa   | trade_open_at | long | 交易开始时间
+| sp    | symbol_partition | string | 交易对分区
+| w     | weight | int | 排序权重
+| ttp   | trade_total_precision | decimal(10,6) | 交易总精度
+| tap   | trade_amount_precision | decimal(10,6) | 交易数量精度
+| tpp   | trade_price_precision | decimal(10,6) | 交易价格精度
+| fp    | fee_precision | decimal(10,6) | 费用精度
+| suspend_desc | suspend_desc | string | 暂停文案
+| transfer_board_desc | transfer_board_desc | string | 转板文案
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
+| lr    | leverage_ratio | decimal | 杠杆率，如：3.5，如果交易对不支持杠杆，则为null
+| smlr  | super_margin_leverage_ratio | decimal | 全仓杠杆率，如：3，如果交易对不支持全仓杠杆，则为null
+| flr   | funding_leverage_ratio | String | C2C杠杆率，如："3"，如果交易对不支持C2C，则为null
+| wr    | withdraw_risk | string | 提币风险率，如：3，如果交易对不支持全仓杠杆，则为null
+| d     | direction | int	| 多空方向：1多2空
+| elr   | etp_leverage_ratio | string | ETP交易对杠杆倍数 	
+| p     | partitions | Object | 
+| castate   | ca state | string | 非必须. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2" 
+| ca1oa   | ca1 open at	 | long | 非必须. 配置了配置集合竞价的交易对才有改信息，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数 
+| ca2oa	   | ca2 open at | long | 非必须. 配置了配置集合竞价的交易对才有改信息，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数  
+|       | \</data\> |  |    |
+| ts    | ts    | String | 增量接口数据时间戳 | 
+| full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
+| err_code | err_code |string| 错误码 (接口报错时返回) | 
+| err_msg | err_msg | string | 错误信息 (接口报错时返回) | 
+
+## 获取所有币种(V1)
 
 此接口返回所有火币全球站支持的币种。
 
@@ -1288,6 +1393,504 @@ curl "https://api.huobi.pro/v1/common/currencys"
 | status         | true     | string   | 接口请求返回的结果（"ok","error"）               |
 | data         | true     | array   |  每一个字符串代表一个支持的币种              |
 
+
+## 获取所有币种(V2)
+
+API Key 权限：读取
+
+ - GET `/v2/settings/common/currencies`
+
+### 请求参数
+| 参数名称 | 数据类型  | 是否必填 | 描述 |
+|-----|-----|-----|----- |
+| ts | long | false | 增量时间戳 |
+
+#### 备注
+ - 传 ts 后查询出来的数据，是这个时间到当前时间这个接口更新的数据。如果没有更新查询出来的data为"[]"。
+
+> response
+
+```json
+{
+    "status":"ok",
+    "data":[
+        {
+            "tags":"",
+            "cawt":false,
+            "fc":12,
+            "sc":12,
+            "dma":"1",
+            "wma":"10",
+            "ft":"eth",
+            "whe":false,
+            "cd":false,
+            "qc":true,
+            "sp":"8",
+            "wp":6,
+            "fn":"Tether USDT",
+            "at":1,
+            "cc":"usdt",
+            "v":true,
+            "de":true,
+            "wed":true,
+            "w":10006,
+            "state":"online",
+            "dn":"USDT",
+            "dd":"Please don’t deposit any other digital assets except USDT to the above address. Otherwise, you may lose your assets permanently. !>_<!Depositing to the above address requires confirmations of the entire network. It will arrive after 12 confirmations, and it will be available to withdraw after 12 confirmations. !>_<!Minimum deposit amount: 1 USDT. Any deposits less than the minimum will not be credited or refunded.!>_<!Your deposit address won’t change often. If there are any changes, we will notify you via announcement or email.!>_<!Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.",
+            "svd":null,
+            "swd":null,
+            "sdd":null,
+            "wd":"Minimum withdrawal amount: 10 USDT (ERC20). !>_<!To ensure the safety of your funds, your withdrawal request will be manually reviewed if your security strategy or password is changed. Please wait for phone calls or emails from our staff.!>_<!Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked."
+        }
+    ],
+    "ts":"1641869938436",
+    "full":1
+}
+```
+
+### 响应参数
+| 参数名称 | 全名 | 数据类型 | 说明 | 
+|------|-----|-----|-----|
+| status | status | string| 返回状态 | 
+| data  | \<data\> | Object |    |
+| cc    | currency_code | string| 币种 |  
+| dn    | display_name |string| 币种显示名称 | 
+| fn    | full-name | string | 币种全称 | 
+| at    | asset_type | int | 资产类型，1 虚拟币 2 法币 | 
+| wp    | withdraw_precision | int | 提币精度 |  
+| ft    | fee_type | string | 手续费类型，eth:固定手续费，btc:区间手续费 husd:按照比例收取手续费 |  
+| dma   | deposit_min_amount | string | 最小充币额度 |  
+| wma   | withdraw_min_amount | string | 最小提币额度 |  
+| sp    | show_precision | string | 显示精度 |  
+| w     | weight | string | 权重 | 
+| qc    | quote_currency | boolean | 是否是计价货币 | 
+| state | state | string | 币种状态。 unkown：未知，not-online：未上线 ，online：已上线 ，offline：已下线 | 
+| v     | visible | boolean | 是否可见--下线币种但有资产的用户可见 | 
+| whe   | white_enabled |  boolean |  用户是否属于币种白名单 | 
+| cd    | country_disabled | boolean |  用户所属国家是否在币种黑名单中--在黑名单但有资产是否可见 | 
+| de    | deposit_enabled | boolean | 充值是否开启  | 
+| wed   | withdraw_enabled | boolean | 提币是否开启 | 
+| cawt  | currency_addr_with_tag |  boolean |  币种地址是否带tag | 
+| fc    | fast_confirms | int |  快速上账区块确认次数 |  
+| sc    | safe_confirms |  int |  安全上账区块确认次数 |  
+| swd   | suspend_withdraw_desc | string | 挂起时提币文案 | 
+| wd    | withdraw_desc | string | 提币文案 |  
+| sdd   | suspend_deposit_desc | string | 挂起时充币文案 | 
+| dd    | deposit_desc | string | 充币文案 | 
+| svd   | suspend_visible_desc | string |  挂起时资产文案 | 
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax | 
+|       | \</data\> |  |    |
+| ts    | ts    | String | 增量接口数据时间戳 | 
+| full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
+| err_code | err_code |string| 错误码 (接口报错时返回) | 
+| err_msg | err_msg | string | 错误信息 (接口报错时返回) | 
+
+
+## 获取币种配置
+
+API Key 权限：读取
+
+ - GET `/v1/settings/common/currencys`
+
+### 请求参数
+| 参数名称 | 数据类型  | 是否必填 | 说明 |
+|-----|-----|-----|----- |
+| ts | long | false | 增量时间戳 |
+
+#### 备注
+ - 传 ts 后查询出来的数据，是这个时间到当前时间这个接口更新的数据。如果没有更新查询出来的data为"[]"。
+
+> response
+
+```json
+{
+    "status":"ok",
+    "data":[
+        {
+            "tags":"",
+            "name":"usdt",
+            "state":"online",
+            "cawt":false,
+            "fc":12,
+            "sc":12,
+            "sp":"8",
+            "iqc":true,
+            "ct":"eth",
+            "de":true,
+            "we":true,
+            "cd":false,
+            "oe":1,
+            "v":true,
+            "whe":false,
+            "wet":1609430400000,
+            "det":1609430400000,
+            "cp":"all",
+            "vat":1508839200000,
+            "ss":[
+                "INSTITUTION",
+                "MINEPOOL",
+                "OTC"
+            ],
+            "fn":"Tether USDT",
+            "wp":6,
+            "w":10006,
+            "dma":"1",
+            "wma":"10",
+            "dn":"USDT",
+            "dd":"Please don’t deposit any other digital assets except USDT to the above address. Otherwise, you may lose your assets permanently. !>_<!Depositing to the above address requires confirmations of the entire network. It will arrive after 12 confirmations, and it will be available to withdraw after 12 confirmations. !>_<!Minimum deposit amount: 1 USDT. Any deposits less than the minimum will not be credited or refunded.!>_<!Your deposit address won’t change often. If there are any changes, we will notify you via announcement or email.!>_<!Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.",
+            "svd":null,
+            "swd":null,
+            "sdd":null,
+            "wd":"Minimum withdrawal amount: 10 USDT (ERC20). !>_<!To ensure the safety of your funds, your withdrawal request will be manually reviewed if your security strategy or password is changed. Please wait for phone calls or emails from our staff.!>_<!Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked."
+        }
+    ],
+    "ts":"1641872721891",
+    "full":1
+}
+```
+
+### 响应参数
+| 参数名称 | 全名 | 数据类型 | 说明 | 
+|------|-----|-----|-----|
+| status | status | string| 返回状态 | 
+| data  | \<data\> | Object |    |
+| name  | name | string| 币种名称
+| dn    | display-name |string| 币种显示名称
+| vat   | visible-assets-timestamp | long | 资产可见开始时间
+| det   | deposit-enable-timestamp | long | 充币开启时间
+| wet   | withdraw-enable-timestamp| long | 提币开放时间
+| wp    | withdraw-precision| int | 提币精度
+| ct    | currency-type | string | 手续费类型，eth是固定手续费，btc是区间手续费
+| cp    | currency-partition| string|  支持的分区。 INVALID：无效分区，all：PRO and HADAX ， pro：PRO ， hadax：HADAX 
+| ss    | support-sites| array | 支持的站点。unknown：未知类型，spot：现货，otc：OTC法币站，futures：币本位交割合约，minepool：矿池 （mulan不支持），institution：机构，swap：币本位永续合约，asset：资管（mulan不支持划转，仅用于对账），cfd：日本站cfd合约，chat：火信(IM)，option：合约期权，linear-swap：U本位合约，custody：香港站资金账户，turbine：涡轮，margin：逐仓杠杆，super-margin：全仓杠杆
+| oe    | otc-enable| integer|  0-没有开启， 1-开启
+| dma   | deposit-min-amount | string | 最小充币额度
+| wma   | withdraw-min-amount|string | 最小提币额度
+| sp    | show-precision| string | 显示精度
+| w     | weight |string | 权重
+| qc    | quote-currency | boolean | 是否是计价货币
+| state | state | string | 币种状态类型。  unkown：未知，not-online：未上线 ，online：已上线 ，offline：已下线
+| v     | visible | boolean | 是否可见
+| whe   | white-enabled |  boolean |  用户是否属于币种白名单
+| cd    | country-disabled | boolean |  用户所属国家是否在币种黑名单中
+| de    | deposit-enabled | boolean | 充值是否开启 
+| we    | withdraw-enabled | boolean | 提币是否开启
+| cawt  | currency-addr-with-tag |  boolean |  币种地址是否带tag
+| cao   | currency-addr-oneoff | boolean | 币种地址是否是一次性地址
+| fc    | fast-confirms | int |  快速上账区块确认次数
+| sc    | safe-confirms |  int |  安全上账区块确认次数
+| swd   | suspend-withdraw-desc | string | 挂起时提币文案
+| wd    | withdraw-desc | string | 提币文案
+| sdd   | suspend-deposit-desc | string | 挂起时充币文案
+| dd    | deposit-desc | string | 充币文案
+| svd   | suspend-visible-desc| string |  挂起时资产文案
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
+| fn    | full-name | string | 币种全称 | | |
+| bc    | block-chains |  | 
+| iqc   | is-quote-currency | |
+|       | \</data\> |  |    |
+| ts    | ts    | String | 增量接口数据时间戳 | 
+| full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
+| err-code| err-code |string| 错误码 (接口报错时返回) | 
+| err-msg | err-msg | string | 错误信息 (接口报错时返回) | 
+
+
+## 获取交易对配置
+
+API Key 权限：读取
+
+ - GET `/v1/settings/common/symbols`
+
+### 请求参数
+| 参数名称 | 数据类型  | 是否必填 | 说明 |
+|-----|-----|-----|----- |
+| ts | long | false | 增量时间戳 |
+
+#### 备注
+ - 传 ts 后查询出来的数据，是这个时间到当前时间这个接口更新的数据。如果没有更新查询出来的data为"[]"。
+
+> response
+
+```json
+{
+    "status":"ok",
+    "data":[
+        {
+            "symbol":"agldusdt",
+            "tags":"",
+            "state":"online",
+            "bcdn":"AGLD",
+            "qcdn":"USDT",
+            "elr":null,
+            "tm":"PRO",
+            "sn":"AGLD/USDT",
+            "ve":true,
+            "dl":false,
+            "te":true,
+            "ce":true,
+            "cd":false,
+            "tet":1630668600000,
+            "we":false,
+            "toa":1630668600000,
+            "tca":1893470400000,
+            "voa":1630666800000,
+            "vca":1893470400000,
+            "bc":"agld",
+            "qc":"usdt",
+            "sp":"innovation",
+            "d":null,
+            "tpp":4,
+            "tap":4,
+            "fp":8,
+            "w":950000000,
+            "ttp":8
+        }
+    ],
+    "ts":"1641880066563",
+    "full":1
+}
+```
+
+### 响应参数
+| 参数名称 | 全名 | 数据类型 | 说明 | 
+|------|-----|-----|-----|
+| status | status | string| 返回状态 | 
+| data  | \<data\> | Object |    |
+| symbol| symbol | string | 交易对（外）
+| sn    | symbol-name | string | 交易对显示名称
+| bc    | base-currency | string | 基础币种
+| qc    | quote-currency | string | 计价币种
+| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制）
+| ve    | visible-enabled | boolean | 是否可见
+| we    | white-enabled | boolean | 是否白名单
+| dl    | delist | boolean | 是否去除
+| cd    | country-disabled | boolean | 是否在国家黑名单
+| te    | trade-enabled | boolean | 是否可交易
+| ce    | cancel-enabled | boolean | 是否可撤单
+| tet   | trade-enable-timestamp | long | 可交易时间
+| toa   | trade-open-at | long | 交易开始时间
+| tca   | trade-close-at | long | 交易结束时间
+| voa   | visible-open-at | long | 可见开始时间
+| vca   | visible-close-at | long | 可见结束时间
+| sp    | symbol-partition | string | 交易对分区
+| tm    | trade-market | string | 交易对分区
+| w     | weight | int | 排序权重
+| ttp   | trade-total-precision | decimal(10,6) | 交易总精度
+| tap   | trade-amount-precision | decimal(10,6) | 交易数量精度
+| tpp   | trade-price-precision | decimal(10,6) | 交易价格精度
+| fp    | fee-precision | decimal(10,6) | 费用精度
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
+| d     | direction | | 
+| bcdn  | base_currency_display_name | string | 基础币种显示名称
+| qcdn  | quote_currency_display_name | string | 计价币种显示名称
+| elr   |	etp_leverage_ratio | string | ETP交易对杠杆倍数
+| castate   | ca state | string | 非必须. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2" 
+| ca1oa   | ca1 open at	 | long | 非必须. 集合竞价第1阶段开始时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
+| ca1ca   | ca1 close at	 | long | 非必须. 集合竞价第1阶段结束时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
+| ca2oa	   | ca2 open at | long | 非必须. 集合竞价第2阶段开始时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
+| ca2ca	   | ca2 close at | long | 非必须. 集合竞价第2阶段结束时间，自UTC 1970年1月1日0时0分0秒0毫秒到现在的总毫秒数
+|       | \</data\> |  |    |
+| ts    | ts    | String | 增量接口数据时间戳 | 
+| full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
+| err-code | err-code |string| 错误码 (接口报错时返回) | 
+| err-msg | err-msg | string | 错误信息 (接口报错时返回) | 
+
+
+## 获取市场交易对配置
+
+API Key 权限：读取
+
+ - GET `/v1/settings/common/market-symbols`
+
+### 请求参数
+| 参数名称 | 数据类型  | 是否必填 | 说明 |
+|-----|-----|-----|----- |
+| symbols | string | false | 查询的交易对组合，不填表示所有交易对，多个交易对请使用 , 分隔 |
+| ts | long | false | 增量时间戳 |
+
+#### 备注
+ - 传 ts 后查询出来的数据，是这个时间到当前时间这个接口更新的数据。如果没有更新查询出来的data为"[]"。
+
+> response
+
+```json
+{
+    "status": "ok",
+    "data": [
+        {
+            "symbol": "btcusdt",
+            "state": "online",
+            "bc": "btc",
+            "qc": "usdt",
+            "pp": 2,
+            "ap": 6,
+            "sp": "main",
+            "vp": 8,
+            "minoa": 0.0001,
+            "maxoa": 1000,
+            "minov": 5,
+            "lominoa": 0.0001,
+            "lomaxoa": 1000,
+            "lomaxba": 1000,
+            "lomaxsa": 1000,
+            "smminoa": 0.0001,
+            "smmaxoa": 100,
+            "bmmaxov": 1000000,
+            "lr": 5,
+            "smlr": 3,
+            "flr": 3,
+            "at": "enabled",
+            "tags": "activities"
+        }
+    ],
+    "ts": "1641880897191",
+    "full": 1
+}
+```
+
+### 响应参数
+| 参数名称 | 全名 | 数据类型 | 说明 | 
+|------|-----|-----|-----|
+| status | status | string| 返回状态 | 
+| data  | \<data\> | Object |    |
+| symbol | symbol | string | 交易对（外）
+| bc    | base-currency | string | 基础币种
+| qc    | quote-currency | string | 计价币种
+| state | state | string | 交易对状态。 unknown：未知，not-online：未上线，pre-online：预上线，online：已上线，suspend：暂停，offline：已下线，transfer-board：转版，fuse：熔断（风控系统控制）
+| sp    | symbol-partition | string | 交易对分区
+| tags  | tags | string |  标签，多个标签以逗号分隔，如：st,hadax
+| lr    | leverage_ratio | decimal | 支持逐仓杠杆的交易对，对应的倍数。Global提供
+| smlr  | super_margin_leverage_ratio | decimal | 支持全仓杠杆的交易对，对应的倍数。Global提供
+| pp    | price-precision | integer | 交易对价格精度
+| ap    | amount-precision | integer | 交易对数量精度
+| vp    | value-precision | integer | 金额精度
+| minoa | min-order-amt | decimal | 最小下单梳理
+| maxoa | max-order-amt | decimal | 最大下单数量
+| minov | min-order-value | decimal | 最小下单金额
+| lominoa | limit-order-min-order-amt | decimal | 现价买最小订单数量
+| lomaxoa | limit-order-max-order-amt | decimal | 现价买最大订单数量
+| lomaxba | limit-order-max-buy-amt | decimal | 现价买最大可买数量
+| lomaxsa | limit-order-max-sell-amt | decimal | 现价买最大可买数量
+| smminoa | sell-market-min-order-amt | decimal | 市价卖最小订单数量
+| smmaxoa | sell-market-max-order-amt | decimal | 市价卖最大订单数量
+| bmmaxov | buy-market-max-order-value | decimal | 市价买最大金额
+| at    | api-trading | string | 是否允许api交易
+| u     | underlying | string | ETP：标的
+| mfr   | mgmt-fee-rate | decimal | 
+| ct    | charge-time | string | 持仓管理费收取时间 (unix time in millisecond, 仅对杠杆ETP币对有效
+| rt    | rebal-time | string | 每日调仓时间 (unix time in millisecond, 仅对杠杆ETP币对有效)
+| rthr  | rebal-threshold | decimal | 临时调仓阈值 (实际杠杆率，仅对杠杆ETP币对有效
+| in    | init-nav | decimal | ETP：初始净值
+| maxov | max-order-value | decimal | 市价单最大下单金额	
+| flr   | funding-leverage-ratio | decimal | C2C杠杆倍数	
+| castate | ca state | string | 非必需. 集合竞价的状态；当处于集合竞价的第1和第2阶段的时候，才会展示。枚举值："ca_1", "ca_2"
+|       | \</data\> |  |    |
+| ts    | ts    | String | 增量接口数据时间戳 | 
+| full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
+| err-code| err-code |string| 错误码 (接口报错时返回) | 
+| err-msg | err-msg | string | 错误信息 (接口报错时返回) | 
+
+## 查询链信息
+
+API Key 权限：读取
+
+ - GET `/v1/settings/common/chains`
+
+### 请求参数
+| 参数名称 | 数据类型  | 是否必填 | 说明 |
+|-----|-----|-----|----- |
+| show-desc	| string | false | 全量列表时文案参数, 0:无文案 1:全部文案 2:暂停充提和换链文案
+| currency	| string | false | 币种
+| ts | long | false | 增量时间戳 |
+
+#### 备注
+ - 传 ts 后查询出来的数据，是这个时间到当前时间这个接口更新的数据。如果没有更新查询出来的data为"[]"。
+
+> response
+
+```json
+{
+    "status": "ok",
+    "data": [
+        {
+            "chain": "hrc20nft",
+            "currency": "nft",
+            "code": "hrc20nft",
+            "ct": "live",
+            "ac": "eth",
+            "default": 0,
+            "dma": "160298",
+            "wma": "160298",
+            "de": true,
+            "we": true,
+            "wp": 6,
+            "ft": "eth",
+            "dn": "HECO",
+            "fn": "",
+            "awt": false,
+            "adt": false,
+            "ao": false,
+            "fc": 10,
+            "sc": 20,
+            "v": true,
+            "sda": "",
+            "swa": "",
+            "deposit-tips-desc": "Minimum deposit amount:160298\nAny deposits less than the minimum amount will not be credited or refunded.",
+            "withdraw-desc": "Minimum withdrawal amount: 160298 NFT(HECO). !>_<!To ensure the safety of your funds, your withdrawal request will be manually reviewed if your security strategy or password is changed. Please wait for phone calls or emails from our staff.!>_<!Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.",
+            "suspend-deposit-desc": "",
+            "suspend-withdraw-desc": "",
+            "replace-chain-info-desc": "",
+            "replace-chain-notification-desc": "",
+            "replace-chain-popup-desc": ""
+        }
+    ],
+    "ts": "1641880897191",
+    "full": 1
+}
+```
+
+### 响应参数
+| 参数名称 | 全名 | 数据类型 | 说明 | 
+|------|-----|-----|-----|
+| status | status | string| 返回状态 | 
+| data  | \<data\> | Object |    |
+| adt   | addr-deposit-tag | boolean | 充值地址是否有tag
+| ac    | address-chain | string | 地址复用哪个链，比如ERC20各链都使用eth地址
+| ao    | addr-oneoff | boolean | 是否一次性地址
+| awt   | addr-with-tag | boolean | 链上地址是否支持tag
+| chain | chain | string | 链名
+| ct    | chain-type | string | 链类型 plain普通 live多链有效 old换链中老链 new换链中新链 legal法币通道 tooold换链已结束老链
+| code  | code | string | 已废弃，等同于链名chain
+| currency | currency | string | 所属币种
+| deposit-desc | deposit-desc | string | 充值描述文案
+| de    | deposit-enable | boolean | 是否可充值
+| dma   | deposit-min-amount | string | 充值上账最小金额，小于此金额会：1.小额累计超过deposit-min-amount再上账 2. 小额不累计，永不上账
+| deposit-tips-desc | deposit-tips-desc | string | 充值描述信息tips
+| dn    | display-name | string | 链显示名，一般大写
+| fc    | fast-confirms | integer | 充值快速上账次数，当前交易所在链节点的高度距离链尾距离长度大于此数时，充提通知清算给用户上账，此充值订单视为不安全充值，在提币和账户划转时可用金额需排除此订单等价金额
+| ft    | fee-type | string | 手续费类型 eth btc husd 可能是指链上手续费类型，具体含义请前端和产品解释 DW程序未使用此参数
+| default | is-default | integer | 是否默认链
+| replace-chain-info-desc | replace-chain-info-desc | string | 换链描述信息
+| replace-chain-notification-desc | replace-chain-notification-desc | string | 换链提示信息
+| replace-chain-popup-desc | replace-chain-popup-desc | string | 换链弹窗信息
+| sc    | safe-confirms | integer | 充值安全上账次数，当前交易所在链节点的高度距离链尾距离长度大于此数时，资管DW标记此订单为安全充值，在提币和账户划转时视为可用金额
+| sda   | suspend-deposit-announcement | string | 暂停充值公告信息
+| suspend-deposit-desc | suspend-deposit-desc | string | 暂停充值描述信息
+| swa   | suspend-withdraw-announcement | string | 暂停提币公告信息
+| suspend-withdraw-desc | suspend-withdraw-desc | string | 暂停提币描述信息
+| v     | visible | boolean | 是否可见
+| withdraw-desc | withdraw-desc | string | 提币描述文案
+| we    | withdraw-enable | boolean | 是否可提币
+| wma   | withdraw-min-amount | string | 提币最小金额，小于此金额拒绝提币
+| wp    | withdraw-precision | integer | 提币数值精度，金额大于此精度拒绝提币
+| fn    | full-name | string | 
+| withdraw-tips-desc | withdraw-tips-desc | string | 提币弹窗提示
+| suspend-visible-desc | suspend-visible-desc | string | 暂停可见文案
+|       | \</data\> |  |    |
+| ts    | ts    | String | 增量接口数据时间戳 | 
+| full  | full | int | 增量接口数据类型标识： 0 增量， 1全量 | 
+| err-code| err-code |string| 错误码 (接口报错时返回) | 
+| err-msg | err-msg | string | 错误信息 (接口报错时返回) | 
 
 ## APIv2 币链参考信息
 
@@ -4779,6 +5382,7 @@ API Key 权限：交易
 | price           | string   | false    | NA       | 订单价格（对市价单无效）                                     |
 | source          | string   | false    | spot-api | 现货交易填写“spot-api”，逐仓杠杆交易填写“margin-api”，全仓杠杆交易填写“super-margin-api”, C2C杠杆交易填写"c2c-margin-api" |
 | client-order-id | string   | false    | NA       | 用户自编订单号（最大长度64个字符，须在8小时内保持唯一性）    |
+| self-match-prevent | int   | false    | 0       | 自成交 ，0：表示允许自成交; 1：表示不允许自成交    |
 | stop-price      | string   | false    | NA       | 止盈止损订单触发价格                                         |
 | operator        | string   | false    | NA       | 止盈止损订单触发价运算符 gte – greater than and equal (>=), lte – less than and equal (<=) |
 
@@ -4858,6 +5462,7 @@ API Key 权限：交易<br>
 | price           | string   | false    | NA       | 订单价格（对市价单无效）                                     |
 | source          | string   | false    | spot-api | 现货交易填写“spot-api”，逐仓杠杆交易填写“margin-api”，全仓杠杆交易填写“super-margin-api”, C2C杠杆交易填写"c2c-margin-api" |
 | client-order-id | string   | false    | NA       | 用户自编订单号（最大长度64个字符，须在8小时内保持唯一性）    |
+| self-match-prevent | int   | false    | 0       | 自成交 ，0：表示允许自成交; 1：表示不允许自成交    |
 | stop-price      | string   | false    | NA       | 止盈止损订单触发价格                                         |
 | operator }]     | string   | false    | NA       | 止盈止损订单触发价运算符 gte – greater than and equal (>=), lte – less than and equal (<=) |
 
@@ -6685,7 +7290,7 @@ API Key 权限：读取<br>
 | symbol     | true     | string | 交易对                                               |                                  | btcusdt, ethbtc...（取值参考`GET /v1/common/symbols`）       |
 | start-date | false    | string | 查询开始日期, 日期格式yyyy-mm-dd                     |                                  |                                                              |
 | end-date   | false    | string | 查询结束日期, 日期格式yyyy-mm-dd                     |                                  |                                                              |
-| states     | false    | string | 状态列表，可以支持多个状态，用逗号分隔               |                                  | created 未放款，accrual 已放款，cleared 已还清，invalid 异常 |
+| states     | false    | string | 状态列表，可以支持多个状态，用逗号分隔               |                                  | created 未放款，accrual 已放款，cleared 已还清，invalid 异常，failed 借贷失败  |
 | from       | false    | string | 查询起始 ID                                          |                                  |                                                              |
 | direct     | false    | string | 查询方向                                             |                                  | prev 向前，时间（或 ID）正序；next 向后，时间（或 ID）倒序） |
 | size       | false    | string | 查询记录大小                                         | 100                              | [1, 100]                                                     |
@@ -6743,7 +7348,7 @@ API Key 权限：读取<br>
 | interest-balance   | true     | string   | 未还币息                   |                                                              |
 | created-at         | true     | long     | 借币发起时间               |                                                              |
 | accrued-at         | true     | long     | 最近一次计息时间           |                                                              |
-| state              | true     | string   | 订单状态                   | created 未放款，accrual 已放款，cleared 已还清，invalid 异常 |
+| state              | true     | string   | 订单状态                   | created 未放款，accrual 已放款，cleared 已还清，invalid 异常，failed 借贷失败 |
 | paid-point         | true     | string   | 已支付点卡金额（用于还息） |                                                              |
 | paid-coin          | true     | string   | 已支付原币金额（用于还息） |                                                              |
 | deduct-rate        | true     | string   | 抵扣率（用于还息）         |                                                              |
@@ -7564,6 +8169,79 @@ Websocket服务器同时支持一次性请求数据（pull）。
 
 单个连接每两次请求不能小于100ms。
 
+## K线数据
+
+### 主题订阅
+
+一旦K线数据产生，Websocket服务器将通过此订阅主题接口推送至客户端：
+
+`market.$symbol$.kline.$period$`
+
+> 订阅请求
+
+```json
+{
+  "sub": "market.ethbtc.kline.1min",
+  "id": "id1"
+}
+```
+
+### 参数
+
+| 参数   | 数据类型 | 是否必需 | 描述     | 取值范围                                                     |
+| ------ | -------- | -------- | -------- | ------------------------------------------------------------ |
+| symbol | string   | true     | 交易代码 | btcusdt, ethbtc...等（如需获取杠杆ETP净值K线，净值symbol = 杠杆ETP交易对symbol + 后缀‘nav’，例如：btc3lusdtnav） |
+| period | string   | true     | K线周期  | 1min, 5min, 15min, 30min, 60min, 4hour, 1day, 1mon, 1week, 1year |
+
+> Response
+
+```json
+{
+  "id": "id1",
+  "status": "ok",
+  "subbed": "market.ethbtc.kline.1min",
+  "ts": 1489474081631 //system response time
+}
+```
+
+> Update example
+
+```json
+{
+    "ch":"market.ethbtc.kline.1min",
+    "ts":1630981694370,
+    "tick":{
+        "id":1630981680,
+        "open":0.074849,
+        "close":0.074848,
+        "low":0.074848,
+        "high":0.074849,
+        "amount":2.4448,
+        "vol":0.1829884187,
+        "count":3
+    }
+}
+```
+
+### 数据更新字段列表
+
+| 字段   | 数据类型 | 描述                                        |
+| ------ | -------- | ------------------------------------------- |
+| ch     | string   | 数据所属的 channel，格式：market.$symbol.kline.$period     |
+| ts     | long     | 系统响应时间               |
+| \<tick\> | object     |                      |
+| id     | integer  | unix时间，同时作为K线ID                     |
+| amount | float    | 成交量                                      |
+| count  | integer  | 成交笔数                                    |
+| open   | float    | 开盘价                                      |
+| close  | float    | 收盘价（当K线为最晚的一根时，是最新成交价） |
+| low    | float    | 最低价                                      |
+| high   | float    | 最高价                                      |
+| vol    | float    | 成交额, 即 sum(每一笔成交价 * 该笔的成交量) |
+| \</tick\> |       |                      |
+
+<aside class="notice">当symbol被设为“hb10”或“huobi10”时，amount，count，vol均为零值。</aside>
+
 
 ## 聚合行情(Ticker)数据
 
@@ -7765,9 +8443,9 @@ Websocket服务器同时支持一次性请求数据（pull）。
 7）	如果收到增量数据某price档位的size为0值，须将该price档位从MBP订单簿中删除；<br>
 8）	如果收到单条增量数据中包含两个及以上price档位的更新，这些price档位须在MBP订单簿中被同时更新。<br>
 
-当前仅支持5档/20档MBP逐笔增量以及150档MBP快照增量的推送，二者的区别为 -<br>
+当前仅支持5档/20档MBP逐笔增量以及150档/400档MBP快照增量的推送，二者的区别为 -<br>
 1） 深度不同；<br>
-2） 5档/20档为逐笔增量MBP行情，150档为100毫秒定时快照增量MBP行情；<br>
+2） 5档/20档为逐笔增量MBP行情，150档/400档为100毫秒定时快照增量MBP行情；<br>
 3） 当5档/20档订单簿仅发生单边行情变化时，增量推送仅包含单边行情更新，比如，推送消息中包含数组asks，但不含数组bids；<br>
 
 ```json
@@ -7786,7 +8464,7 @@ Websocket服务器同时支持一次性请求数据（pull）。
     }
 }
 ```
-当150档订单簿仅发生单边行情变化时，增量推送包含双边行情更新，但其中一边行情为空，比如，推送消息中包含数组asks更新的同时，也包含bids空数组；<br>
+当150档/400档订单簿仅发生单边行情变化时，增量推送包含双边行情更新，但其中一边行情为空，比如，推送消息中包含数组asks更新的同时，也包含bids空数组；<br>
 
 ```json
 {
@@ -7802,8 +8480,8 @@ Websocket服务器同时支持一次性请求数据（pull）。
     }
 }
 ```
-未来，150档增量推送的数据行为将与5档/20档增量保持一致，即，单边深度行情变更时，推送消息中将不包含另一边行情深度行情；<br>
-4） 当150档订单簿在100毫秒时间间隔内未发生变化时，增量推送包含bids和asks空数组；<br>
+未来，150档/400档增量推送的数据行为将与5档/20档增量保持一致，即，单边深度行情变更时，推送消息中将不包含另一边行情深度行情；<br>
+4） 当150档/400档订单簿在100毫秒时间间隔内未发生变化时，增量推送包含bids和asks空数组；<br>
 
 ```json
 {
@@ -7818,8 +8496,8 @@ Websocket服务器同时支持一次性请求数据（pull）。
 }
 ```
 而5档/20档MBP逐笔增量，在订单簿未发生变化时，不推送数据；<br>
-未来，150档增量推送的数据行为将与5档增量保持一致，即，在订单簿未发生变化时，不再推送空消息；<br>
-5）5档/20档逐笔增量行情仅支持部分交易对（btcusdt,ethusdt,xrpusdt,eosusdt,ltcusdt,etcusdt,adausdt,dashusdt,bsvusdt），150档快照增量支持全部交易对。<br>
+未来，150档/400档增量推送的数据行为将与5档增量保持一致，即，在订单簿未发生变化时，不再推送空消息；<br>
+5）5档/20档逐笔增量行情仅支持部分交易对: btcusdt, ethusdt, xrpusdt, eosusdt, ltcusdt, etcusdt, adausdt, dashusdt, bsvusdt, htusdt, dotusdt, linkusdt, iotausdt, zecusdt, trxusdt, xmrusdt, arusdt, dfausdt, nftusdt, uniusdt, dogeusdt, solusdt, xecusdt, lunausdt, bchusdt, maticusdt, vetusdt, xlmusdt, filusdt, thetausdt 。150档/400档快照增量支持全部交易对。
 
 REQ频道支持5档/20档/150档全量数据的获取。<br>
 
@@ -8444,45 +9122,31 @@ Rest接口签名步骤,您可以点击 <a href='https://huobiapi.github.io/docs/
 
 成功建立与Websocket服务器的连接后，Websocket客户端发送如下请求以订阅特定主题：
 
-```json
-{
-	"action": "sub",
-	"ch": "accounts.update"
-}
-```
+`{`<br>
+	`"action": "sub",`<br>
+	`"ch": "accounts.update"`<br>
+`}`
+
 订阅成功Websocket客户端会接收到如下消息：
 
-```json
-{
-	"action": "sub",
-	"code": 200,
-	"ch": "accounts.update#0",
-	"data": {}
-}
-```
-
-### 请求数据
-
-成功建立Websocket服务器的连接后，Websocket客户端发送如下请求用以获取一次性数据：
+`{`<br>
+	`"action": "sub",`<br>
+	`"code": 200,`<br>
+	`"ch": "accounts.update#0",`<br>
+	`"data": {}`<br>
+`}`
 
 
-```json
-{
-    "action": "req", 
-    "ch": "topic"
-}
-```
+### 首笔账户变更推送信息异常
 
-请求成功后Websocket客户端会收到如下消息：
+`{`<br>
+    `"action":"sub",`<br>
+    `"code":500,`<br>
+    `"ch":"accounts.update#2",`<br>
+    `"message":"系统异常:"`<br>
+`}`
 
-```json
-{
-    "action": "req",
-    "ch": "topic",
-    "code": 200,
-    "data": {} // 请求数据体
-}
-```
+当首笔账户变更推送 `"message":"系统异常:"`,  后续的资产变动是不会再推送了. 出现此消息后, 需重新订阅账户变更
 
 ## 订阅订单更新
 
