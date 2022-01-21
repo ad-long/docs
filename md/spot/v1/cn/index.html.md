@@ -27,9 +27,9 @@ table th {
 | 生效时间<br>(UTC +8) | 接口     | 变化      | 摘要         |
 | ---------- | --------- | --------- | --------------- |
 | 2022.02.21 | `GET v1/common/symbols`,<br>`GET v1/common/currencys` | 优化 | 新增返回参数: ca-state 集合竞价当前状态 |
-| 2022.02.21 | `GET /v2/settings/common/symbols`,<br>`GET /v1/settings/common/currencys` | 新增 | 新增接口 |
-| 2022.02.21 | `GET /v1/settings/common/symbols`,<br>`GET /v1/settings/common/market-symbols` | 新增 | 新增接口 |
-| 2022.02.21 | `GET /v1/settings/common/chains` | 新增 | 新增接口 |
+| 2022.02.21 | `GET /v2/settings/common/symbols`,<br>`GET /v1/settings/common/currencys` | 新增 | 新增"获取所有交易对(V2)"接口<br/>新增"获取币种配置"接口<br/> |
+| 2022.02.21 | `GET /v1/settings/common/symbols`,<br>`GET /v1/settings/common/market-symbols` | 新增 | 新增"获取交易对配置"接口<br/>新增"获取市场交易对配置"接口<br/> |
+| 2022.02.21 | `GET /v1/settings/common/chains` | 新增 | 新增"查询链信息"接口 |
 | 2022.01.08 | `POST /v1/order/batch-orders`,<br>`POST /v1/order/orders/place` | 优化 | 新增请求参数"self-match-prevent" |
 | 2021.11.30 | `POST /v1/dw/withdraw/api/create` | 优化 | 新增请求参数"client-order-id" |
 | 2021.11.30 | `GET /v1/query/withdraw/client-order-id` | 新增 | 通过clientOrderId查询提币订单 |
