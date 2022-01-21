@@ -1,4 +1,4 @@
-require ../lib/_jquery
+//= require  ../lib/_jquery
 
 /*
 Copyright 2008-2013 Concur Technologies, Inc.
