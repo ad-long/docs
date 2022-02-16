@@ -28,500 +28,323 @@ search: true
 做市商项目不支持点卡抵扣、VIP、交易量相关活动以及任何形式的返佣活动。
 </aside>
 
-欢迎有优秀 maker 策略交易量大的用户参与长期合约做市商项目。如果您的火币交割合约账户中有折合大于 3 BTC 资产，或火币币本位永续合约账户中有折合大于 3 BTC 资产，或火币U本位合约账户中有大于 100000 USDT 资产，请提供以下信息到 dm_mm@huobi.com（做市商项目不支持点卡抵扣、VIP、交易量相关活动以及任何形式的返佣活动）:
+欢迎有优秀 maker 策略交易量大的用户参与长期合约做市商项目。如果您的火币交割合约账户中有折合大于 3 BTC 资产，或火币币本位永续合约账户中有折合大于 3 BTC 资产，或火币U本位合约账户中有大于 100000 USDT 资产，请提供以下信息到 Vip@global-hgroup.com（做市商项目不支持点卡抵扣、VIP、交易量相关活动以及任何形式的返佣活动）:
 
 1. 提供火币 UID （需不存在返佣关系的 UID）；
 2. 提供其他交易平台 maker 交易量截图证明（比如30天内成交量，或者 VIP 等级等）；
 
+具体的做市商权益政策内容您可以通过：<a href='https://www.huobi.com/support/zh-cn/detail/900003272306'>U本位合约做市商权益政策</a>  来了解。
+
+## 直连专线（Colocation）简介
+### 解决方案架构
+火币合约 API 直连专线解决方案是基于 AWS 基础架构构建的。客户端将通过 AWS “PrivateLink”进行连接，通过快速的 AWS 网络连接直接访问 Huobi 的 API 服务，而无需路由到公共网络进行访问。
+
+### 性能提升
+直连专线解决方案的网络延迟比普通外网连接预计低 10ms 至 50ms。实际的性能提升取决于很多因素。
+
+### 符合条件的客戶
+直连专线仅适用于更高级别的做市商。要确认您的帐户是否符合条件，请咨询您的专属客户经理。
+
+### 配置说明 
+具体配置可以通过：<a href='https://github.com/hbdmapi/huobi_colocation/blob/main/%E7%81%AB%E5%B8%81%E5%90%88%E7%BA%A6%E7%9B%B4%E8%BF%9E%E4%B8%93%E7%BA%BF%E9%83%A8%E7%BD%B2.pdf'>火币合约直连专线部署</a>来了解。
+
+## 风险机制说明
+### 阶梯强制平仓
+担保资产率是衡量用户资产风险的指标，当担保资产率 ≤ 0%时，用户的仓位将会被系统强制平仓。<br>
+建议用户密切关注担保资产率的变动，避免其仓位被强平。<br>
+火币合约实行阶梯强平机制，即系统会尝试降低调整系数对应的档位，从而避免仓位被一次性强平。<br>
+具体的U本位合约阶梯强制平仓规则您可以通过: <a href='https://www.huobi.com/support/zh-cn/detail/900001325083'>阶梯强制平仓说明</a>  来了解。
+
+### 风险准备金和分摊机制
+风险准备金，用于应付因强平单未能平出而产生的穿仓损失。<br>
+当市场行情波动较大，用户强制平仓后，按照接管价格无法成交时，导致亏损范围大于风险准备金。平台采用“分摊”制度，从本期盈利的账户中，每个账户按盈利等比分摊穿仓部分的损失。<br>
+具体的U本位合约风险准备金和分摊机制您可以通过: <a href='https://www.huobi.com/support/zh-cn/detail/900001325083'>阶梯强制平仓说明</a>  来了解。
+
+### 阶梯调整系数
+调整系数，为防止用户穿仓而设计。根据持仓张数设定最高五个档位，用户的净持仓量越大，档位越高，风险越大。<br>
+具体的U本位合约阶梯调整系数您可以通过: <a href='https://www.huobi.com/support/zh-cn/detail/900001326606'>U本位合约阶梯调整系数</a>  来了解。
+
+## 撮合机制说明
+1、撮合系统从订单系统接受订单后，订单进入撮合系统，成交则调用清算服务进行清算，成功交收后，返回撮合结果给订单系统；未成交则加入订单队列等待成交。<br>
+2、价格优先，即在买入申报时，买价高的申报优先于买价低的申报；在卖出申报时，卖价低的申报优先于卖价高的申报。<br>
+3、时间优先，即在同价位的买价申报情况下，依照申报到服务器时间的先后顺序确定。<br>
+4、最高买入申报与最低卖出申报价位相同，以该价格为成交价<br>
+5、买入申报价格高于即时揭示的最低卖出申报价格时，以即时揭示的最低卖出申报价格为成交价<br>
+6、卖出申报价格低于即时揭示的最高买入申报价格时，以即时揭示的最高买入申报价格为成交价
 
 # 更新日志
 
-## 1.1.5 2021年12月28日 【新增HUSD交易区内容,同时所有接口的contract_code合约代码入返参支持HUST区合约代码，如：BTC-HUSD。】
+## 1.1.6 2022年02月28日 【新增接口单向持仓的相关内容】
 
-### 1、修改获取合约信息接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取合约信息
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_contract_info
-
-### 2、修改获取合约指数信息接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取合约指数信息
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_index
-
-### 3、修改获取合约最高限价和最低限价接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取合约最高限价和最低限价
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_price_limit
-
-### 4、修改获取当前可用合约总持仓量接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取当前可用合约总持仓量
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_open_interest
-
-### 5、修改查询合约风险准备金和预估分摊比例接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】查询合约风险准备金和预估分摊比例
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_risk_info
-
-### 6、修改获取风险准备金历史数据接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取风险准备金历史数据
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_insurance_fund
-
-### 7、修改查询平台阶梯调整系数（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询平台阶梯调整系数
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_adjustfactor
-
-### 8、修改查询平台阶梯调整系数（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询平台阶梯调整系数
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_cross_adjustfactor
-
-### 9、修改获取平台持仓量接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取平台持仓量	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_his_open_interest
-
-### 10、修改获取平台阶梯保证金（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取平台阶梯保证金
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_ladder_margin
-
-### 11、修改获取平台阶梯保证金（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取平台阶梯保证金
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_cross_ladder_margin
-
-### 12、修改精英账户多空持仓对比-账户数接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】精英账户多空持仓对比-账户数	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_elite_account_ratio
-
-### 13、修改精英账户多空持仓对比-持仓量接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】精英账户多空持仓对比-持仓量	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_elite_position_ratio
-
-### 14、修改获取强平订单接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取强平订单	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_liquidation_orders
-
-### 15、修改查询平台历史结算记录接口（在返参settlement_record下新增字段：trade_partition（交易区））
- - 接口名称：【通用】查询平台历史结算记录	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_settlement_records
-
-### 16、修改获取预估结算价接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取预估结算价	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_estimated_settlement_price
-
-### 17、修改查询系统状态（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询系统状态	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_api_state
-
-### 18、修改查询系统划转权限（全仓）接口（margin_account不传默认为USDT，若需查询所有全仓账户数据则需要传ALL）
- - 接口名称：【全仓】查询系统划转权限	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_cross_transfer_state
-
-### 19、修改查询系统交易权限（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询系统交易权限	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trade_state
-
-### 20、修改获取合约的资金费率接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取合约的资金费率	
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_funding_rate
-
-### 21、修改批量获取合约的资金费率接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】批量获取合约的资金费率		
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_batch_funding_rate
-
-### 22、修改获取合约的历史资金费率接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取合约的历史资金费率
- - 接口类型：公共接口
- - 接口URL：/linear-swap-api/v1/swap_historical_funding_rate
-
-### 23、修改获取市场最优挂单接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参ticks下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取市场最优挂单		
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/bbo
-
-### 24、修改批量获取聚合行情接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参ticks下新增字段：trade_partition（交易区））
- - 接口名称：【通用】批量获取聚合行情		
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/detail/batch_merged
-
-### 25、修改获取市场最近成交记录接口（新增trade_partition（交易区）选填入参字段，不填默认USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取市场最近成交记录		
- - 接口类型：公共接口
- - 接口URL：/linear-swap-ex/market/trade
-
-### 26、修改获取账户总资产估值接口（入参valuation_asset资产估值币种新增HUSD枚举值）
- - 接口名称：【通用】获取账户总资产估值		
+### 1、新增切换持仓模式（逐仓）接口
+ - 接口名称：【逐仓】切换持仓模式
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_balance_valuation
+ - 接口URL：/linear-swap-api/v1/swap_switch_position_mode
 
-### 27、修改获取用户的合约账户信息（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取用户的合约账户信息		
+### 2、新增切换持仓模式（全仓）接口
+ - 接口名称：【全仓】切换持仓模式
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_cross_switch_position_mode
+
+### 3、修改获取用户账户信息（逐仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【逐仓】获取用户账户信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_account_info
 
-### 28、修改获取用户的合约账户信息（全仓）接口（新增trade_partition（交易区）选填入参字段，在返参contract_detail和futures_contract_detail下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取用户的合约账户信息		
+### 4、修改获取用户账户信息（全仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【全仓】获取用户账户信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_account_info
 
-### 29、修改获取用户的合约持仓信息（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取用户的合约持仓信息	
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_position_info
-
-### 30、修改获取用户的合约持仓信息（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取用户的合约持仓信息	
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_position_info
-
-### 31、修改查询母账户下所有子账户资产信息（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参list下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询母账户下所有子账户资产信息	
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_sub_account_list
-
-### 32、修改查询母账户下所有子账户资产信息（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参list下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询母账户下所有子账户资产信息		
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_sub_account_list
-
-### 33、修改批量获取子账户资产信息（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参account_info_list下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】批量获取子账户资产信息	
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_sub_account_info_list
-
-### 34、修改批量获取子账户资产信息（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参account_info_list下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】批量获取子账户资产信息	
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_sub_account_info_list
-
-### 35、修改查询母账户下的单个子账户资产信息（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询母账户下的单个子账户资产信息	
+### 5、修改获取单个子账户资产信息（逐仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【逐仓】获取单个子账户资产信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_sub_account_info
 
-### 36、修改查询母账户下的单个子账户资产信息（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参contract_detail和futures_contract_detail下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询母账户下的单个子账户资产信息	
+### 6、修改获取单个子账户资产信息（全仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【全仓】获取单个子账户资产信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_sub_account_info
 
-### 37、修改查询母账户下的单个子账户持仓信息（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询母账户下的单个子账户持仓信息
+### 7、修改查询用户账户和持仓信息（逐仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【逐仓】查询用户账户和持仓信息
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_sub_position_info
+ - 接口URL：/linear-swap-api/v1/swap_account_position_info
 
-### 38、修改查询母账户下的单个子账户持仓信息（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询母账户下的单个子账户持仓信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_sub_position_info
-
-### 39、修改查询用户财务记录接口（在返参financial_record下新增字段：trade_partition（交易区））
- - 接口名称：【通用】查询用户财务记录	
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_financial_record
-
-### 40、修改组合查询用户财务记录接口（在返参financial_record下新增字段：trade_partition（交易区））
- - 接口名称：【通用】组合查询用户财务记录
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_financial_record_exact
-
-### 41、修改获取用户的合约下单量限制接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参list下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取用户的合约下单量限制	
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_order_limit
-
-### 42、修改获取用户的合约手续费费率接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【通用】获取用户的合约手续费费率
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_fee
-
-### 43、修改获取用户的合约划转限制（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取用户的合约划转限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_transfer_limit
-
-### 44、修改获取用户的合约划转限制（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取用户的合约划转限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_transfer_limit
-
-### 45、修改获取用户的合约持仓量限制（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取用户的合约持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_position_limit
-
-### 46、修改获取用户的合约持仓量限制（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取用户的合约持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_position_limit
-
-### 47、修改查询用户所有杠杆持仓量限制（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询用户所有杠杆持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_lever_position_limit
-
-### 48、修改查询用户所有杠杆持仓量限制（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询用户所有杠杆持仓量限制
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_lever_position_limit	
-
-### 49、修改获取用户资产和持仓信息（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data和positions下各新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取用户资产和持仓信息
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_account_position_info	
-
-### 50、修改获取用户资产和持仓信息（全仓）接口（在返参contract_detail、futures_contract_detail和positions下各新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取用户资产和持仓信息
+### 8、修改查询用户账户和持仓信息（全仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【全仓】查询用户账户和持仓信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_account_position_info
 
-### 51、修改查询用户结算记录（逐仓）接口（在返参settlement_records下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询用户结算记录
+### 9、修改订阅资产变动（逐仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【逐仓】订阅资产变动
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_user_settlement_records
+ - 订阅地址：accounts.$contract_code
 
-### 52、修改查询用户结算记录（全仓）接口（在返参contract_detail下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询用户结算记录
+### 10、修改订阅资产变动（全仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【全仓】订阅资产变动
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_user_settlement_records
+ - 订阅地址：accounts_cross.$margin_account
 
-### 53、修改获取用户当前可用杠杆倍数（逐仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取用户当前可用杠杆倍数
+### 11、修改获取用户持仓信息（逐仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【逐仓】获取用户持仓信息
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_available_level_rate
+ - 接口URL：/linear-swap-api/v1/swap_position_info
 
-### 54、修改获取用户当前可用杠杆倍数（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取用户当前可用杠杆倍数
+### 12、修改获取用户持仓信息（全仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【全仓】获取用户持仓信息
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_available_level_rate
+ - 接口URL：/linear-swap-api/v1/swap_cross_position_info
 
-### 53、修改切换杠杆（逐仓）接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】切换杠杆
+### 13、修改获取单个子账户持仓信息（逐仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【逐仓】获取单个子账户持仓信息
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_switch_lever_rate
+ - 接口URL：/linear-swap-api/v1/swap_sub_position_info
 
-### 54、修改切换杠杆（全仓）接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】切换杠杆
+### 14、修改获取单个子账户持仓信息（全仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【全仓】获取单个子账户持仓信息
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_switch_lever_rate
+ - 接口URL：/linear-swap-api/v1/swap_cross_sub_position_info
 
-### 55、修改获取用户的合约订单信息（逐仓）接口（在返参data下新增字段：trade_partition（交易区））
+### 15、修改订阅持仓变动（逐仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【逐仓】订阅持仓变动
+ - 接口类型：私有接口
+ - 订阅地址：positions.$contract_code
+
+### 16、修改订阅持仓变动（全仓）接口（返回参数data中，新增position_mode字段，表示当前合约的持仓模式。）
+ - 接口名称：【全仓】订阅持仓变动
+ - 接口类型：私有接口
+ - 订阅地址：positions_cross.$contract_code
+
+### 17、修改合约下单（逐仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【逐仓】合约下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_order
+
+### 18、修改合约下单（全仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【全仓】合约下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_cross_order
+
+### 19、修改合约批量下单（逐仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【逐仓】合约批量下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_batchorder
+
+### 20、修改合约批量下单（全仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【全仓】合约批量下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_cross_batchorder
+
+### 21、修改合约计划委托下单（逐仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【逐仓】合约计划委托下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_trigger_order
+
+### 22、修改合约计划委托下单（全仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【全仓】合约计划委托下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_cross_trigger_order
+
+### 23、修改跟踪委托下单（逐仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【逐仓】跟踪委托下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_track_order
+
+### 24、修改跟踪委托下单（全仓）接口（新增选填入参reduce_only，表示是否为只减仓订单，1表示为只减仓订单，0表示为非只减仓订单。该参数在双向持仓模式下无效，在单向持仓模式下不填默认为0。入参offset（开平方向）字段改为非必填，在双向持仓模式下为必填字段，在单向持仓模式下为非必填，填仅可填“both”。）
+ - 接口名称：【全仓】跟踪委托下单
+ - 接口类型：私有接口
+ - 接口URL：/linear-swap-api/v1/swap_cross_track_order
+
+### 25、修改获取用户的合约订单信息（逐仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【逐仓】获取用户的合约订单信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_order_info
 
-### 56、修改获取用户的合约订单信息（全仓）接口（在返参data下新增字段：trade_partition（交易区））
+### 26、修改获取用户的合约订单信息（全仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【全仓】获取用户的合约订单信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_order_info
 
-### 57、修改获取用户的合约订单明细信息（逐仓）接口（在返参data下新增字段：trade_partition（交易区））
+### 27、修改获取用户的合约订单明细信息（逐仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【逐仓】获取用户的合约订单明细信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_order_detail
 
-### 58、修改获取用户的合约订单明细信息（全仓）接口（在返参data下新增字段：trade_partition（交易区））
+### 28、修改获取用户的合约订单明细信息（全仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【全仓】获取用户的合约订单明细信息
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_order_detail
 
-### 59、修改获取用户的合约当前未成交委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
+### 29、修改获取用户的合约当前未成交委托（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【逐仓】获取用户的合约当前未成交委托
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_openorders	
+ - 接口URL：/linear-swap-api/v1/swap_openorders
 
-### 60、修改获取用户的合约当前未成交委托（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参orders下新增字段：trade_partition（交易区））
+### 30、修改获取用户的合约当前未成交委托（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【全仓】获取用户的合约当前未成交委托
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_openorders
 
-### 61、修改获取用户的合约历史委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
+### 31、修改获取用户的合约历史委托（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【逐仓】获取用户的合约历史委托
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_hisorders
 
-### 62、修改获取用户的合约历史委托（全仓）接口（在返参orders下新增字段：trade_partition（交易区））
+### 32、修改获取用户的合约历史委托（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【全仓】获取用户的合约历史委托
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_hisorders
 
-### 63、修改组合查询合约历史委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】组合查询合约历史委托
+### 33、修改组合查询用户历史委托（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】组合查询用户历史委托
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_hisorders_exact
 
-### 64、修改组合查询合约历史委托（全仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】组合查询合约历史委托
+### 34、修改组合查询用户历史委托（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】组合查询用户历史委托
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_hisorders_exact
 
-### 65、修改获取用户的合约历史成交记录（逐仓）接口（在返参trades下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取用户的合约历史成交记录
+### 35、修改获取用户的成交记录（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数trades中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】获取用户的成交记录
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_matchresults
 
-### 66、修改获取用户的合约历史成交记录（全仓）接口（在返参trades下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取用户的合约历史成交记录
+### 36、修改获取用户的成交记录（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数trades中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】获取用户的成交记录
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_matchresults
 
-### 67、修改组合查询历史成交记录（逐仓）接口（在返参trades下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】组合查询历史成交记录
+### 37、修改组合查询用户成交记录（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数trades中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】组合查询用户成交记录
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_matchresults_exact
 
-### 68、修改组合查询历史成交记录（全仓）接口（在返参trades下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】组合查询历史成交记录
+### 38、修改组合查询用户成交记录（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数trades中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】组合查询用户成交记录
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_matchresults_exact
 
-### 69、修改获取计划委托当前委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
+### 39、修改获取计划委托当前委托（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【逐仓】获取计划委托当前委托
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_trigger_openorders	
+ - 接口URL：/linear-swap-api/v1/swap_trigger_openorders
 
-### 70、修改获取计划委托当前委托（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取计划委托当前委托
+### 40、修改获取计划委托当前委托（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】获取计划委托当前委托	
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_trigger_openorders
 
-### 71、修改获取计划委托历史委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取计划委托历史委托
+### 41、修改获取计划委托历史委托（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】获取计划委托历史委托	 
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_trigger_hisorders
 
-### 72、修改获取计划委托历史委托（全仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取计划委托历史委托
+### 42、修改获取计划委托历史委托（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】获取计划委托历史委托	
  - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_trigger_hisorders
+ - 接口URL：/linear-swap-api/v1/swap_cross_trigger_hisorders	
 
-### 73、修改获取止盈止损当前委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取止盈止损当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_tpsl_openorders
-
-### 74、修改获取止盈止损当前委托（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取止盈止损当前委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_openorders
-
-### 75、修改获取止盈止损历史委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】获取止盈止损历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_tpsl_hisorders
-
-### 76、修改获取止盈止损历史委托（全仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】获取止盈止损历史委托
- - 接口类型：私有接口
- - 接口URL：/linear-swap-api/v1/swap_cross_tpsl_hisorders
-
-### 77、修改查询开仓单关联的止盈止损订单详情（逐仓）接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询开仓单关联的止盈止损订单详情
+### 43、修改查询开仓单关联的止盈止损订单详情（逐仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】查询开仓单关联的止盈止损订单详情 
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_relation_tpsl_order
 
-### 78、修改查询开仓单关联的止盈止损订单详情（全仓）接口（在返参data下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询开仓单关联的止盈止损订单详情
+### 44、修改查询开仓单关联的止盈止损订单详情（全仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】查询开仓单关联的止盈止损订单详情	
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_relation_tpsl_order
 
-### 79、修改查询跟踪委托订单当前委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询跟踪委托订单当前委托
+### 45、修改获取跟踪委托当前委托（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】获取跟踪委托当前委托
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_track_openorders
 
-### 80、修改查询跟踪委托订单当前委托（全仓）接口（新增trade_partition（交易区）选填入参字段，不填默认查询USDT，在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询跟踪委托订单当前委托
+### 46、修改获取跟踪委托当前委托（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】获取跟踪委托当前委托	
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_track_openorders
 
-### 81、修改查询跟踪委托订单历史委托（逐仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【逐仓】查询跟踪委托订单历史委托
+### 47、修改获取跟踪委托历史委托（逐仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】获取跟踪委托历史委托
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_track_hisorders
 
-### 82、修改查询跟踪委托订单历史委托（全仓）接口（在返参orders下新增字段：trade_partition（交易区））
- - 接口名称：【全仓】查询跟踪委托订单历史委托
+### 48、修改获取跟踪委托历史委托（全仓）接口（trade_type入参新增17买入（单向持仓）和18卖出（单向持仓）枚举值，同时返回参数orders中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】获取跟踪委托历史委托	
  - 接口类型：私有接口
  - 接口URL：/linear-swap-api/v1/swap_cross_track_hisorders
 
-### 83、修改订阅强平订单数据（免鉴权）接口（订阅参数外层新增选填字段：trade_partition（交易区），与topic同级，不填默认USDT，在返参data下新增字段trade_partition（交易区））
- - 接口名称：【通用】订阅强平订单数据（免鉴权）
- - 接口类型：私有接口
- - 订阅地址：public.$contract_code.liquidation_orders
-
-### 84、修改订阅资金费率变动数据（免鉴权）接口（订阅参数外层新增选填字段：trade_partition（交易区），与topic同级，不填默认USDT，在返参data下新增字段trade_partition（交易区））
- - 接口名称：【通用】订阅资金费率变动数据（免鉴权）
- - 接口类型：私有接口
- - 订阅地址：public.$contract_code.funding_rate
-
-### 86、修改订阅合约信息变动数据（免鉴权）接口（订阅参数外层新增选填字段：trade_partition（交易区），与topic同级，不填默认USDT，在返参data下新增字段trade_partition（交易区））
- - 接口名称：【通用】订阅合约信息变动数据（免鉴权）
- - 接口类型：私有接口
- - 订阅地址：public.$contract_code.contract_info
-
-### 87、修改订阅订单成交数据（逐仓）接口（在返参最外层新增字段trade_partition（交易区），与contract_code同级）
+### 49、修改订阅订单成交数据（逐仓）接口（返回参数新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【逐仓】订阅订单成交数据
  - 接口类型：私有接口
- - 接口URL：orders.$contract_code
+ - 订阅地址：orders.$contract_code
 
-### 88、修改订阅订单成交数据（全仓）接口（在返参最外层新增字段trade_partition（交易区），与contract_code同级）
- - 接口名称：【全仓】订阅订单成交数据
+### 50、修改订阅订单成交数据（全仓）接口（返回参数新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】订阅订单成交数据	
  - 接口类型：私有接口
- - 接口URL：orders_cross.$contract_code
+ - 订阅地址：orders_cross.$contract_code
 
-### 87、修改订阅资产变动数据（逐仓）接口（在返参data下新增字段trade_partition（交易区））
- - 接口名称：【逐仓】订阅资产变动数据
- - 接口类型：私有接口
- - 接口URL：accounts.$contract_code	
-
-### 88、修改订阅资产变动数据（全仓）接口（margin_account订阅入参新增HUSD。在返参contract_detail和futures_contract_detail下新增字段trade_partition（交易区））
- - 接口名称：【全仓】订阅资产变动数据
- - 接口类型：私有接口
- - 接口URL：accounts_cross.$margin_account
-
-### 89、修改订阅持仓变动更新数据（逐仓）接口（在返参data下新增字段trade_partition（交易区））
- - 接口名称：【逐仓】订阅持仓变动更新数据
- - 接口类型：私有接口
- - 接口URL：positions.$contract_code
-
-### 90、修改订阅持仓变动更新数据（全仓）接口（在返参data下新增字段trade_partition（交易区））
- - 接口名称：【全仓】订阅持仓变动更新数据
- - 接口类型：私有接口
- - 接口URL：positions_cross.$contract_code
-
-### 91、修改订阅撮合订单成交数据（逐仓）接口（在返参最外层新增字段trade_partition（交易区），与contract_code同级）
+### 51、修改订阅撮合订单成交数据（逐仓）接口（返回参数新增reduce_only字段，表示是否为只减仓。）
  - 接口名称：【逐仓】订阅撮合订单成交数据
  - 接口类型：私有接口
- - 接口URL：matchOrders.$contract_code
+ - 订阅地址：matchOrders.$contract_code
 
-### 92、修改订阅撮合订单成交数据（全仓）接口（在返参最外层新增字段trade_partition（交易区），与contract_code同级）
- - 接口名称：【全仓】订阅撮合订单成交数据
+### 52、修改订阅撮合订单成交数据（全仓）接口（返回参数新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】订阅撮合订单成交数据	
  - 接口类型：私有接口
- - 接口URL：matchOrders_cross.$contract_code
+ - 订阅地址：matchOrders_cross.$contract_code
 
-### 93、修改订阅计划委托订单更新（逐仓）接口（在返参data下新增字段trade_partition（交易区））
- - 接口名称：【逐仓】订阅计划委托订单更新
+### 53、修改订阅计划委托订单变动（逐仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【逐仓】订阅计划委托订单变动
  - 接口类型：私有接口
- - 接口URL：trigger_order.$contract_code
+ - 订阅地址：trigger_order.$contract_code
 
-### 94、修改订阅计划委托订单更新（全仓）接口（在返参data下新增字段trade_partition（交易区））
- - 接口名称：【全仓】订阅计划委托订单更新
+### 54、修改订阅计划委托订单变动（全仓）接口（返回参数data中，新增reduce_only字段，表示是否为只减仓。）
+ - 接口名称：【全仓】订阅计划委托订单变动	
  - 接口类型：私有接口
- - 接口URL：trigger_order_cross.$contract_code
+ - 订阅地址：trigger_order_cross.$contract_code
 
 ## 1.1.4 2021年12月22日 【新增USDT交割合约接口内容】
 
@@ -535,8 +358,8 @@ search: true
  - 接口类型：公共接口
  - 接口URL：/linear-swap-api/v1/swap_price_limit
 
-### 3、修改获取当前可用合约总持仓量接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【通用】获取当前可用合约总持仓量
+### 3、修改获取当前合约总持仓量接口（新增选填入参：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
+ - 接口名称：【通用】获取当前合约总持仓量
  - 接口类型：公共接口
  - 接口URL：/linear-swap-api/v1/swap_open_interest
 
@@ -555,8 +378,8 @@ search: true
  - 接口类型：公共接口
  - 接口URL：/linear-swap-api/v1/swap_cross_adjustfactor
 
-### 7、修改获取平台持仓量接口（新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
- - 接口名称：【通用】获取平台持仓量
+### 7、修改获取平台历史持仓量接口（新增选填入参：contract_type（合约类型）、pair（交易对）。返回参数data下新增字段：business_type（业务类型）、contract_type（合约类型）、pair（交易对）。）
+ - 接口名称：【通用】获取平台历史持仓量
  - 接口类型：公共接口
  - 接口URL：/linear-swap-api/v1/swap_his_open_interest
 
@@ -1443,8 +1266,8 @@ search: true
  - 接口类型: 私有接口
  - 接口URL: /linear-swap-api/v1/swap_cross_trigger_hisorders
 
-### 32、修改获取当前可用合约总持仓量（在返回参数data中新增trade_volume：最近24小时成交量（张），trade_amount：最近24小时成交量（币）trade_turnover：最近24小时成交额、这三个字段 ）
- - 接口名称: 【通用】获取当前可用合约总持仓量
+### 32、修改获取当前合约总持仓量（在返回参数data中新增trade_volume：最近24小时成交量（张），trade_amount：最近24小时成交量（币）trade_turnover：最近24小时成交额、这三个字段 ）
+ - 接口名称: 【通用】获取当前合约总持仓量
  - 接口类型: 公共接口
  - 接口URL: /linear-swap-api/v1/swap_open_interest
 
@@ -2028,11 +1851,11 @@ search: true
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_contract_info                             | GET    |      【通用】获取合约信息                        |       否          |
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_index                                     | GET    |      【通用】获取合约指数信息                    |       否          |                     
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_price_limit                               | GET    |      【通用】获取合约最高限价和最低限价          |       否          |           
-读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_open_interest                             | GET    |      【通用】获取当前可用合约总持仓量            |       否          |            
+读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_open_interest                             | GET    |      【通用】获取当前合约总持仓量            |       否          |            
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_risk_info                                 | GET    |      【通用】查询合约风险准备金和预估分摊比例    |       否          |
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_insurance_fund                            | GET    |      【通用】获取风险准备金历史数据              |       否          |
 读取  | 基础信息接口 |  逐仓   | /linear-swap-api/v1/swap_adjustfactor                              | GET    |      【逐仓】查询平台阶梯调整系数                |       否          |
-读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_his_open_interest                         | GET    |      【通用】获取平台持仓量                      |       否          |
+读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_his_open_interest                         | GET    |      【通用】获取平台历史持仓量                      |       否          |
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_elite_account_ratio                       | GET    |      【通用】精英账户多空持仓对比-账户数         |       否          |
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_elite_position_ratio                      | GET    |      【通用】精英账户多空持仓对比-持仓量         |       否          |
 读取  | 基础信息接口 |  通用   | /linear-swap-api/v1/swap_liquidation_orders                        | GET    |      【通用】获取强平订单                        |       否          |
@@ -2092,6 +1915,8 @@ search: true
 读取  | 账户接口    |  全仓  |  /linear-swap-api/v1/swap_cross_lever_position_limit                  | POST    |     【全仓】查询用户所有杠杆持仓量限制       |       是          |
 读取  | 账户接口    |  全仓  |  /linear-swap-api/v1/swap_cross_account_position_info                 | POST    |     【全仓】获取用户资产和持仓信息          |       是          |
 读取  | 账户接口    |  全仓  |  /linear-swap-api/v1/swap_cross_available_level_rate                   | POST    |     【全仓】获取用户当前合约杠杆倍数        |       是          |
+交易  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_switch_position_mode                      | POST   |      【逐仓】切换持仓模式                      |     是         |
+交易  | 交易接口    |  全仓  |  /linear-swap-api/v1/swap_cross_switch_position_mode                | POST   |      【全仓】切换持仓模式                       |     是         |
 交易  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_order                                     | POST   |      【逐仓】合约下单                             |     是         |
 交易  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_batchorder                                | POST   |      【逐仓】合约批量下单                         |     是         |
 交易  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_switch_lever_rate                         | POST   |      【逐仓】切换杠杆                          |     是         |
@@ -2101,9 +1926,9 @@ search: true
 读取  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_order_detail                              | POST   |      【逐仓】获取用户的合约订单明细信息           |     是         |
 读取  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_openorders                                | POST   |      【逐仓】获取用户的合约当前未成交委托         |     是         |
 读取  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_hisorders                                 | POST   |      【逐仓】获取用户的合约历史委托               |     是         |
-读取  | 交易接口 |  逐仓   | /linear-swap-api/v1/swap_hisorders_exact                             | POST    |      【逐仓】组合查询合约历史委托                        |       是          |
+读取  | 交易接口    |  逐仓   | /linear-swap-api/v1/swap_hisorders_exact                           | POST   |      【逐仓】组合查询合约历史委托                        |       是          |
 读取  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_matchresults                              | POST   |      【逐仓】获取用户的合约历史成交记录           |     是         |
-读取  | 交易接口 |  逐仓   | /linear-swap-api/v1/swap_matchresults_exact                          | POST    |      【逐仓】组合查询用户历史成交记录                     |       是          |
+读取  | 交易接口    |  逐仓   | /linear-swap-api/v1/swap_matchresults_exact                        | POST   |      【逐仓】组合查询用户历史成交记录                     |       是          |
 交易  | 交易接口    |  逐仓  |  /linear-swap-api/v1/swap_lightning_close_position                  | POST   |      【逐仓】合约闪电平仓下单                     |     是         |
 交易  | 策略接口    |  逐仓  |  /linear-swap-api/v1/swap_trigger_order                             | POST   |      【逐仓】合约计划委托下单                     |     是          |
 交易  | 策略接口    |  逐仓  |  /linear-swap-api/v1/swap_trigger_cancel                            | POST   |      【逐仓】合约计划委托撤单                     |     是         |
@@ -2997,7 +2822,7 @@ curl "https://status-linear-swap.huobigroup.com/api/v2/summary.json"
 
 - <a href='https://github.com/hbdmapi/huobi_futures_Postman'>Postman</a>
 
-- <a href='https://github.com/hbdmapi/huobi_futures_CSharp'>CSharp</a>
+- <a href='https://github.com/hbdmapi/huobi_sdk_CSharp'>CSharp</a>
 
 - <a href='https://github.com/hbdmapi/huobi_futures_Golang'>Golang</a>
 
@@ -3495,22 +3320,21 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_contract_info?contract_code=B
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
  - 当support_margin_mode为逐仓模式时，contract_type,business_type 不可传交割的类型。当support_margin_mode为全仓模式时，查询出来的都是交割合约的数据。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
+
 
 ###  请求参数
 
 | 参数名称      | 是否必须 | 类型   | 描述     | 取值范围                                   |
 | ------------- | -------- | ------ | -------- | ------------------------------------------ |
-| contract_code | false    | string | 合约代码 | 永续："BTC-USDT"，"BTC-HUSD"... ，交割："BTC-USDT-210625"，"BTC-HUSD-211231"...  |
+| contract_code | false    | string | 合约代码 | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
 | support_margin_mode | false | string | 合约支持的保证金模式  | cross：仅支持全仓模式；isolated：仅支持逐仓模式；all：全逐仓都支持  |
-| pair | false |  string | 交易对 |  "BTC-USDT"，"BTC-HUSD"... |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
-```json 
+```json
 
 {
     "status": "ok",
@@ -3587,7 +3411,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_contract_info?contract_code=B
 | status  | true | string  | 请求处理结果 | "ok" , "error"  |
 | \<data\> |   true   |  object array   |   |   |
 | symbol  | true | string  | 品种代码  | "BTC","ETH"...   |
-| contract_code   | true | string  | 合约代码 |  永续："BTC-USDT"，"BTC-HUSD"... ，交割："BTC-USDT-210625"，"BTC-HUSD-211231"...   |
+| contract_code   | true | string  | 合约代码 |  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...   |
 | contract_size  | true | decimal | 合约面值，即1张合约对应多少标的币种（如BTC-USDT合约则面值单位就是BTC） | 0.1，0.01... |
 | price_tick  | true | decimal | 合约价格最小变动精度 | 0.001, 0.01... |
 | settlement_date  | true | string  | 合约下次结算时间    | 时间戳，如"1490759594752"  |
@@ -3595,11 +3419,10 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_contract_info?contract_code=B
 | create_date   | true | string  | 合约上市日期    | 如"20180706" |
 | contract_status      | true | int     | 合约状态  | 合约状态: 0:已下市、1:上市、2:待上市、3:停牌，4:待开盘、5:结算中、6:交割中、7:结算完成、8:交割完成 |
 | support_margin_mode | true | string | 合约支持的保证金模式  | cross：全仓模式；isolated：逐仓模式；all：全逐仓都支持 |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT"，"BTC-HUSD"...    |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | delivery_date  | true | string  | 合约交割日期,永续无需交割时该字段为空字符串    | 如"20180720"   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \</data\>   |      |         |        |       |
 | ts     | true | long    | 响应生成时间点，单位：毫秒    |     |   
 
@@ -3623,8 +3446,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_index?contract_code=BTC-USDT"
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | false | string | 指数代码 | "BTC-USDT","ETH-USDT","BTC-HUSD"...    |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 指数代码 | "BTC-USDT","ETH-USDT"...    |
 
 > Response:
 
@@ -3649,10 +3471,9 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_index?contract_code=BTC-USDT"
 | -------------------- | ---- | ------- | ------------- | -------------- |
 | status               | true | string  | 请求处理结果        | "ok" , "error" |
 | \<data\> |   true   |   object array      |    |       |
-| contract_code    | true | string  | 指数代码     | "BTC-USDT","ETH-USDT","BTC-HUSD"... |
+| contract_code    | true | string  | 指数代码     | "BTC-USDT","ETH-USDT"... |
 | index_price    | true | decimal | 指数价格    |                |
 | index_ts   | true | long    | 响应生成时间点，单位：毫秒 |     |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \</data\>   |      |         |        |                |
 | ts   | true | long    | 时间戳，单位：毫秒     |                |
 
@@ -3671,17 +3492,15 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_price_limit?contract_code=BTC
  - 该接口支持全仓模式和逐仓模式
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ###  请求参数
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | false |  string | 合约代码  |   永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-210625","BTC-HUSD-211231"...  |
-| pair          | false |  string | 交易对 |   "BTC-USDT"，"BTC-HUSD"...   |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false |  string | 合约代码  |   永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
+| pair          | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -3738,21 +3557,20 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_price_limit?contract_code=BTC
 | status  | true | string  | 请求处理结果        | "ok"  |
 | \<data\> |   true   |  object array       |         |    |
 | symbol   | true | string  | 品种代码          | "BTC","ETH" ...   |
-| contract_code        | true | string  | 合约代码          | 如 永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-210625", "BTC-HUSD-210625"...   |
+| contract_code        | true | string  | 合约代码          | 如 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...   |
 | high_limit           | true | decimal | 最高买价          |   |
 | low_limit            | true | decimal | 最低卖价          |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          |   true |  string | 交易对 |   如："BTC-USDT"，"BTC-HUSD"...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \<data\>   |      |         |     |   |
 | ts                   | true | long    | 响应生成时间点，单位：毫秒 |  |
 
-## 【通用】获取当前可用合约总持仓量 
+## 【通用】获取当前合约总持仓量 
 
 ###  示例
 
-- GET `/linear-swap-api/v1/swap_open_interest`
+- GET `/linear-swap-api/v1/swap_open_interest`
 
 ```shell
 
@@ -3764,17 +3582,15 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_open_interest?contract_code=B
  - 该接口支持全仓模式和逐仓模式
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ###  请求参数
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | false |  string | 合约代码 |   永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-210625","BTC-HUSD-210625"... |
-| pair | false |  string | 交易对 |   BTC-USDT, BTC-HUSD ...  |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false |  string | 合约代码 |   永续："BTC-USDT"... ，交割："BTC-USDT-210625"... |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -3847,17 +3663,16 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_open_interest?contract_code=B
 | status    | true | string  | 请求处理结果        | "ok" , "error"      |
 | \<data\>|    true  |   object array      |               |   |
 | symbol     | true | string  | 品种代码          | "BTC", "ETH" ...  |
-| contract_code        | true | string  | 合约代码          | 永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-210625","BTC-HUSD-210625"...  |
+| contract_code        | true | string  | 合约代码          | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
 | amount               | true | decimal | 持仓量(币)，单边数量       | |
 | volume               | true | decimal | 持仓量(张)，单边数量        | |
-| value               | true | decimal | 总持仓额（单位为合约的计价币种，如USDT或HUSD）      | |
+| value               | true | decimal | 总持仓额（单位为合约的计价币种，如USDT）      | |
 | trade_amount               | true | decimal | 最近24小时成交量（币）（当前时间-24小时）,值是买卖双边之和	      | |
 | trade_volume               | true | decimal | 最近24小时成交量（张）（当前时间-24小时）,值是买卖双边之和   | |
 | trade_turnover               | true | decimal | 最近24小时成交额	（当前时间-24小时）,值是买卖双边之和       | |
-| contract_type         | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair                  |   true |  string | 交易对 |   如："BTC-USDT"，"BTC-HUSD"...   |
+| contract_type         | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair                  |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type         | true |  string | 业务类型 |  futures：交割、swap：永续   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \</data\>   |      |         |       ||
 | ts                   | true | long    | 响应生成时间点，单位：毫秒 | |
 
@@ -3886,10 +3701,10 @@ curl "https://api.hbdm.com/linear-swap-ex/market/depth?contract_code=BTC-USDT&ty
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | true <img width=250/> |  string <img width=250/> | 合约代码 或 合约标识  <img width=250/>  | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识） |
+| contract_code | true <img width=250/> |  string <img width=250/> | 合约代码 或 合约标识  <img width=250/>  | 永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识） |
 | type   | true |  string| 深度类型 |  (150档数据)  step0, step1, step2, step3, step4, step5, step14, step15, step16, step17（合并深度1-5,14-17）；step0时，不合并深度, (20档数据)  step6, step7, step8, step9, step10, step11, step12, step13, step18, step19（合并深度7-13,18-19）；step6时，不合并深度     |
 
-> Response: 
+> Response:
 
 ```json
 
@@ -3975,14 +3790,12 @@ curl "https://api.hbdm.com/linear-swap-ex/market/depth?contract_code=BTC-USDT&ty
  - 该接口支持全仓模式和逐仓模式
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code来决定。
 
 ### 请求参数
 | 参数名称   | 是否必须 | 类型     | 描述  | 取值范围 |
 | ------ | ---- | ------ | ---------------------------------------- | ---- |
-| contract_code | false | string | 合约代码 或 合约标识 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识） |
+| contract_code | false | string | 合约代码 或 合约标识 |  永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识） |
 | business_type	| false（请看备注）	| string | 业务类型，不填默认永续 |	futures：交割、swap：永续、all：全部 |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response
 
@@ -4057,13 +3870,12 @@ curl "https://api.hbdm.com/linear-swap-ex/market/depth?contract_code=BTC-USDT&ty
 | ------ | ---- | ------ | ---------------------------------------- | -------------- |
 | status | true | string | 请求处理结果     | "ok" , "error" |
 | \<ticks\> |true  |  object array |           |                |
-| contract_code  | true | string  | 合约代码 或 合约标识  |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
-| business_type	| true	| string | 业务类型  |	futures：交割、swap：永续、all：全部 |
+| contract_code  | true | string  | 合约代码 或 合约标识  |  永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
+| business_type	| true	| string | 业务类型  |	futures：交割、swap：永续  |
 | mrid   | true | long | 撮合ID，唯一标识  |                |
 | ask   | false | array | [卖1价,卖1量(张)] |                |
 | bid   | false | array | [买1价,买1量(张)] |                |
 | ts   | true | long | 系统检测orderbook时间点，单位：毫秒   |                |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \</ticks\>            |      |        |               |                |
 | ts     | true | long | 响应生成时间点，单位：毫秒                            |                |
 
@@ -4088,7 +3900,7 @@ curl "https://api.hbdm.com/linear-swap-ex/market/history/kline?contract_code=BTC
 
 | 参数名称   | 是否必须 | 类型      | 描述    | 取值范围 |
 | ------ | ---- | ------- | ---- | ---------------------------------------- |
-| contract_code | true | string  | 合约代码 或 合约标识 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识） |
+| contract_code | true | string  | 合约代码 或 合约标识 | 永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识） |
 | period | true | string  | K线类型   | 1min, 5min, 15min, 30min, 60min,4hour,1day,1week,1mon |
 | size   | false（请看备注） | int | 获取数量，默认150 |  [1,2000]  |
 | from   | false（请看备注） | long | 开始时间戳 10位 单位S |   |
@@ -4155,7 +3967,7 @@ curl "https://api.hbdm.com/linear-swap-ex/market/history/kline?contract_code=BTC
 ### 请求参数：
 | **参数名称**    | **是否必须** | **类型** | **描述**        |  **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- |  ---------------------------------------- |
-| contract_code      | true     | string |  合约代码 或 合约标识 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）    |
+| contract_code      | true     | string |  合约代码 或 合约标识 | 永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）    |
 | period          | true     | string  | K线类型       | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week,1mon     |
 | size  | true     | int    | K线获取数量    | [1,2000] |
 
@@ -4237,7 +4049,7 @@ curl "https://api.hbdm.com/linear-swap-ex/market/detail/merged?contract_code=BTC
 
 | 参数名称   | 是否必须 | 类型     | 描述  | 取值范围 |
 | ------ | ---- | ------ | ---------------------------------------- | ---- |
-| contract_code | true | string | 合约代码 或 合约标识 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+| contract_code | true | string | 合约代码 或 合约标识 | 永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
 
 > Response:
 
@@ -4304,15 +4116,13 @@ curl "https://api.hbdm.com/linear-swap-ex/market/detail/merged?contract_code=BTC
  - 该接口更新频率为50ms
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code来决定。
 
 ### 请求参数
 
 | 参数名称   | 是否必须 | 类型     | 描述  | 取值范围 |
 | ------ | ---- | ------ | ---------------------------------------- | ---- |
-| contract_code | false | string | 合约代码 或 合约标识 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+| contract_code | false | string | 合约代码 或 合约标识 | 永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
 | business_type | false（请看备注） | string | 业务类型，不填默认永续    | futures：交割、swap：永续、all：全部 |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -4353,9 +4163,8 @@ curl "https://api.hbdm.com/linear-swap-ex/market/detail/merged?contract_code=BTC
 | ------ | ---- | ------ | ---------------------------------------- | -------------- |
 | status | true | string | 请求处理结果     | "ok" , "error" |
 | \<ticks\> |true  |  object array |           |                |
-| contract_code   | true | string  | 合约代码 或 合约标识 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
-| business_type | true | string | 业务类型     | futures：交割、swap：永续  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码 或 合约标识 | 永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
+| business_type | true | string | 业务类型    | futures：交割、swap：永续  |
 | id   | true | long | K线id |                |
 | amount   | true | string | 成交量(币) （最近24（当前时间-24小时）小时成交量币）。 值是买卖双边之和   |                |
 | ask   | true | array | [卖1价,卖1量(张)] |                |
@@ -4376,7 +4185,7 @@ curl "https://api.hbdm.com/linear-swap-ex/market/detail/merged?contract_code=BTC
 
 ###  示例
 
-- GET `/linear-swap-ex/market/trade`
+- GET `/linear-swap-ex/market/trade`
 
 ```shell
 
@@ -4388,15 +4197,13 @@ curl "https://api.hbdm.com/linear-swap-ex/market/trade?contract_code=BTC-USDT"
  - 该接口支持全仓模式和逐仓模式
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；同时支持合约标识，格式为 BTC-USDT（永续）、BTC-USDT-CW（当周）、BTC-USDT-NW（次周）、BTC-USDT-CQ（当季）、BTC-USDT-NQ（次季）。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code来决定。
 
 ###  请求参数
 
 | 参数名称   | 是否必须 | 类型     | 描述   | 取值范围                                     |
 | ------ | ---- | ------ | ---- |---------------------------------------- |
-| contract_code | false | string | 合约代码 或 合约标识 |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
+| contract_code | false | string | 合约代码 或 合约标识 |   永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
 | business_type | false（请看备注） | string | 业务类型，不填默认永续    | futures：交割、swap：永续、all：全部 |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -4443,9 +4250,8 @@ curl "https://api.hbdm.com/linear-swap-ex/market/trade?contract_code=BTC-USDT"
 | price     | true | string | 成交价       |      |
 | ts     | true | long | 成交时间       |      |
 | quantity   | true | string |  成交量（币）  |                |
-| contract_code     | true | string  | 合约代码       |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）    |
-| business_type | true | string | 业务类型    | futures：交割、swap：永续 |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true | string  | 合约代码       |      |
+| business_type | true | string | 业务类型     | futures：交割、swap：永续  |
 | trade_turnover   | true | string |  成交额（计价币种）  |                |
 | \</data\>    |  |  |              |      |
 | \</tick\>    |  |  |              |      |
@@ -4472,7 +4278,7 @@ curl "https://api.hbdm.com/linear-swap-ex/market/history/trade?contract_code=BTC
 
 | 参数名称   | 是否必须  | 数据类型   | 描述    | 取值范围   |
 | ------ | ----- | ------ | --------- | ---------------------------------------- |
-| contract_code | true  | string | 合约代码 或 合约标识    |    永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识） |
+| contract_code | true  | string | 合约代码 或 合约标识    |   永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识） |
 | size   | true | int | 获取交易记录的数量，默认1 |  [1, 2000]   |
 
 > Response:
@@ -4542,15 +4348,13 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_risk_info?contract_code=BTC-U
 #### 备注
  - 该接口支持全仓模式和逐仓模式
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-FUTURES。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code来决定。
 
 ### 请求参数
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围  |
-| ------ | ----- | ------ | ---- | ---------------------------- | ---- |
-| contract_code | false | string | 合约代码 |    永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES"... |
+| ------ | ----- | ------ | ---- | ---------------------------- | 
+| contract_code | false | string | 合约代码 |    永续："BTC-USDT"... ，交割："BTC-USDT-FUTURES"... |
 | business_type |  false |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -4601,10 +4405,9 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_risk_info?contract_code=BTC-U
 |\<data\>        |   true   |   object array      |               |                |
 | estimated_clawback | true | decimal | 预估分摊比例        |                |
 | insurance_fund     | true | decimal | 风险准备金余额       |                |
-| contract_code             | true | string  | 合约代码          | 永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES"... |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_code             | true | string  | 合约代码          | 永续："BTC-USDT"... ，交割："BTC-USDT-FUTURES"... |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \</data\>          |      |         |               |                |
 
 ## 【通用】查询合约风险准备金余额历史数据
@@ -4625,7 +4428,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_insurance_fund?contract_code=
 
 | 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
 | ------ | ---- | ------ | ---- | -------------- |
-| contract_code | true | string | 合约代码 | 永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES"...   |
+| contract_code | true | string | 合约代码 | 永续："BTC-USDT"... ，交割："BTC-USDT-FUTURES"...   |
 | page_index | false | int  | 页码，不填默认第1页|   |
 | page_size  | false | int  | 不填默认100，不得多于100 |  [1-100] |
 
@@ -4675,10 +4478,9 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_insurance_fund?contract_code=
 | ts             | true | long    | 响应生成时间点，单位：毫秒 |     |
 | \<data\>       |   true   |   object      |               | 字典数据           |
 | symbol         | true | string  | 品种代码          | "BTC","ETH"... |
-| contract_code  | true | string  | 合约代码          |  永续："BTC-USDT","BTC-HUSD"... ，交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES"... |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_code  | true | string  | 合约代码          |  永续："BTC-USDT"... ，交割："BTC-USDT-FUTURES"... |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \<tick\>  |   true  |  object array       |     |                |
 | insurance_fund | true | decimal | 风险准备金余额       |                |
 | ts             | true | long    | 数据时间点，单位：毫秒   |       |
@@ -4705,8 +4507,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_adjustfactor?contract_code=BT
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围           |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约  |  "BTC-USDT","BTC-HUSD"...  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约  |  "BTC-USDT"...  |
 
 > Response:
 
@@ -4759,9 +4560,8 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_adjustfactor?contract_code=BT
 | ts                | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>          |  true    |   object array     |               |          |
 | symbol            | true | string  | 品种代码           | "BTC","ETH"...|
-| contract_code            | true | string  |   合约代码       |  "BTC-USDT","BTC-HUSD" ... |
+| contract_code            | true | string  |   合约代码       |  "BTC-USDT" ... |
 | margin_mode            | true | string  |   保证金模式	       |  	isolated：逐仓模式 |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \<list\>          |   true   |   object array   |         |                |
 | lever_rate        | true | decimal | 杠杆倍数          |                |
 | \<ladders\>  |    true  |  object array      |               |                |
@@ -4783,17 +4583,15 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_adjustfactor?contract_code=BT
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。
  - contract_type、pair和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ### 请求参数
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围           |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| pair          | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD"...  |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false | string | 合约代码 | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"... |
+| pair          | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false(请看备注) |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -4861,11 +4659,10 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_adjustfactor?contract_code=BT
 | ts                | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>          |  true    |   object array     |               |          |
 | symbol            | true | string  | 品种代码           | "BTC","ETH"...|
-| contract_code            | true | string  |   合约代码       | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code            | true | string  |   合约代码       | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"... |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \<list\>          |   true   |   object array   |         |                |
 | lever_rate        | true | decimal | 杠杆倍数          |                |
@@ -4888,17 +4685,15 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_adjustfactor?contract_code=BT
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。
  - pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ### 请求参数
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false  | string | 合约代码    |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...      |
-| pair | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD"...   |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false  | string | 合约代码    |   永续："BTC-USDT"... ，交割："BTC-USDT-210625"...      |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response
 
@@ -4949,12 +4744,11 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_adjustfactor?contract_code=BT
 | ---------------------- | ---- | ------- | ------------------ | ---------------------------------------- |
 | status                 | true | string  | 请求处理结果             |                                          |
 | \<data\> | true     |  object  array      |                    |                                          |
-| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...     |
 | estimated_settlement_price              | true | decimal  |  本期预估结算价/预估交割价（结算类型为交割时为预估交割价；结算时为预估结算价；）  |                                  |
 | settlement_type        | true | string | 本期结算类型         |  “delivery”：交割，“settlement”：结算            |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</data\>            |      |         |                    |                                          |
 | ts                     | true | long    | 接口响应时间（毫秒）                |                                          |
@@ -4965,7 +4759,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_adjustfactor?contract_code=BT
 - 每6秒计算并更新一次预估结算价。
 
 
-## 【通用】平台持仓量的查询
+## 【通用】平台历史持仓量查询
 
 ### 实例
 
@@ -4986,9 +4780,9 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_his_open_interest?contract_co
 
 | 参数名称          | 是否必须  | 类型     | 描述     | 取值范围  |
 | ------------- | ----- | ------ | ------ | ---------------------------------------- |
-| contract_code | false（请看备注） |  string | 合约代码   |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...       |
-| pair          | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD"...  |
-| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false（请看备注） |  string | 合约代码   |  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...        |
+| pair          | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | period        | true  | string | 时间周期类型 | 1小时:"60min"，4小时:"4hour"，12小时:"12hour"，1天:"1day" |
 | size          | false | int    | 获取数量,默认为：48   |  [1,200]                      |
 | amount_type   | true  | int    | 计价单位   | 1:张，2:币                                   |
@@ -5026,15 +4820,14 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_his_open_interest?contract_co
 | ts            | true | long    | 响应生成时间点，单位：毫秒 |                                          |
 | \<data\>      |  true    |   object      | 字典数据          |                                          |
 | symbol        | true | string  | 品种代码          | "BTC","ETH"...                           |
-| contract_code | true | string  | 合约代码          |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_code | true | string  | 合约代码          |   永续："BTC-USDT"... ，交割："BTC-USDT-210625"... |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \<tick\>      |  true    |  object array       |               |                                          |
 | volume        | true | decimal | 持仓量。 |                                          |
 | amount_type   | true | int     | 计价单位（表示持仓量的计价单位） | 1:张，2:币                                  |
-| value               | true | decimal | 总持仓额（单位为合约的计价币种，如USDT或HUSD）     | |
+| value               | true | decimal | 总持仓额（单位为合约的计价币种，如USDT）     | |
 | ts            | true | long    | 统计时间          |                                          |
 | \</tick\>     |      |         |               |  |
 | \</data\>     |      |         |               |  |
@@ -5056,8 +4849,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_his_open_interest?contract_co
 ### 请求参数：
 | **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
 | ----------------------- | -------- | ------- | ------------------ | -------------- |	
-| contract_code | false | string | 合约代码，不填默认返回所有支持逐仓的合约的阶梯保证金	 | 比如： “BTC-USDT”、“BTC-HUSD” ... |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码，不填默认返回所有支持逐仓的合约的阶梯保证金	 | 比如： “BTC-USDT”、“ETH-USDT”... |
 
 > Response
 
@@ -5119,10 +4911,9 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_his_open_interest?contract_co
 | status | true | string | 请求处理结果	 | "ok" , "error" |
 | \<data\> | true  | object array |  |  |
 | symbol | true  | string |  品种代码 |  比如："BTC"|
-| contract_code | true  | string |  合约代码 |  比如：“BTC-USDT”、“BTC-HUSD” ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true  | string |  合约代码 |  比如："BTC-USDT"|
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如“BTC-USDT”, “BTC-HUSD”... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | \<list\> | true  | object array |  |  |
 | lever_rate | true  | int |  杠杆倍数|   |
 | \<ladders\> | true  | object array | 该合约对应杠杆倍数下的阶梯保证金数据 |  |
@@ -5145,16 +4936,14 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_his_open_interest?contract_co
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
  - pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ### 请求参数：
 | **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
 | ----------------------- | -------- | ------- | ------------------ | -------------- |	
-| contract_code | false | string | 合约代码	 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| pair          | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD"... |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false | string | 合约代码	 | 永续：“BTC-USDT”... ，交割“BTC-USDT-210625”...  |
+| pair          | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response
 
@@ -5195,12 +4984,11 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_his_open_interest?contract_co
 | status | true | string | 请求处理结果	 | "ok" , "error" |
 | \<data\> | true  | object array |  |  |
 | symbol | true  | string |  品种代码 |  比如："BTC"|
-| contract_code | true  | string |  合约代码 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true  | string |  合约代码 | 永续：“BTC-USDT”... ，交割“BTC-USDT-210625”... |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式 |
-| margin_account | true | string | 保证金账户  | 比如“USDT”,"HUSD" |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...  |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \<list\> | true  | object array |  |  |
 | lever_rate | true  | int |  杠杆倍数|   |
@@ -5234,7 +5022,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_elite_account_ratio?contract_
 
 | 参数名称          | 是否必须  | 类型     | 描述     | 取值范围  |
 | ------------- | ----- | ------ | ------ | ---------------------------------------- |
-| contract_code        | true  | string | 合约代码   | 永续："BTC-USDT","BTC-HUSD"... , 交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES" ...         |
+| contract_code        | true  | string | 合约代码   | 永续："BTC-USDT"... , 交割："BTC-USDT-FUTURES" ...         |
 | period        | true  | string | 时间周期类型 | 5min, 15min, 30min, 60min,4hour,1day |
 
 > Response:
@@ -5269,9 +5057,8 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_elite_account_ratio?contract_
 | ts                | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>          |  true    |   object      |               |          |
 | symbol            | true | string  | 品种代码          | "BTC","ETH"...|
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| contract_code            | true | string  | 合约代码          | 永续："BTC-USDT","BTC-HUSD"... , 交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES" ...   |
-| pair              |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_code            | true | string  | 合约代码          | 永续："BTC-USDT"... , 交割："BTC-USDT-FUTURES" ...   |
+| pair              |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \<list\>          |   true   |   object array   |         |                |
 | buy_ratio        | true | decimal | 净多仓的账户比例          |                |
@@ -5300,7 +5087,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_elite_position_ratio?contract
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围          |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | true | string | 合约代码 | 永续："BTC-USDT","BTC-HUSD"... , 交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES" ...  |
+| contract_code | true | string | 合约代码 | 永续："BTC-USDT"... , 交割："BTC-USDT-FUTURES" ...  |
 | period | true | string | 周期 | 5min, 15min, 30min, 60min,4hour,1day |
 
 > Response:
@@ -5334,9 +5121,8 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_elite_position_ratio?contract
 | ts                | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>          |  true    |   object      |               |          |
 | symbol            | true | string  | 品种代码          | "BTC","ETH"... |
-| contract_code            | true | string  | 合约代码          | 永续："BTC-USDT","BTC-HUSD"... , 交割："BTC-USDT-FUTURES","BTC-HUSD-FUTURES" ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_code            | true | string  | 合约代码          | 永续："BTC-USDT"... , 交割："BTC-USDT-FUTURES" ... |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \<list\>          |   true   |   object array   |         |                |
 | buy_ratio        | true | decimal | 多仓的总持仓量占比          |                |
@@ -5364,8 +5150,8 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_api_state?contract_code=BTC-U
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约 |   "BTC-USDT","BTC-HUSD"...     |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约 |   "BTC-USDT"...     |
+
 
 > Response:   
 
@@ -5407,10 +5193,9 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_api_state?contract_code=BTC-U
 | ts                   | true | long   | 响应生成时间点，单位：毫秒 |                |
 | \<data\> |  true    |  object array      |               |                |
 | symbol       | true | string | 品种代码         |   "BTC","ETH"...              |
-| contract_code | true | string | 合约代码         |    "BTC-USDT","BTC-HUSD"...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true | string | 合约代码         |    "BTC-USDT"...  |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:"BTC-USDT","BTC-HUSD"... |
+| margin_account | true | string | 保证金账户  | 比如]“BTC-USDT” |
 | open       | true | int | 开仓下单权限："1"表示可用，“0”表示不可用         |             |
 | close       | true | int | 平仓下单权限："1"表示可用，“0”表示不可用           |          |
 | cancel       | true | int | 撤单权限："1"表示可用，“0”表示不可用         |    |
@@ -5438,7 +5223,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_api_state?contract_code=BTC-U
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| margin_account | false | string |  保证金账户，不传默认为USDT |  全部：“ALL”, USDT账户： "USDT", HUSD账户："HUSD"    |
+| margin_account | false | string |  保证金账户，不填则返回所有全仓数据 |   "USDT"，目前只有一个全仓账户（USDT）    |
 
 > Response 
 
@@ -5474,7 +5259,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_api_state?contract_code=BTC-U
 | ts                   | true | long   | 响应生成时间点，单位：毫秒 |                |
 | \<data\> |  true    |  object array      |               |                |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  |  "USDT", "HUSD"  |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | transfer_in       | true | int | 从币币转入的权限："1"表示可用，“0”表示不可用           |              |
 | transfer_out       | true | int | 转出至币币的权限："1"表示可用，“0”表示不可用          |          |
 | master_transfer_sub       | true | int | 从母账号划转到子账号的权限："1"表示可用，“0”表示不可用            |              |
@@ -5497,17 +5282,15 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_api_state?contract_code=BTC-U
  - 该接口仅支持全仓模式。
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ###  请求参数
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | false | string | 合约代码    |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair          | false |  string | 交易对 |  "BTC-USDT","BTC-HUSD"...   |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false | string | 合约代码    |   永续："BTC-USDT"... ，交割："BTC-USDT-210625"...   |
+| pair          | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false(请看备注) |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response
 
@@ -5577,12 +5360,11 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_api_state?contract_code=BTC-U
 | ts                   | true | long   | 响应生成时间点，单位：毫秒 |                |
 | \<data\> |  true    |  object array      |               |                |
 | symbol       | true | string | 品种代码         |   "BTC","ETH"...              |
-| contract_code | true | string | 合约代码         |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true | string | 合约代码         |   永续："BTC-USDT"... ，交割："BTC-USDT-210625"... |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,"HUSD" |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | open       | true | int | 开仓下单权限："1"表示可用，“0”表示不可用         |             |
 | close       | true | int | 平仓下单权限："1"表示可用，“0”表示不可用           |          |
@@ -5606,7 +5388,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_funding_rate?contract_code=BT
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | true | string | 合约代码 | "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码 |"BTC-USDT" ...  |
 
 > Response: 
 
@@ -5635,9 +5417,8 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_funding_rate?contract_code=BT
 | ts                | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>          |  true    |   object      |               |          |
 | symbol        | true | string | 品种代码          |             |
-| contract_code        | true | string | 合约代码          |   "BTC-USDT","BTC-HUSD" ...             |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| fee_asset        | true | string | 资金费币种   |  "USDT","HUSD"              |
+| contract_code        | true | string | 合约代码          |   "BTC-USDT" ...             |
+| fee_asset        | true | string | 资金费币种   |  "USDT"...              |
 | funding_time        | true | string |当期资金费率时间        |                |
 | funding_rate        | true | string | 当期资金费率          |                |
 | estimated_rate        | true | string | 下一期预测资金费率（一分钟计算一次）   |                |
@@ -5656,8 +5437,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_funding_rate?contract_code=BT
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码，不填返回全部合约 | "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码，不填返回全部合约 |"BTC-USDT" ...  |
 
 > Response
 
@@ -5696,9 +5476,8 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_funding_rate?contract_code=BT
 | ts                | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>          |  true    |   object array      |               |          |
 | symbol        | true | string | 品种代码          |             |
-| contract_code        | true | string | 合约代码          |   "BTC-USDT","BTC-HUSD" ...             |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| fee_asset        | true | string | 资金费币种   |  "USDT", "HUSD"              |
+| contract_code        | true | string | 合约代码          |   "BTC-USDT" ...             |
+| fee_asset        | true | string | 资金费币种   |  "USDT...              |
 | funding_time        | true | string |当期资金费率时间（毫秒）        |                |
 | funding_rate        | true | string | 当期资金费率          |                |
 | estimated_rate        | true | string | 下一期预测资金费率   |                |
@@ -5723,9 +5502,9 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_historical_funding_rate?contr
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | true | string | 合约代码 | "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码 |"BTC-USDT" ...  |
 | page_index | false | int | 页码，不填默认第1页 |  |
-| page_size | false | int | 不填默认20，不得多于50  | [1-50]  |
+| page_size | false | int | 不填默认20，不得多于50  |  |
 
 > Response:
 
@@ -5763,13 +5542,12 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_historical_funding_rate?contr
 | \<data\>          |  true    |   object      |               |          |
 | \<data\>          |  true    |   object      |               |          |
 | symbol        | true | string | 品种代码          |             |
-| contract_code        | true | string | 合约代码          |   "BTC-USDT", "BTC-HUSD" ...             |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| fee_asset        | true | string | 资金费币种   |  "USDT","HUSD"               |
+| contract_code        | true | string | 合约代码          |   "BTC-USDT" ...             |
+| fee_asset        | true | string | 资金费币种   |  "USDT"...              |
 | funding_time        | true | string |资金费率时间        |                |
 | funding_rate        | true | string | 当期资金费率          |                |
 | realized_rate        | true | string | 实际资金费率   |                |
-| avg_premium_index      | true     | string    | 平均溢价指数           |  |
+| avg_premium_index               | true     | string    | 平均溢价指数           |  |
 | \</data\>         |      |         |        |                |
 | total_page        | true | int | 总页数   |                |
 | current_page        | true | int | 当前页   |                |
@@ -5796,8 +5574,8 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_liquidation_orders?contract_c
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false(请看备注) | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false(请看备注) | string | 交易对 | "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | false(请看备注) | string | 合约代码 | 永续："BTC-USDT"... , 交割："BTC-USDT-210625" ...  |
+| pair | false(请看备注) | string | 交易对 |"BTC-USDT" ...  |
 | trade_type | true | int | 交易类型 | 0:全部,5: 卖出强平,6: 买入强平 |
 | create_date | true | int | 日期 | 7，90（7天或者90天） |
 | page_index | false | int | 页码,不填默认第1页 | |
@@ -5856,16 +5634,15 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_liquidation_orders?contract_c
 | \<data\>          |  true    |   object      |               |          |
 | \<orders\>          |   true   |   object array   |         |                |
 | symbol        | true | string | 品种代码          |             |
-| contract_code        | true | string | 合约代码          |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...       |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string | 合约代码          |  永续："BTC-USDT", 交割："BTC-USDT-210625" ...       |
 | created_at        | true | long | 强平时间   |                |
 | direction        | true | string | "buy":买 "sell":卖          |                |
-| offset        | true | string | "open":开 "close":平            |                |
+| offset        | true | string | "open":开 "close":平 "both":单向持仓            |                |
 | price        | true | decimal | 破产价格   |                |
 | volume        | true | decimal | 强平数量（张）         |                |
 | amount        | true | decimal | 强平数量（币）         |                |
 | trade_turnover        | true | decimal | 强平金额（计价币种）         |                |
-| pair          |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...  |
+| pair          |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</orders\>         |      |         |         |                |
 | total_page        | true | int | 总页数   |                |
@@ -5886,7 +5663,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_liquidation_orders?contract_c
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code        | true  | string | 合约代码          |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...      |
+| contract_code        | true  | string | 合约代码          | 永续："BTC-USDT"... , 交割：“BTC-USDT-210625”...       |
 | start_time   | false  | long    | 起始时间（时间戳，单位毫秒）        |  取值范围：[(当前时间 - 90天), 当前时间] ，默认取当前时间- 90天   |
 | end_time   | false  | long    | 结束时间（时间戳，单位毫秒）        | 取值范围：(start_time, 当前时间)，默认取当前时间  |
 | page_index        | false  | int |    页码，不填默认第1页       |                        |
@@ -5937,13 +5714,12 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_liquidation_orders?contract_c
 | \<data\>          |  true    |   object array    |               |          |
 | \<settlement_record\>          |  true    |   object array    |               |          |
 | symbol        | true | string | 品种代码          |             |
-| contract_code        | true | string | 合约代码          |    永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...     |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string | 合约代码          |   永续："BTC-USDT"... , 交割：“BTC-USDT-210625”...      |
 | settlement_time        | true | long | 结算时间（时间戳，单位毫秒）（当settlement_type为交割时，该时间为交割时间；当settlement_type为结算时，该时间为结算时间；）          |             |
 | clawback_ratio        | true | decimal | 分摊比例        |             |
 | settlement_price        | true | decimal | 结算价格（当settlement_type为交割时，该价格为交割价格；当settlement_type为结算时，该价格为结算价格；）          |              |
 | settlement_type        | true | string | 结算类型         |  “delivery”：交割，“settlement”：结算            |
-| pair          |  true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...  |
+| pair          |  true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</settlement_record\>         |      |         |         |                |
 | total_page        | true | int | 总页数   |                |
@@ -5952,7 +5728,7 @@ curl "https://api.hbdm.com/linear-swap-api/v1/swap_liquidation_orders?contract_c
 | \</data\>         |      |         |        |                |
 
 
-## 【通用】获取合约的溢价指数K线
+## 【通用】获取合约的溢价指数K线 
 
 - GET `/index/market/history/linear_swap_premium_index_kline`
 
@@ -5969,7 +5745,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_premium_index_kline?
 
 | 参数名称    | 是否必须 | 类型 | 描述        | 取值范围                                |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码         |  "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 合约代码         |  "BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型               |  1min, 5min, 15min, 30min, 60min,4hour,1day, 1week,1mon     |
 | size  | true     | int    | K线获取数量     |   [1,2000] |
 
@@ -6034,7 +5810,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_estimated_rate_kline
 
 | 参数名称    | 是否必须 | 类型 | 描述        | 默认值 | 取值范围                                |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week,1mon     |
 | size  | true     | int    | K线获取数量     |  | [1,2000] |                                        |
 
@@ -6101,7 +5877,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须 | 类型     | 描述  | 取值范围 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码 或 合约标识    |    永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+| contract_code      | true     | string | 合约代码 或 合约标识    |   永续："BTC-USDT" ... ，交割：“BTC-USDT-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
 | period          | true     | string  | 周期               |    1min,5min, 15min, 30min, 60min,4hour,1day,1week,1mon     |
 | basis_price_type          | false     | string  | 基差价格类型，表示在周期内计算基差使用的价格类型， 不填，默认使用开盘价     |    开盘价：open，收盘价：close，最高价：high，最低价：low，平均价=（最高价+最低价）/2：average   |
 | size  | true     | int    | 基差获取数量，默认 150 | [1,2000] |
@@ -6158,7 +5934,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| valuation_asset   | false  | string    |    资产估值币种，即按该币种为单位进行估值，不填默认"BTC"    |   "BTC", "USD", "USDT", "CNY", "EUR", "GBP", "VND", "HKD", "TWD", "MYR", "SGD", "KRW", "RUB", "TRY", "HUSD"     |
+| valuation_asset   | false  | string    |    资产估值币种，即按该币种为单位进行估值，不填默认"BTC"    |   "BTC", "USD", "USDT", "CNY", "EUR", "GBP", "VND", "HKD", "TWD", "MYR", "SGD", "KRW", "RUB", "TRY"    |
 
 
 > Response: 
@@ -6182,7 +5958,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ---------------------- | ---- | ------- | ------------------ | ---------------------------------------- |
 | status                 | true | string  | 请求处理结果             |                                          |
 | \<data\> | true     |  object array      |                    |                                          |
-| valuation_asset   | true  | string    |    资产估值币种，即按该币种为单位进行估值   | "BTC", "USD", "USDT", "CNY", "EUR", "GBP", "VND", "HKD", "TWD", "MYR", "SGD", "KRW", "RUB", "TRY", "HUSD"    |
+| valuation_asset   | true  | string    |    资产估值币种，即按该币种为单位进行估值   |  "BTC", "USD", "USDT", "CNY", "EUR", "GBP", "VND", "HKD", "TWD", "MYR", "SGD", "KRW", "RUB", "TRY"   |
 | balance        | true | string |    资产估值       |         |
 | \</data\>            |      |         |                    |                                          |
 | ts                     | true | long    | 时间戳                |                                          |
@@ -6199,10 +5975,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 ###  请求参数
 
-| 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         | 
+| 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码 ，不填默认返回所有合约资产  |  "BTC-USDT","BTC-HUSD"...   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码 |  "BTC-USDT"... ,如果缺省，默认返回所有合约  |
 
 > Response:
 
@@ -6243,10 +6018,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | status               | true   | string  | 请求处理结果               | "ok" , "error" |
 | ts                   | long | long    | 响应生成时间点，单位：毫秒        |                |
 | \<data\> |    true    |  object array       |                      |                |
-| symbol               | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code        | true   | string  | 合约代码                 |  "BTC-USDT","BTC-HUSD" ... |
-| trade_partition      |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_asset         | true   | string | 保证金币种（计价币种）                 |                |
+| symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
+| contract_code     | true   | string  | 合约代码                 |  "BTC-USDT" ... |
+| margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance       | true   | decimal | 账户权益                 |                |
 | margin_static        | true   | decimal | 静态权益                 |                |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
@@ -6260,7 +6034,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
 | margin_mode          | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account       | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD” ... |
+| margin_account       | true | string | 保证金账户  | 比如“BTC-USDT” |
+| position_mode	       | true | string | 持仓模式    | single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>            |        |         |                      |                |
 
 ## 【全仓】获取用户账户信息
@@ -6274,8 +6049,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| margin_account | false | string | 保证金账户，不填默认返回所有合约资产 |   "USDT", "HUSD"  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户 |  "USDT"，目前只有一个全仓账户（USDT）  |
 
 > Response
 
@@ -6370,7 +6144,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                   | long | long    | 响应生成时间点，单位：毫秒        |                |
 | \<data\> |    true    |  object array       |                      |                |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance       | true   | decimal | 账户权益                 |                |
 | margin_static        | true   | decimal | 静态权益                 |                |
@@ -6380,10 +6154,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | profit_unreal        | true   | decimal | 未实现盈亏（所有全仓仓位汇总）                |                |
 | withdraw_available   | true   | decimal | 可划转数量                |                |
 | risk_rate            | true   | decimal | 保证金率                 |                |
+| position_mode	       | true   | string  | 持仓模式    | single_side：单向持仓；dual_side：双向持仓 |
 | \<contract_detail\> |    true    |  object array       |    支持永续的所有合约的相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |  永续："BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 |  永续："BTC-USDT" ...  |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -6391,14 +6165,13 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</contract_detail\>            |        |         |                      |                |
 | \<futures_contract_detail\> |    true    |  object array       |    支持交割的所有合约的相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |  交割："BTC-USDT-210625","BTC-HUSD-210625" ... |
-| trade_partition   |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 |  交割："BTC-USDT-210625" ... |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -6406,8 +6179,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</futures_contract_detail\>            |        |         |                      |                |
 | \</data\>            |        |         |                      |                |
@@ -6426,8 +6199,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码，不填默认返回所有合约持仓  |  "BTC-USDT","BTC-HUSD"...   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码 |  "BTC-USDT"... ,如果缺省，默认返回所有合约  |
 
 > Response:
 
@@ -6469,8 +6241,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                   | true | long    | 响应生成时间点，单位：毫秒    |                                          |
 | \<data\>             |  true    |   object array      |     |     |
 | symbol               | true | string  | 品种代码             | "BTC","ETH"...                           |
-| contract_code        | true | string  | 合约代码             | "BTC-USDT","BTC-HUSD" ...                          |
-| trade_partition      | true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码             | "BTC-USDT" ...                          |
 | volume               | true | decimal | 持仓量（张）              |                                          |
 | available            | true | decimal | 可平仓数量（张）            |                                          |
 | frozen               | true | decimal | 冻结数量（张）             |                                          |
@@ -6485,7 +6256,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | direction            | true | string  | 仓位方向            |  "buy":买，即多仓  "sell":卖，即空仓  |
 | last_price           | true | decimal | 最新价              |                                          |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD”... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
+| position_mode | true | string | 持仓模式	  | single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>            |      |         |      |              |
 
 #### 备注
@@ -6505,10 +6277,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false |  string | 交易对 |   BTC-USDT, BTC-HUSD ...   |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码 |  永续："BTC-USDT"... ， 交割：“BTC-USDT-210625” ...  |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 
 > Response:
 
@@ -6573,10 +6344,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                   | true | long    | 响应生成时间点，单位：毫秒    |                                          |
 | \<data\> |  true    |   object array      |     |     |
 | symbol               | true | string  | 品种代码             | "BTC","ETH"...                           |
-| contract_code        | true | string  | 合约代码             | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码             | 永续："BTC-USDT"... ， 交割：“BTC-USDT-210625” ...   |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”, “HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | volume               | true | decimal | 持仓量（张）              |                                          |
 | available            | true | decimal | 可平仓数量（张）            |                                          |
 | frozen               | true | decimal | 冻结数量（张）             |                                          |
@@ -6585,14 +6355,15 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | profit_unreal        | true | decimal | 未实现盈亏            |                                          |
 | profit_rate          | true | decimal | 收益率              |                                          |
 | profit               | true | decimal | 收益               |                                          |
-| margin_asset         | true | string | 保证金币种（计价币种）                 |                |
+| margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | position_margin      | true | decimal | 持仓保证金            |                                          |
 | lever_rate           | true | int     | 杠杠倍数             |                                          |
 | direction            | true | string  | 仓位方向             |  "buy":买，即多仓  "sell":卖，即空仓    |
 | last_price           | true | decimal | 最新价              |                                          |
-| contract_type        | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair                 | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type        | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair                 | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type        | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| position_mode        | true | string | 持仓模式	  | single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>            |      |         |      |              |
 
 
@@ -6607,8 +6378,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | true | string | 合约代码 |  "BTC-USDT","BTC-HUSD"...   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true | string | 合约代码 |  "BTC-USDT"...   |
 
 ### 备注：
 
@@ -6674,8 +6444,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                   | long | long    | 响应生成时间点，单位：毫秒        |                |
 | \<data\> |    true    |  object array       |                      |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code        | true | string  | 合约代码             | "BTC-USDT","BTC-HUSD"...     |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码             | "BTC-USDT" ...   |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance       | true   | decimal | 账户权益                 |                |
 | margin_static        | true   | decimal | 静态权益                 |                |
@@ -6690,11 +6459,11 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:“BTC-USDT”, “BTC-HUSD”... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
+| position_mode	 | true | string | 持仓模式	   | single_side：单向持仓；dual_side：双向持仓 |
 | \<positions\> |    true    |  object array       |                      |                |
 | symbol               | true | string  | 品种代码             | "BTC","ETH"...                           |
-| contract_code        | true | string  | 合约代码             | "BTC-USDT","BTC-HUSD" ...         |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码             |"BTC-USDT" ...         |
 | volume               | true | decimal | 持仓量（张）              |                                          |
 | available            | true | decimal | 可平仓数量（张）            |                                          |
 | frozen               | true | decimal | 冻结数量（张）             |                                          |
@@ -6709,7 +6478,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | direction            | true | string  | 仓位方向           |  "buy":买，即多仓  "sell":卖，即空仓  |
 | last_price           | true | decimal | 最新价              |                                          |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD”... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
+| position_mode	 | true | string | 持仓模式	   | single_side：单向持仓；dual_side：双向持仓 |
 | \</positions\>            |        |         |                      |                |
 | \</data\>            |        |         |                      |                |
 
@@ -6725,7 +6495,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| margin_account | true | string | 保证金账户 |  "USDT", "HUSD"  |
+| margin_account | true | string | 保证金账户 |  "USDT"，目前只有一个全仓账户（USDT）  |
 
 > Response
 
@@ -6864,7 +6634,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                   | long | long    | 响应生成时间点，单位：毫秒        |                |
 | \<data\> |    true    |  object array       |                      |                |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance       | true   | decimal | 账户权益                 |                |
 | margin_static        | true   | decimal | 静态权益                 |                |
@@ -6874,10 +6644,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | profit_unreal        | true   | decimal | 未实现盈亏（所有全仓仓位汇总）                |                |
 | withdraw_available   | true   | decimal | 可划转数量                |                |
 | risk_rate            | true   | decimal | 保证金率                 |                |
+| position_mode	 | true | string | 持仓模式	   | single_side：单向持仓；dual_side：双向持仓 |
 | \<contract_detail\> |    true    |  object array       |    支持全仓的永续合约的相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 | 永续："BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 | 永续："BTC-USDT" ...  |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -6885,14 +6655,13 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</contract_detail\>            |        |         |                      |                |
 | \<futures_contract_detail\> |    true    |  object array       |    支持全仓的交割合约的相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 | 交割："BTC-USDT-210625","BTC-HUSD-210625" ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 | 交割："BTC-USDT-210625" ... |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -6900,16 +6669,15 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</futures_contract_detail\>            |        |         |                      |                |
 | \<positions\> |    true    |  object array       |    支持全仓的所有合约的仓位                  |                |
 | symbol               | true | string  | 品种代码             | "BTC","ETH"...                           |
-| contract_code        | true | string  | 合约代码             | 永续："BTC-USDT","BTC-HUSD" ... ，交割："BTC-USDT-210625","BTC-HUSD-210625" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码             | 永续："BTC-USDT" ... ，交割："BTC-USDT-210625" ...  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”, “HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | volume               | true | decimal | 持仓量（张）              |                                          |
 | available            | true | decimal | 可平仓数量（张）            |                                          |
 | frozen               | true | decimal | 冻结数量（张）             |                                          |
@@ -6923,9 +6691,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | lever_rate           | true | int     | 杠杠倍数             |                                          |
 | direction            | true | string  | 仓位方向           |  "buy":买，即多仓  "sell":卖，即空仓         |
 | last_price           | true | decimal | 最新价              |                                          |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD"...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| position_mode	 | true | string | 持仓模式	   | single_side：单向持仓；dual_side：双向持仓 |
 | \</positions\>            |        |         |                      |                |
 | \</data\>            |        |         |                      |                |
 
@@ -6998,8 +6767,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约 |  "BTC-USDT","BTC-HUSD"...   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约 |  "BTC-USDT"...   |
 
 > Response:
 
@@ -7038,14 +6806,13 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | sub_uid           | true | long    | 子账户UID        |                |
 | \<list\>          |   true   |  object array       |               |                |
 | symbol            | true | string  | 品种代码          | "BTC","ETH"...|
-| contract_code            | true | string  | 合约代码          |  "BTC-USDT","BTC-HUSD" ... |
-| trade_partition   | true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_asset      | true | string | 保证金币种（计价币种）                 |                |
+| contract_code            | true | string  | 合约代码          |  "BTC-USDT" ... |
+| margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance    | true | decimal | 账户权益          |                |
 | liquidation_price | true | decimal | 预估强平价         |                |
 | risk_rate         | true | decimal | 保证金率          |                |
 | margin_mode       | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account    | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD” ... |
+| margin_account    | true | string | 保证金账户  | 比如“BTC-USDT” |
 | \</list\>         |      |         |               |                |
 | \</data\>         |      |         |               |                |
 
@@ -7065,8 +6832,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户 |  "USDT"，"HUSD"  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户 |  "USDT"，目前只有一个全仓账户（USDT）  |
 
 > Response
 
@@ -7102,11 +6868,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | sub_uid           | true | long    | 子账户UID        |                |
 | \<list\>          |   true   |  object array       |               |                |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”, “HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance    | true | decimal | 账户权益          |                |
 | risk_rate         | true | decimal | 保证金率          |                |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | \</list\>         |      |         |               |                |
 | \</data\>         |      |         |               |                |                  
     
@@ -7125,8 +6890,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 ### 请求参数
 | 参数名称   | 是否必须  | 类型     | 描述   |  取值范围       |
 | ------ | ----- | ------ |  ---- | ------------------------------ |
-| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约 |  "BTC-USDT","BTC-HUSD"...   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码 |  "BTC-USDT"... ,如果缺省，默认返回所有合约  |
 | page_index  | false | int    | 第几页,不填默认第一页            |                                          |
 | page_size   | false | int    | 不填默认20，不得多于50          |                                          |
 
@@ -7177,9 +6941,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | sub_uid           | true | long    | 子账户UID        |                |
 | \<account_info_list\>          |   true   |  object array       |               |                |
 | symbol            | true | string  | 品种代码          | "BTC","ETH"...|
-| contract_code            | true | string  | 合约代码          |  "BTC-USDT","BTC-HUSD" ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_account | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD” ... |
+| contract_code            | true | string  | 合约代码          |  "BTC-USDT" ... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_mode | true | string | 保证金模式  |isolated：逐仓模式 |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance    | true | decimal | 账户权益          |                |
@@ -7203,8 +6966,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 ### 请求参数
 | 参数名称   | 是否必须  | 类型     | 描述   |  取值范围       |
 | ------ | ----- | ------ |  ---- | ------------------------------ |
-| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户 |  "USDT"，"HUSD"  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户 |  "USDT"，目前只有一个全仓账户（USDT）  |
 | page_index  | false | int    | 第几页,不填默认第一页            |                                          |
 | page_size   | false | int    | 不填默认20，不得多于50          |                                          |
 
@@ -7251,9 +7013,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | \<sub_list\>  | true     |  object array       |               |                                          |
 | sub_uid           | true | long    | 子账户UID        |                |
 | \<account_info_list\>          |   true   |  object array       |               |                |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”, “HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance    | true | decimal | 账户权益          |                |
 | risk_rate         | true | decimal | 保证金率          |                |
@@ -7277,8 +7038,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称    | 是否必须  | 类型     | 描述    | 取值范围 |
 | ------- | ----- | ------ | ------- | ---------------------------- |
-| contract_code  | false | string | 合约代码 ,如果缺省，默认返回所有合约    |  "BTC-USDT","BTC-HUSD"...  |      |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code  | false | string | 合约代码 ,如果缺省，默认返回所有合约    |  "BTC-USDT"...  |      |
 | sub_uid | true  | long   | 子账户的UID |       |
 
 > Response:
@@ -7321,8 +7081,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                 | true | long    | 响应生成时间点，单位：毫秒        |                                        |
 | \<data\>           |  true    | object array    |     |    |
 | symbol             | true | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code      | true | string  | 合约代码                 | "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"... |
-| trade_partition    | true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code             | true | string  | 合约代码                 | "BTC-USDT","ETH-USDT"... |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance     | true | decimal | 账户权益                 |                                        |
 | margin_position    | true | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                                        |
@@ -7337,7 +7096,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | adjust_factor      | true | decimal | 调整系数                 |                                        |
 | margin_static      | true | decimal | 静态权益                   |                                        |
 | margin_mode       | true | string     | 保证金模式             | isolated：逐仓模式 |
-| margin_account    | true | string     | 保证金账户             | 比如:“BTC-USDT”,“BTC-HUSD” ... |
+| margin_account    | true | string     | 保证金账户             | 比如“BTC-USDT” |
+| position_mode     | true | string     | 持仓模式	             | single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>          |      |         |       |  |
 
 #### 备注
@@ -7357,8 +7117,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | 参数名称    | 是否必须  | 类型     | 描述    | 取值范围 |
 | ------- | ----- | ------ | ------- | ---------------------------- |
 | sub_uid | true  | long   | 子账户的UID |       |
-| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户 |  "USDT"，"HUSD"  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户 |  "USDT"，目前只有一个全仓账户（USDT）  |
 
  > Response:
 
@@ -7454,7 +7213,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                   | long | long    | 响应生成时间点，单位：毫秒        |                |
 | \<data\> |    true    |  object array       |                      |                |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD”  |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance       | true   | decimal | 账户权益                 |                |
 | margin_static        | true   | decimal | 静态权益                 |                |
@@ -7464,10 +7223,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | profit_unreal        | true   | decimal | 未实现盈亏                |                |
 | withdraw_available   | true   | decimal | 可划转数量                |                |
 | risk_rate            | true   | decimal | 保证金率                 |                |
-| \<contract_detail\> |    true    |  object array       |    支持永续的所有合约的相关字段                  |                |
+| position_mode        | true   | string  | 持仓模式	             | single_side：单向持仓；dual_side：双向持仓 |
+| \<contract_detail\> |    true    |  object array       |    支持全仓的所有合约的相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 | 永续： "BTC-USDT","BTC-HUSD" ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 |  "BTC-USDT" ... |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -7475,14 +7234,13 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如：“BTC-USDT”,“BTC-HUSD” ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</contract_detail\>            |        |         |                      |                |
-| \<futures_contract_detail\> |    true    |  object array       |    支持交割的所有合约的相关字段                  |                |
+| \<futures_contract_detail\> |    true    |  object array       |    支持全仓的所有合约的相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |  交割： "BTC-USDT-211231","BTC-HUSD-211231" ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 |  "BTC-USDT-211231" ... |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -7490,8 +7248,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如：“BTC-USDT”,“BTC-HUSD” ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</futures_contract_detail\>            |        |         |                      |                |
 | \</data\>            |        |         |                      |                |
@@ -7514,8 +7272,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称    | 是否必须  | 类型     | 描述    | 取值范围 |
 | ------- | ----- | ------ |  ------------------ | ---- |
-| contract_code  | false | string | 合约代码，如果缺省，默认返回所有合约    |  "BTC-USDT","BTC-HUSD"... |      |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code  | false | string | 合约代码，如果缺省，默认返回所有合约    |  "BTC-USDT"... |      |
 | sub_uid | true  | long   | 子账户的UID |                              |      |
 
 
@@ -7558,8 +7315,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts              | true | long    | 响应生成时间点，单位：毫秒 |                                          |
 | \<data\>        |  true    | object array        |               |                                          |
 | symbol          | true | string  | 品种代码          | "BTC","ETH"...                           |
-| contract_code   | true | string  | 合约代码          | "BTC-USDT","BTC-HUSD"...            |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码          | "BTC-USDT" ...                          |
 | volume          | true | decimal | 持仓量（张）           |                                          |
 | available       | true | decimal | 可平仓数量（张）         |                                          |
 | frozen          | true | decimal | 冻结数量（张）         |                                          |
@@ -7574,7 +7330,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | direction       | true | string  | 仓位方向           |  "buy":买，即多仓  "sell":卖，即空仓         |
 | last_price       | true | decimal  | 最新价          |   |
 | margin_mode | true | string | 保证金模式  |isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD” ... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
+| position_mode | true | string | 持仓模式	  | single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>       |      |         |               |                                          |
 
 ## 【全仓】查询单个子账户持仓信息
@@ -7590,11 +7347,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称    | 是否必须  | 类型     | 描述    | 取值范围 |
 | ------- | ----- | ------ |  ------------------ | ---- |
-| contract_code  | false | string | 合约代码    |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |      |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code  | false | string | 合约代码    |  永续："BTC-USDT"...，交割：“BTC-USDT-210625” |      |
 | sub_uid | true  | long   | 子账户的UID |                              |      |
-| pair | false |  string | 交易对 |   BTC-USDT, BTC-HUSD ...  |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 
 > Response:
 
@@ -7638,10 +7394,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                   | true | long    | 响应生成时间点，单位：毫秒    |                                          |
 | \<data\>             |  true    |   object array      |     |     |
 | symbol               | true | string  | 品种代码             | "BTC","ETH"...                           |
-| contract_code        | true | string  | 合约代码             |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码             | 永续："BTC-USDT"...，交割：“BTC-USDT-210625”     |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | volume               | true | decimal | 持仓量（张）              |                                          |
 | available            | true | decimal | 可平仓数量（张）            |                                          |
 | frozen               | true | decimal | 冻结数量（张）             |                                          |
@@ -7655,9 +7410,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | lever_rate           | true | int     | 杠杠倍数             |                                          |
 | direction            | true | string  | 仓位方向           |  "buy":买，即多仓  "sell":卖，即空仓      |
 | last_price           | true | decimal | 最新价              |                                          |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如：“BTC-USDT”,“BTC-HUSD”...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| position_mode | true | string | 持仓模式	  | single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>            |      |         |      |              |
 
 
@@ -7673,12 +7429,12 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称        | 是否必须  | 类型     | 描述    | 取值范围  |
 | ----------- | ----- | ------ | ---------------------- | ---------------------------------------- |
-| margin_account      | true <img width=250/>  | string | 保证金账户  <img width=1000/>    | 逐仓："BTC-USDT","BTC-HUSD"... , 全仓："USDT","HUSD"   |
-| contract_code | false | string | 合约代码，不填查询所有  |  永续："BTC-USDT","BTC-HUSD"... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
+| margin_account      | true <img width=250/>  | string | 保证金账户  <img width=1000/>    | "BTC-USDT","USDT"(查询全仓时使用)...     |
+| contract_code | false | string | 合约代码，不填查询所有  | 永续："BTC-USDT"...，交割：“BTC-USDT-210625”  |
 | type        | false | string | 不填查询全部类型,【查询多类型中间用，隔开】 | 3:平多; 4:平空; 5:开仓手续费-吃单; 6:开仓手续费-挂单; 7:平仓手续费-吃单; 8:平仓手续费-挂单; 9:交割平多; 10:交割平空; 11:交割手续费; 12:强制平多; 13:强制平空; 14:从币币转入; 15:转出至币币; 16:结算未实现盈亏-多仓; 17:结算未实现盈亏-空仓; 19:穿仓分摊; 26:系统; 28:活动奖励; 29:返利; 30:资金费-收入; 31:资金费-支出; 34:转出到子账号合约账户; 35:从子账号合约账户转入; 36:转出到母账号合约账户; 37:从母账号合约账户转入; 38:从其他保证金账户转入; 39:转出到其他保证金账户;  |
 | create_date | false | int    | 可随意输入正整数，如果参数超过90则默认查询90天的数据，默认7 |                                          |
 | page_index  | false | int    | 第几页,不填默认第一页            |                                          |
-| page_size   | false | int    | 不填默认20，不得多于50          |   [1-50]                           |
+| page_size   | false | int    | 不填默认20，不得多于50          |                                          |
 
 #### 备注：
  - 若需要查询全仓账户某一个合约市场的交易类财务记录才需要使用contract_code入参，其他场景无需填写。
@@ -7731,11 +7487,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | \<financial_record\>  | true     |  object array       |               |                                          |
 | id                    | true | long    |   财务记录ID（品种唯一）      |                                          |
 | ts                    | true | long    | 创建时间          |                                          |
-| asset                | true | string  | 币种          | "USDT","HUSD"           |
-| contract_code                | true | string  | 合约代码         |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_account                | true | string  | 保证金账户          | 逐仓："BTC-USDT","BTC-HUSD"... , 全仓："USDT","HUSD"                           |
-| face_margin_account           | true | string  | 对手方保证金账户，仅在type交易类型为34、35、36、37、38、39时有值，其他类型为空字符串  | 逐仓："BTC-USDT","BTC-HUSD"... , 全仓："USDT","HUSD"        |
+| asset                | true | string  | 币种          | "USDT"...                           |
+| contract_code                | true | string  | 合约代码         | 永续："BTC-USDT"... ，交割：“BTC-USDT-210625”...    |
+| margin_account                | true | string  | 保证金账户          | "BTC-USDT","USDT"...                           |
+| face_margin_account           | true | string  | 对手方保证金账户，仅在type交易类型为34、35、36、37、38、39时有值，其他类型为空字符串          | "BTC-USDT"...                           |
 | type                  | true | int     | 交易类型          | 3:平多; 4:平空; 5:开仓手续费-吃单; 6:开仓手续费-挂单; 7:平仓手续费-吃单; 8:平仓手续费-挂单; 9:交割平多; 10:交割平空; 11:交割手续费; 12:强制平多; 13:强制平空; 14:从币币转入; 15:转出至币币; 16:结算未实现盈亏-多仓; 17:结算未实现盈亏-空仓; 19:穿仓分摊; 26:系统; 28:活动奖励; 29:返利; 30:资金费-收入; 31:资金费-支出; 34:转出到子账号合约账户; 35:从子账号合约账户转入; 36:转出到母账号合约账户; 37:从母账号合约账户转入; 38:从其他保证金账户转入; 39:转出到其他保证金账户;   |
 | amount                | true | decimal | 金额（计价货币）            |                                          |
 | \</financial_record\> |     |         |               |                                          |
@@ -7757,8 +7512,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 ### 请求参数
 | 参数名称        | 是否必须  | 类型     | 描述    | 取值范围  |
 | ----------- | ----- | ------ | ---------------------- | ---------------------------------------- |
-| margin_account      | true  | string | 保证金账户                 | 逐仓："BTC-USDT","BTC-HUSD"... , 全仓："USDT","HUSD"       |
-| contract_code      | false  | string | 合约代码                   |  永续："BTC-USDT","BTC-HUSD"... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
+| margin_account      | true  | string | 保证金账户                 | "BTC-USDT","USDT"(查询全仓时使用)...      |
+| contract_code      | false  | string | 合约代码                   | 永续："BTC-USDT"... ，交割：“BTC-USDT-210625”...    |
 | type        | false | string | 不填查询全部类型,【查询多类型中间用，隔开】 | 	3:平多; 4:平空; 5:开仓手续费-吃单; 6:开仓手续费-挂单; 7:平仓手续费-吃单; 8:平仓手续费-挂单; 9:交割平多; 10:交割平空; 11:交割手续费; 12:强制平多; 13:强制平空; 14:从币币转入; 15:转出至币币; 16:结算未实现盈亏-多仓; 17:结算未实现盈亏-空仓; 19:穿仓分摊; 26:系统; 28:活动奖励; 29:返利; 30:资金费-收入; 31:资金费-支出; 34:转出到子账号合约账户; 35:从子账号合约账户转入; 36:转出到母账号合约账户; 37:从母账号合约账户转入;38:从其他保证金账户转入 ;39:转出到其他保证金账户 ;
 | start_time   | false  | long    | 起始时间（时间戳，单位毫秒）        | 详见备注    |
 | end_time   | false  | long    | 结束时间（时间戳，单位毫秒）        |  详见备注   |
@@ -7838,11 +7593,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | \<financial_record\>  | true     |  object array       |               |                                          |
 | id                    | true | long    |               |                                          |
 | ts                    | true | long    | 创建时间          |                                          |
-| asset                | true | string  | 币种          | "USDT","HUSD"                          |
-| contract_code                | true | string  | 合约代码         |  永续："BTC-USDT","BTC-HUSD"... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...      |
-| trade_partition      |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_account                | true | string  | 保证金账户          | 逐仓："BTC-USDT","BTC-HUSD"... , 全仓："USDT","HUSD"              |
-| face_margin_account           | true | string  | 对手方保证金账户，仅在type交易类型为34、35、36、37、38、39时有值，其他类型为空字符串  | 逐仓："BTC-USDT","BTC-HUSD"... , 全仓："USDT","HUSD"     |
+| asset                | true | string  | 币种          | "USDT"...                           |
+| contract_code                | true | string  | 合约代码         | "BTC-USDT"...                           |
+| margin_account                | true | string  | 保证金账户          | "BTC-USDT","USDT"...                           |
+| face_margin_account           | true | string  | 对手方保证金账户，仅在type交易类型为34、35、36、37、38、39时有值，其他类型为空字符串          | "BTC-USDT"...                           |
 | type                  | true | int     | 交易类型          |  3:平多; 4:平空; 5:开仓手续费-吃单; 6:开仓手续费-挂单; 7:平仓手续费-吃单; 8:平仓手续费-挂单; 9:交割平多; 10:交割平空; 11:交割手续费; 12:强制平多; 13:强制平空; 14:从币币转入; 15:转出至币币; 16:结算未实现盈亏-多仓; 17:结算未实现盈亏-空仓; 19:穿仓分摊; 26:系统; 28:活动奖励; 29:返利; 30:资金费-收入; 31:资金费-支出; 34:转出到子账号合约账户; 35:从子账号合约账户转入; 36:转出到母账号合约账户; 37:从母账号合约账户转入;38:从其他保证金账户转入 ;39:转出到其他保证金账户 ;
 | amount                | true | decimal | 金额（计价货币）            |                                          |
 | \</financial_record\> |     |         |               |                                          |
@@ -7866,7 +7620,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | true  | string | 合约代码     |    "BTC-USDT","BTC-HUSD"...              |
+| contract_code | true  | string | 合约code     |     "BTC-USDT"...                           |
 | start_time   | false  | long    | 起始时间（时间戳，单位毫秒）        |  取值范围：[(当前时间 - 90天), 当前时间] ，默认取当前时间- 90天   |
 | end_time   | false  | long    | 结束时间（时间戳，单位毫秒）        | 取值范围：(start_time, 当前时间]，默认取当前时间  |
 | page_index	|false |	int	|页码 |不填默认第1页	|
@@ -7942,10 +7696,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | \<data\> | true     |  object      |                    |                                          |
 | \<settlement_records\> | true     |  object   array    |                    |                                          |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |  "BTC-USDT","BTC-HUSD"... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如：“BTC-USDT”,“BTC-HUSD” ... |
+| contract_code     | true   | string  | 合约代码                 |  "BTC-USDT" ... |
+| margin_mode | true | string | 保证金模式  |  isolated：逐仓模式 |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_balance_init        | true | decimal | 本期初始账户权益         |                                          |
 | margin_balance        | true | decimal | 本期结算后账户权益         |                                          |
 | settlement_profit_real        | true | decimal | 本期结算已实现盈亏            |                                          |
@@ -7957,7 +7710,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | fee_asset        | true | string | 手续费币种      |                                          |
 | \<positions\> | true     |  object   array    |                    |                                          |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |  "BTC-USDT","BTC-HUSD" ... |
+| contract_code     | true   | string  | 合约代码                 |  "BTC-USDT" ... |
 | direction            | true | string  | 仓位方向  |     "buy":买 "sell":卖                                     |
 | volume               | true | decimal | 本期结算前持仓量（张）              |                                          |
 | cost_open            | true | decimal | 开仓均价             |                                          |
@@ -7986,7 +7739,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| margin_account | true | string | 保证金账户 |  "USDT"，"HUSD"  |
+| margin_account | true | string | 保证金账户 |  "USDT"，目前只有一个全仓账户（USDT）  |
 | start_time   | false  | long    | 起始时间（时间戳，单位毫秒）        |  取值范围：[(当前时间 - 90天), 当前时间] ，默认取当前时间- 90天   |
 | end_time   | false  | long    | 结束时间（时间戳，单位毫秒）        | 取值范围：(start_time, 当前时间]，默认取当前时间  |
 | page_index	|false |	int	|页码，不填默认第1页 |	 |
@@ -8006,49 +7759,75 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
     "data":{
         "total_page":2,
         "current_page":1,
-        "total_size":11,
+        "total_size":13,
         "settlement_records":[
             {
                 "margin_mode":"cross",
                 "margin_account":"USDT",
-                "margin_balance_init":21.23035181555383535,
-                "margin_balance":20.78635202555383535,
-                "settlement_profit_real":-0.44399979,
-                "settlement_time":1640016004038,
+                "margin_balance_init":5000,
+                "margin_balance":5007.6708,
+                "settlement_profit_real":7.6708,
+                "settlement_time":1611051602040,
                 "clawback":0,
-                "funding_fee":-0.00459979,
+                "funding_fee":0,
                 "offset_profitloss":0,
-                "fee":0,
+                "fee":0.6708,
                 "fee_asset":"USDT",
                 "contract_detail":[
                     {
                         "symbol":"BTC",
                         "contract_code":"BTC-USDT",
                         "offset_profitloss":0,
-                        "fee":0,
+                        "fee":0.6708,
                         "fee_asset":"USDT",
-                        "pair":"BTC-USDT",
                         "positions":[
                             {
-                                "pair":"BTC-USDT",
-                                "symbol":"BTC",
+                                "symbol":"BTC-USDT",
                                 "contract_code":"BTC-USDT",
                                 "direction":"buy",
-                                "volume":1,
-                                "cost_open":46500,
-                                "cost_hold_pre":46437.3,
-                                "cost_hold":45997.9,
-                                "settlement_profit_unreal":-0.4394,
-                                "settlement_price":45997.9,
+                                "volume":9,
+                                "cost_open":27911.111111111111111111,
+                                "cost_hold_pre":27911.111111111111111111,
+                                "cost_hold":34361.25,
+                                "settlement_profit_unreal":580.5125,
+                                "settlement_price":34361.25,
+                                "settlement_type":"settlement"
+                            },
+                            {
+                                "symbol":"BTC-USDT",
+                                "contract_code":"BTC-USDT",
+                                "direction":"sell",
+                                "volume":9,
+                                "cost_open":27988.888888888888888888,
+                                "cost_hold_pre":27988.888888888888888888,
+                                "cost_hold":34361.25,
+                                "settlement_profit_unreal":-573.5125,
+                                "settlement_price":34361.25,
                                 "settlement_type":"settlement"
                             }
                         ]
                     }
                 ]
+            },
+            {
+                "margin_mode":"cross",
+                "margin_account":"USDT",
+                "margin_balance_init":5000,
+                "margin_balance":5000,
+                "settlement_profit_real":0,
+                "settlement_time":1611047654316,
+                "clawback":0,
+                "funding_fee":0,
+                "offset_profitloss":0,
+                "fee":0,
+                "fee_asset":"USDT",
+                "contract_detail":[
+
+                ]
             }
         ]
     },
-    "ts":1640315971265
+    "ts":1611051729365
 }
 ```
 
@@ -8059,8 +7838,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | status                 | true | string  | 请求处理结果             |                                          |
 | \<data\> | true     |  object      |                    |                                          |
 | \<settlement_records\> | true     |  object   array    |                    |                                          |
-| margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”, “HUSD”  |
+| margin_mode | true | string | 保证金模式  | cross：全仓模式  |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | margin_balance_init        | true | decimal | 本期初始账户权益         |                                          |
 | margin_balance        | true | decimal | 本期结算后账户权益         |                                          |
 | settlement_profit_real        | true | decimal | 本期结算已实现盈亏            |                                          |
@@ -8072,15 +7851,14 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | fee_asset        | true | string | 手续费币种      |                                          |
 | \<contract_detail\> | true     |  object   array    |   支持全仓的所有合约的相关字段       |        |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 |  永续："BTC-USDT" ... ， 交割："BTC-USDT-210625" ... |
 | offset_profitloss        | true | decimal | 本期该合约平仓盈亏           |                                          |
 | fee        | true | decimal | 本期该合约交易手续费           |                                          |
 | fee_asset        | true | string | 手续费币种      |                                          |
-| pair |   true |  string | 交易对 |   如：“BTC-USDT”,“BTC-HUSD” ...   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | \<positions\> | true     |  object   array    |   该合约仓位（结算时有持仓量的才有值）                |          |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码      |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code     | true   | string  | 合约代码      |  永续："BTC-USDT" ... ， 交割："BTC-USDT-210625" ...  |
 | direction            | true | string  | 仓位方向  |     "buy":买 "sell":卖                                     |
 | volume               | true | decimal | 本期结算前持仓量（张）              |                                          |
 | cost_open            | true | decimal | 开仓均价             |                                          |
@@ -8089,7 +7867,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | settlement_profit_unreal        | true | decimal | 本期结算未实现盈亏            |                                          |
 | settlement_price        | true | decimal | 本期结算价格，交割时为交割价格            |                                          |
 | settlement_type        | true | string |   结算类型          |     settlement：结算；delivery：交割；      |
-| pair |   true |  string | 交易对 |   如：“BTC-USDT”,“BTC-HUSD” ...    |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | \</positions\>            |      |         |                    |                                          |
 | \</contract_detail\> | true     |    |                |                                          |
 | \</settlement_records\>            |      |         |                    |                                          |
@@ -8111,8 +7889,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
 | ----------------------- | -------- | ------- | ------------------ | -------------- |	
-| contract_code | false | string | 合约代码，不填默认返回所有合约的实际可用杠杆倍数	 | 比如： “BTC-USDT”,“BTC-USDT”... |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码，不填默认返回所有合约的实际可用杠杆倍数	 | 比如： “BTC-USDT”...  |
 
 > 返回示例：
 
@@ -8138,8 +7915,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ----------------------- | -------- | ------- | ------------------ | -------------- |
 | status | true | string | 请求处理结果	 | "ok" , "error" |
 | \<data\> | true  | object array |  | 字典数据 |
-| contract_code | true  | string |  合约代码 |  比如："BTC-USDT","BTC-HUSD" ...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true  | string |  合约代码 |  比如："BTC-USDT"|
 | margin_mode | true | string |  保证金模式  | isolated：逐仓模式 |
 | available_level_rate | true  | string |  实际可用杠杆倍数，多个以英文逗号隔开 | 比如："1,5,10" |
 | \</data\> |  |  |  |  |
@@ -8155,17 +7931,15 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。
  - pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ###  请求参数
 
 | 参数名              | 参数类型    | 必填    | 描述    | 取值范围 |
 | ---------------- | ------- | ----- | ---------------------------------------- | -----------|
-| contract_code | false | string | 合约代码	 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false | string | 合约代码	 | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”... |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false(请看备注) |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response
 
@@ -8218,12 +7992,11 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ------------- | ---- | ------- | --------------- | ---------------------------------------- |
 | status | true | string | 请求处理结果	 | "ok" , "error" |
 | \<data\> | true  | object array |  | 字典数据 |
-| contract_code | true  | string |  合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true  | string |  合约代码 | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”... |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
 | available_level_rate | true  | string |  实际可用杠杆倍数，多个以英文逗号隔开 | 比如："1,5,10" |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</data\> |  |  |  |  |
 | ts | true  | long | 响应生成时间点，单位：毫秒 |  |
@@ -8238,18 +8011,16 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。
  - pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ### 请求参数
 
   参数名称               |   是否必须   |  类型  |  描述             |   取值范围       |
 ----------------------- | -------- | ------- | ------------------ | -------------- |
- contract_code <img width=250/> |  false <img width=250/> | string <img width=250/> |  合约代码 <img width=1000/> |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
+ contract_code <img width=250/> |  false <img width=250/> | string <img width=250/> |  合约代码 <img width=1000/> | 永续"BTC-USDT"... ，交割："BTC-USDT-220325"...   |
  order_price_type | true  | string | 订单报价类型 | "limit":限价，"opponent":对手价，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单,opponent_ioc"： 对手价-IOC下单，"lightning_ioc"：闪电平仓-IOC下单，"optimal_5_ioc"：最优5档-IOC下单，"optimal_10_ioc"：最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单,"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
- pair | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
- contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+ pair | false |  string | 交易对 |   BTC-USDT   |
+ contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
  business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
- trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -8310,14 +8081,13 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
  ts | true  | long | 响应生成时间点，单位：毫秒 |  |
  \<data\>  |  |  |  |  |    
  order_price_type | true  | string | 订单报价类型 | "limit":限价，"opponent":对手价，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单,opponent_ioc"： 对手价-IOC下单，"lightning_ioc"：闪电平仓-IOC下单，"optimal_5_ioc"：最优5档-IOC下单，"optimal_10_ioc"：最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单,"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
- \<list\>  |  |  |  |  |
+ \<list\>(属性名称：list) |  |  |  |  |
  symbol | true  | string | 品种代码 | "BTC","ETH"... |
- contract_code  |  true   |  string   |  合约代码   |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
- trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+ contract_code  |  true   |  string   |  合约代码   |  永续"BTC-USDT"... ，交割："BTC-USDT-220325"...   |
  open_limit | true | decimal | 合约开仓单笔下单量最大值 |  |
  close_limit | true | decimal | 合约平仓单笔下单量最大值 |  |
- contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
- pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+ contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+ pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
  business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
  \</list\>  |  |  |  |  |
  \</data\> |  |  |  |  |
@@ -8331,17 +8101,15 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。
  - pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ### 请求参数
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围                         |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| pair | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false | string | 合约代码 | 永续："BTC-USDT"... ，交割：“BTC-USDT-210625” ... |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response:
 
@@ -8414,15 +8182,14 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts              | true | long   | 响应生成时间点，单位：毫秒   |                |
 | \<data\>        | true     |  object array      |                 |                |
 | symbol          | true | string | 品种代码            | "BTC","ETH"... |
-| contract_code          | true | string | 合约代码            | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string | 合约代码            | 永续："BTC-USDT"... ，交割：“BTC-USDT-210625” ...  |
 | open_maker_fee  | true | string | 开仓挂单的手续费费率，小数形式 |                |
 | open_taker_fee  | true | string | 开仓吃单的手续费费率，小数形式 |                |
 | close_maker_fee | true | string | 平仓挂单的手续费费率，小数形式 |                |
 | close_taker_fee | true | string | 平仓吃单的手续费费率，小数形式 |                |
-| fee_asset    | true | string | 手续费币种   |    "USDT", "HUSD"     |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| fee_asset    | true | string | 手续费币种   |    "USDT"...    |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | delivery_fee | true |  string | 交割的手续费费率，小数形式 |    |
 | \</data\>       |      |        |                 |                |
@@ -8438,8 +8205,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围       |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约 |  "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码 |  "BTC-USDT"... ,如果缺省，默认返回所有合约 |
 
 > Response:
 
@@ -8476,10 +8242,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts                         | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>     |  true    |  object array       |               |                |
 | symbol                     | true | string  | 品种代码          | "BTC","ETH"... |
-| contract_code              | true | string  | 合约代码          |  "BTC-USDT","BTC-HUSD" ... |
-| trade_partition           |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code                     | true | string  | 合约代码          | "BTC-USDT" ... |
 | margin_mode               | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account            | true | string | 保证金账户  | 比如: "BTC-USDT","BTC-HUSD" ... |
+| margin_account            | true | string | 保证金账户  | 比如“BTC-USDT” |
 | transfer_in_max_each       | true | decimal | 单笔最大转入量       |                |
 | transfer_in_min_each       | true | decimal | 单笔最小转入量       |                |
 | transfer_out_max_each      | true | decimal | 单笔最大转出量       |                |
@@ -8501,8 +8266,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围       |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户  |  "USDT"，"HUSD"  |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| margin_account | false | string | 保证金账户，不填则返回所有全仓保证金账户  |  "USDT"，目前只有一个全仓账户（USDT）  |
 
 > Response:
 
@@ -8536,9 +8300,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | status                     | true | string  | 请求处理结果        | "ok" , "error" |
 | ts                         | true | long    | 响应生成时间点，单位：毫秒 |                |
 | \<data\>     |  true    |  object array       |               |                |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”, “HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | transfer_in_max_each       | true | decimal | 单笔最大转入量       |                |
 | transfer_in_min_each       | true | decimal | 单笔最小转入量       |                |
 | transfer_out_max_each      | true | decimal | 单笔最大转出量       |                |
@@ -8560,8 +8323,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围      |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码,如果缺省，默认返回所有合约  |  "BTC-USDT","BTC-HUSD" ... |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码 |   "BTC-USDT"... ,如果缺省，默认返回所有合约 |
 
 > Response:
 
@@ -8595,14 +8357,13 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts            | true | long    | 响应生成时间点，单位：毫秒   |                                          |
 | \<data\>      | true     |  object array       |      |   |
 | symbol        | true | string  | 品种代码            | "BTC","ETH"...                           |
-| contract_code | true | string  | 合约代码            |  "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true | string  | 合约代码            |   "BTC-USDT" ... |
 | margin_mode   | true | string |  保证金模式  | isolated：逐仓模式 |
 | buy_limit     | true | decimal | 合约多仓持仓的最大值，单位为张 |                                          |
 | sell_limit    | true | decimal | 合约空仓持仓的最大值，单位为张 |    
 | lever_rate    | true |  int | 用户当前品种杠杆倍数 |     |
-| buy_limit_value   | true |  decimal | 合约多仓持仓价值上限，单位USDT或HUSD |     |
-| sell_limit_value  | true |  decimal | 合约空仓持仓价值上限，单位USDT或HUSD |     |
+| buy_limit_value   | true |  decimal | 合约多仓持仓价值上限，单位USDT |     |
+| sell_limit_value  | true |  decimal | 合约空仓持仓价值上限，单位USDT |     |
 | mark_price        | true |  decimal |  当前品种标记价格（以该价格用于计算持仓张数）  |     |                                      |
 | \</data\>     |      |         |                 |   |
 
@@ -8616,17 +8377,15 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。
  - pair、contract_type和contract_code同时填写，优先取contract_code。
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 ### 请求参数
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围      |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| contract_code | false | string | 合约代码 |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| pair | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false | string | 合约代码 |   永续："BTC-USDT"... ，交割：”BTC-USDT-210625“  |
+| pair | false |  string | 交易对 |   BTC-USDT   |
+| contract_type | false |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | business_type |  false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response
 
@@ -8704,17 +8463,16 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | ts            | true | long    | 响应生成时间点，单位：毫秒   |                                          |
 | \<data\>      | true     |  object array       |      |   |
 | symbol        | true | string  | 品种代码            | "BTC","ETH"...                           |
-| contract_code | true | string  | 合约代码            |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true | string  | 合约代码            |  永续："BTC-USDT"... ，交割：”BTC-USDT-210625“  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
 | buy_limit     | true | decimal | 合约多仓持仓的最大值，单位为张 |                                          |
 | sell_limit    | true | decimal | 合约空仓持仓的最大值，单位为张 |                                          |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | lever_rate    | true |  int | 用户当前品种杠杆倍数 |     |
-| buy_limit_value   | true |  decimal | 合约多仓持仓价值上限，单位USDT或HUSD |     |
-| sell_limit_value  | true |  decimal | 合约空仓持仓价值上限，单位USDT或HUSD |     |
+| buy_limit_value   | true |  decimal | 合约多仓持仓价值上限，单位USDT |     |
+| sell_limit_value  | true |  decimal | 合约空仓持仓价值上限，单位USDT |     |
 | mark_price        | true |  decimal |  当前品种标记价格（以该价格用于计算持仓张数）  |     |
 | \</data\>     |      |         |                 |   |
 
@@ -8725,8 +8483,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 ### 请求参数
 | 参数名称   | 是否必须 | 类型     | 描述  | 取值范围 |
 | ------ | ---- | ------ | ---------------------------------------- | ---- |
-| contract_code | false | string | 合约代码，不填返回全部  | 如："BTC-USDT","BTC-HUSD" ...   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | false | string | 合约代码，不填返回全部  | 如"BTC-USDT"、"ETH-USDT" |
 | lever_rate    | false | int    | 杠杆倍数，不填返回所有杠杆倍数 |   |
 
 #### 备注
@@ -8763,13 +8520,12 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | status | true | string | 请求处理结果     | "ok" , "error" |
 | \<data\> |true  |  object array |           |                |
 | symbol        | true | string  | 品种代码            | "BTC","ETH"...                           |
-| contract_code | true | string  | 合约代码            |  "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true | string  | 合约代码            |   "BTC-USDT" ... |
 | margin_mode | true | string | 保证金模式  |isolated：逐仓模式 |
 | \<list\> |true  |  object array |           |                |
 | lever_rate | true |  int | 品种杠杆倍数 |     |
-| buy_limit_value | true |  decimal |合约多仓持仓价值上限，单位USDT或HUSD |     |
-| sell_limit_value | true |  decimal | 合约空仓持仓价值上限，单位USDT或HUSD  |     |
+| buy_limit_value | true |  decimal |合约多仓持仓价值上限，单位USDT |     |
+| sell_limit_value | true |  decimal | 合约空仓持仓价值上限，单位USDT |     |
 | \</list\>            |      |        |               |                |
 | \</data\>            |      |        |               |                |
 | ts     | true | long | 响应生成时间点，单位：毫秒                            |                |
@@ -8783,11 +8539,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | 参数名称   | 是否必须 | 类型     | 描述  | 取值范围 |
 | ------ | ---- | ------ | ---------------------------------------- | ---- |
 | business_type | false（请看备注） |  string | 业务类型，不填默认永续 |  futures：交割、swap：永续、all：全部   |
-| contract_type | false |  string | 合约类型，不填返回全部 | swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | false |  string | 交易对，不填返回全部 |   如："BTC-USDT","BTC-HUSD" ...  |
-| contract_code | false |  string | 合约代码，不填返回全部  |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
+| contract_type | false |  string | 合约类型，不填返回全部 | swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | false |  string | 交易对，不填返回全部 |   如：“BTC-USDT”   |
+| contract_code | false |  string | 合约代码，不填返回全部  | 永续："BTC-USDT"...  交割："BTC-USDT-211231"... |
 | lever_rate    | false |  int    | 杠杆倍数，不填返回所有杠杆倍数 |   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 #### 备注
  - 该接口仅支持全仓模式。
@@ -8795,7 +8550,6 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
  - pair、contract_type和contract_code同时填写，优先取contract_code
  - lever_rate杠杆倍数入参必须处于用户的可用杠杆倍数范围内，否则报错1037
  - business_type 在查询交割合约数据时为必填参数。且参数值要传：futures 或 all 。
- - business_type和trade_partition是同等优先级，前者决定业务线，后者决定交易区，最终的查询结果，由business_type和trade_partition的组合，加上contract_code或（pair、contract_type）来决定。
 
 > Response:
 
@@ -8874,16 +8628,15 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | status | true | string | 请求处理结果     | "ok" , "error" |
 | \<data\> |true  |  object array |           |                |
 | symbol        | true | string  | 品种代码            | "BTC","ETH"...                           |
-| contract_code | true | string  | 合约代码            | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code | true | string  | 合约代码            | 永续："BTC-USDT"...  交割："BTC-USDT-211231"...  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式 |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | \<list\> |true  |  object array |           |                |
 | lever_rate | true |  int | 品种杠杆倍数 |     |
-| buy_limit_value | true |  decimal |合约多仓持仓价值上限，单位USDT或HUSD |     |
-| sell_limit_value | true |  decimal | 合约空仓持仓价值上限，单位USDT或HUSD |     |
+| buy_limit_value | true |  decimal |合约多仓持仓价值上限，单位USDT |     |
+| sell_limit_value | true |  decimal | 合约空仓持仓价值上限，单位USDT |     |
 | \</list\>            |      |        |               |                |
 | \</data\>            |      |        |               |                |
 | ts     | true | long | 响应生成时间点，单位：毫秒                            |                |
@@ -8898,18 +8651,18 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 ### 请求参数
 
-| 参数名称   | 是否必须  | 类型     | 描述   | 取值范围    | 
+| 参数名称   | 是否必须  | 类型     | 描述   | 取值范围    |
 | ------ | ----- | ------ | ---- | ---------------------------- |
 | sub_uid | true | long | 子账号uid   |  |
-| asset | true | string | 币种	 |  "USDT"，"HUSD"  |
-| from_margin_account | true | string | 转出的保证金账户	 |  逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD" |
-| to_margin_account | true | string | 转入的保证金账户	 |   逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD" |
+| asset | true | string | 币种	 |  "USDT"... |
+| from_margin_account | true | string | 转出的保证金账户	 |  "BTC-USDT"，"USDT"... |
+| to_margin_account | true | string | 转入的保证金账户	 |  "BTC-USDT"，"USDT"... |
 | amount | true | decimal | 划转金额 ||
 | type | true | string | 划转类型 | master_to_sub：母账户划转到子账户， sub_to_master：子账户划转到母账户 |
-| client_order_id | false | long | 客户自己填写和维护的订单号 | 必须为数字,请注意必须小于等于9223372036854775807 |
+| client_order_id | false | long | 客户自己填写和维护的订单号，必须为数字 | [1-9223372036854775807] |
 
 #### 备注：
- - 当from_margin_account或to_margin_account 为USDT或HUSD时，代表是从全仓保证金中转入或划出。
+ - 当from_margin_account或to_margin_account 为USDT时，代表是从全仓保证金中转入或划出。
  - 从转出的保证金账户划转到转入的保证金账户，币种必须为转出的保证金账户的计价币种；
  - 转出的保证金账户与转入的保证金账户的计价币种必须一致（如BTC-USDT可以划转USDT到ETH-USDT，而没办法划转到ETH-HUSD）.
  - 母账户与每个子账户相互划转限频10次/分钟。
@@ -8950,11 +8703,11 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名称   | 是否必须  | 类型     | 描述   | 取值范围      |
 | ------ | ----- | ------ | ---- | ---------------------------- |
-| margin_account | true | string | 保证金账户	 |   逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD" |
+| margin_account | true | string | 保证金账户	 |  "BTC-USDT"，"USDT"... |
 | transfer_type | false | string | 划转类型，不填查询全部类型,【查询多类型中间用，隔开】 | 34:转出到子账号合约账户;  35:从子账号合约账户转入; |
 | create_date | true | int | 日期 | 可随意输入正整数，如果参数超过90则默认查询90天的数据 |
 | page_index | false | int | 页码，不填默认第1页 | 1 |
-| page_size | false | int | 不填默认20，不得多于50 | [1-50] |
+| page_size | false | int | 不填默认20，不得多于50 | 20 |
 
 > Response:
 
@@ -8995,10 +8748,10 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | \<transfer_record\>      | true     |  object array      |      |   |
 | id        | true | long  | 划转订单ID            |  |
 | ts        | true | long  | 创建时间            |  |
-| asset | true | string | 币种	 |  "USDT", "HUSD" |
-| margin_account | true | string | 保证金账户	 |   逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD" |
-| from_margin_account | true | string | 转出的保证金账户	 |  逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD" |
-| to_margin_account | true | string | 转入的保证金账户	 |   逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD" |
+| asset | true | string | 币种	 |  "USDT"... |
+| margin_account | true | string | 保证金账户	 |  "BTC-USDT"... |
+| from_margin_account | true | string | 转出的保证金账户	 |  "BTC-USDT"... |
+| to_margin_account | true | string | 转入的保证金账户	 |  "BTC-USDT"... |
 | sub_uid        | true | string  | 子账户UID            |  |
 | sub_account_name        | true | string  | 子账户登录名            |  |
 | transfer_type        | true | int  | 划转类型            | 34:转出到子账号合约账户; 35:从子账号合约账户转入; |
@@ -9020,14 +8773,14 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
 | ----------------------- | -------- | ------- | ------------------ | -------------- |
-| asset | true | string | 币种	 |  "USDT","HUSD" |
-| from_margin_account | true | string | 转出的保证金账户	 |  逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD"  |
-| to_margin_account | true | string | 转入的保证金账户	 |  逐仓："BTC-USDT","BTC-HUSD"... ，全仓："USDT","HUSD" |
+| asset | true | string | 币种	 |  "USDT"... |
+| from_margin_account | true | string | 转出的保证金账户	 |  "BTC-USDT"，"USDT"... |
+| to_margin_account | true | string | 转入的保证金账户	 |  "ETH-USDT"，"USDT"... |
 | amount | true | decimal | 划转数额（单位为合约的计价币种）	 |  |
-| client_order_id | false | long | 客户自己填写和维护的订单号 | 必须为数字,请注意必须小于等于9223372036854775807 |
+| client_order_id | false | long | 客户自己填写和维护的订单号,必须为数字 | [1-9223372036854775807] |
 
 #### 备注：
-- 当from_margin_account或to_margin_account 为USDT或HUSD时，代表是从全仓保证金中转入或划出。
+- 当from_margin_account或to_margin_account 为USDT时，代表是从全仓保证金中转入或划出。
 - 从转出的保证金账户划转到转入的保证金账户，划转的币种必须为转出的保证金账户的计价币种；
 - 转出的保证金账户与转入的保证金账户的计价币种必须一致（如BTC-USDT可以划转USDT到ETH-USDT，而没办法划转到ETH-HUSD）。
 - 此接口的访问频次的限制为1分钟10次。
@@ -9133,7 +8886,91 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | \</TDN\>     |      |         |         |   |
 | \</data\>     |      |         |         |   |
 
+
 # 合约交易接口
+
+## 【逐仓】切换持仓模式
+
+ - POST `/linear-swap-api/v1/swap_switch_position_mode`
+
+#### 备注
+
+ - 该接口仅支持逐仓模式
+
+### 请求参数
+
+| **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
+| ----------------------- | -------- | ------- | ------------------ | -------------- |	
+| margin_account | true | string | 保证金账户	 | 比如： "BTC-USDT"，"ETH-USDT" ... |
+| position_mode | true | string | 持仓模式	 | single_side：单向持仓；dual_side：双向持仓 |
+
+> response
+
+```json
+{
+    "status":"ok",
+    "data":[
+        {
+            "margin_account":"BTC-USDT",
+            "position_mode":"single_side"
+        }
+    ],
+    "ts":1566899973811
+}
+```
+
+### 返回参数
+
+| **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
+| ----------------------- | -------- | ------- | ------------------ | -------------- |
+| status | true | string | 请求处理结果	 | "ok" , "error" |
+| \<data\> | true  | object array |  | 字典数据 |
+| margin_account | true | string | 保证金账户	 | 比如： "BTC-USDT"，"ETH-USDT" ... |
+| position_mode | true | string | 持仓模式	 | single_side：单向持仓；dual_side：双向持仓 |
+| \</data\> |  |  |  |  |
+| ts | true  | long | 响应生成时间点，单位：毫秒 |  |
+
+
+## 【全仓】切换持仓模式
+
+ - POST `/linear-swap-api/v1/swap_cross_switch_position_mode`
+
+#### 备注
+
+ - 该接口仅支持全仓模式
+
+### 请求参数
+
+| **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
+| ----------------------- | -------- | ------- | ------------------ | -------------- |	
+| margin_account | true | string | 保证金账户	 |  比如： "USDT"，"HUSD" |
+| position_mode | true | string | 持仓模式	 | single_side：单向持仓；dual_side：双向持仓 |
+
+> response
+
+```json
+{
+    "status":"ok",
+    "data":[
+        {
+            "margin_account":"USDT",
+            "position_mode":"single_side"
+        }
+    ],
+    "ts":1566899973811
+}
+```
+
+### 返回参数
+
+| **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
+| ----------------------- | -------- | ------- | ------------------ | -------------- |
+| status | true | string | 请求处理结果	 | "ok" , "error" |
+| \<data\> | true  | object array |  | 字典数据 |
+| margin_account | true | string | 保证金账户	 | 比如："USDT","HUSD" |
+| position_mode | true | string | 持仓模式	 | single_side：单向持仓；dual_side：双向持仓 |
+| \</data\> |  |  |  |  |
+| ts | true  | long | 响应生成时间点，单位：毫秒 |  |
 
 ## 【逐仓】合约下单 
 
@@ -9168,12 +9005,13 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名              | 参数类型    | 必填    | 描述    | 取值范围 |
 | ---------------- | ------- | ----- | ---------------------------------------- | -----------|
-| contract_code     | string <img width=250/>  | true  <img width=250/> | 合约代码 <img width=1000/> | "BTC-USDT","BTC-HUSD"...                           |
-| client_order_id  | long    | false | 客户自己填写和维护，必须为数字,请注意必须小于等于9223372036854775807   | |
+| contract_code     | string <img width=250/>  | true  <img width=250/> | 合约代码 <img width=1000/> | "BTC-USDT"...                           |
+| reduce_only      | int     | false | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
+| client_order_id  | long    | false | 客户自己填写和维护，必须为数字  |[1-9223372036854775807] |
 | price            | decimal | false | 价格                                       | |
 | volume           | long    | true  | 委托数量(张)                                  | |
 | direction        | string  | true  | 仓位方向 | "buy":买 "sell":卖 |
-| offset           | string  | true  | 开平方向    | "open":开 "close":平 |
+| offset           | string  | false(请看备注) | 开平方向    | "open":开 "close":平  “both”:单向持仓 |
 | lever_rate       | int     | true  | 杠杆倍数[“开仓”若有10倍多单，就不能再下20倍多单;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)]             |   |
 | order_price_type | string  | true  | 订单报价类型 | "limit":限价，"opponent":对手价 ，"post_only":只做maker单,post only下单只受用户持仓数量限制,"optimal_5"：最优5档，"optimal_10"：最优10档，"optimal_20"：最优20档，"ioc":IOC订单，"fok"：FOK订单, "opponent_ioc": 对手价-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | tp_trigger_price   | decimal | false  | 止盈触发价格                  |                            |
@@ -9192,6 +9030,8 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
  - 只有开仓订单才支持设置止盈止损。
 
  - 止盈触发价格为设置止盈单必填字段，止损触发价格为设置止损单必填字段；若缺省触发价格字段则不会设置对应的止盈单或止损单。
+
+ - offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
 
 ###   开平方向
 
@@ -9241,7 +9081,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 #### 备注
  - 该接口仅支持全仓模式。
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
- - （pair+contract_type）以及 contract_code 必填其一 （全不填报错1014），若同时填写，优先取contract_code。
+ - （pair+contract_type）以及 contract_code 必填其一（全不填报错1014），若同时填写，优先取contract_code。
 
 > Request
 
@@ -9267,15 +9107,16 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
 | 参数名           | 必填  | 参数类型 | 描述                                             | 取值范围                                                     |
 | ---------------- | ----- | -------- | ------------------------------------------------ | ------------------------------------------------------------ |
-| contract_code    | false（请看备注）  | string   | 合约代码   |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...         |
-| pair             | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...  |
-| contract_type    | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| client_order_id  | false | long     | 客户自己填写和维护，必须为数字,请注意必须小于等于9223372036854775807 |                                                              |
+| contract_code    | false（请看备注）  | string   | 合约代码   | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...              |
+| pair             | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type    | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| reduce_only      | false | int      | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
+| client_order_id  | false | long     | 客户自己填写和维护，必须为数字  |     [1-9223372036854775807]                            |
 | price            | false | decimal  | 价格                                             |                                                              |
 | volume           | true  | long     | 委托数量(张)                                     |                                                              |
 | direction        | true  | string   | 仓位方向                                         | "buy":买 "sell":卖                                           |
-| offset           | true  | string   | 开平方向                                         | "open":开 "close":平                                         |
-| lever_rate       | true  | int      | 杠杆倍数,“开仓”若有10倍多单，就不能再下20倍多单;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)] |                                                              |
+| offset           | false（请看备注）  | string   | 开平方向                                         | "open":开 "close":平 “both”:单向持仓                                        |
+| lever_rate       | true  | int      | 杠杆倍数,“开仓”若有10倍多单，就不能再下20倍多单;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)] |   |
 | order_price_type | true  | string   | 订单报价类型                                     | "limit":限价，"opponent":对手价 ，"post_only":只做maker单,post only下单只受用户持仓数量限制,"optimal_5"：最优5档，"optimal_10"：最优10档，"optimal_20"：最优20档，"ioc":IOC订单，"fok"：FOK订单, "opponent_ioc": 对手价-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | tp_trigger_price   | decimal | false  | 止盈触发价格                  |                            |
 | tp_order_price   |  decimal | false | 	止盈委托价格（最优N档委托类型时无需填写价格）                  |  |
@@ -9294,7 +9135,9 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 
  - 止盈触发价格为设置止盈单必填字段，止损触发价格为设置止损单必填字段；若缺省触发价格字段则不会设置对应的止盈单或止损单。
 
-###   开平方向
+ - offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
+
+### 开平方向
 
 开多：买入开多(direction用buy、offset用open)
 
@@ -9331,7 +9174,7 @@ curl "https://api.hbdm.com/index/market/history/linear_swap_basis?contract_code=
 | \</data\>     |      |         |                 |    |
 | ts    | true | long   | 响应生成时间点，单位：毫秒          |     |
 
-####备注
+#### 备注
 
 order_id返回是18位，nodejs和javascript默认解析18有问题，nodejs和javascript里面JSON.parse默认是int，超过18位的数字用json-bigint的包解析。
 
@@ -9393,12 +9236,13 @@ orders_data  | List\<Object\>   |    |    |
 
 | 参数名  |    参数类型   |  必填   |  描述  |   取值范围   |
 | -------- | -------------- |  ---------- | ---------- | ---------- |
-| contract_code        | true <img width=250/> | string <img width=250/>  |  合约代码 <img width=1000/>  |   "BTC-USDT","BTC-HUSD" ...         |
-| client_order_id       |  false   |  long| 客户自己填写和维护，必须为数字,请注意必须小于等于9223372036854775807  |      |
+| contract_code        | true <img width=250/> | string <img width=250/>  |  合约代码 <img width=1000/>  |        "BTC-USDT"...          |
+| reduce_only      | false | int      | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
+| client_order_id       |  false   |  long| 客户自己填写和维护，必须为数字  |  [1-9223372036854775807]    |
 | price       |false  | decimal | 价格 |      |
 | volume   | true    |  long | 委托数量(张)  |      |
-| direction   |true   |  string | 仓位方向   |  "buy":买 "sell":卖    |
-| offset   | true  |  string |   开平方向    |  "open":开 "close":平    |
+| direction   | true   |  string | 仓位方向   |  "buy":买 "sell":卖    |
+| offset   | false(请看备注)  |  string |   开平方向    |  "open":开 "close":平 “both”:单向持仓    |
 | lever_rate     |  true    | int  | 杠杆倍数[“开仓”若有10倍多单，就不能再下20倍多单;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)]             |      |
 | order_price_type            |  true |  string | 订单报价类型  | "limit":限价，"opponent":对手价 ，"post_only":只做maker单,post only下单只受用户持仓数量限制,"optimal_5"：最优5档，"optimal_10"：最优10档，"optimal_20"：最优20档，"ioc":IOC订单，"fok"：FOK订单, "opponent_ioc": 对手价-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | tp_trigger_price   | decimal | false  | 止盈触发价格                  |                            |
@@ -9417,6 +9261,8 @@ orders_data  | List\<Object\>   |    |    |
  - 只有开仓订单才支持设置止盈止损。
 
  - 止盈触发价格为设置止盈单必填字段，止损触发价格为设置止损单必填字段；若缺省触发价格字段则不会设置对应的止盈单或止损单。
+
+ - offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
 
 一次最多允许10个订单。
 
@@ -9480,7 +9326,7 @@ orders_data  | List\<Object\>   |    |    |
 #### 备注
  - 该接口仅支持全仓模式。
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
- - （pair+contract_type）以及 contract_code 必填其一 （全不填报错1014），若同时填写，优先取contract_code。
+ - （pair+contract_type）以及 contract_code 必填其一（全不填报错1014），若同时填写，优先取contract_code。
 
 > Request
 
@@ -9526,14 +9372,15 @@ orders_data  | List\<Object\>   |    |    |
 | 参数名称            | 是否必须 | 类型     | 描述                     | 取值范围           |
 | --------------- | ---- | ------ | ---------------------- | -------------- |
 | \<orders_data\>   | true | object array |     |  |
-| contract_code        | false（请看备注） | string   |  合约代码      |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...      |
-| pair                 | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...  |
-| contract_type        | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| client_order_id       |  false   |  long| 客户自己填写和维护，必须为数字,请注意必须小于等于9223372036854775807  |      |
+| contract_code        | false（请看备注） | string   |  合约代码      | 永续："BTC-USDT"... ， 交割："BTC-USDT-210625"...       |
+| pair                 | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type        | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| reduce_only          | false | int      | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
+| client_order_id       |  false   |  long| 客户自己填写和维护，必须为数字  |  [1-9223372036854775807]    |
 | price       |false  | decimal | 价格 |      |
 | volume   | true    |  long | 委托数量(张)  |      |
 | direction   |true   |  string | 仓位方向   |  "buy":买 "sell":卖    |
-| offset   | true  |  string |   开平方向    |  "open":开 "close":平    |
+| offset   | false（请看备注）  |  string |   开平方向    |  "open":开 "close":平 “both”:单向持仓    |
 | lever_rate     |  true    | int  | 杠杆倍数,“开仓”若有10倍多单，就不能再下20倍多单;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)]            |      |
 | order_price_type            |  true |  string | 订单报价类型  | "limit":限价，"opponent":对手价 ，"post_only":只做maker单,post only下单只受用户持仓数量限制,"optimal_5"：最优5档，"optimal_10"：最优10档，"optimal_20"：最优20档，"ioc":IOC订单，"fok"：FOK订单,"opponent_ioc": 对手价-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | tp_trigger_price   | decimal | false  | 止盈触发价格                  |                            |
@@ -9554,7 +9401,9 @@ orders_data  | List\<Object\>   |    |    |
 
  - 止盈触发价格为设置止盈单必填字段，止损触发价格为设置止损单必填字段；若缺省触发价格字段则不会设置对应的止盈单或止损单。
 
- - 一次最多允许10个订单。
+ - offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
+
+ - 一次最多允许25个订单。
 
 > Response:
 
@@ -9621,7 +9470,7 @@ orders_data  | List\<Object\>   |    |    |
 | --------------- | ---- | ------ | ---------------------- | -------------- |
 | order_id        | false (请看备注) | string | 订单ID(多个订单ID中间以","分隔,一次最多允许撤消10个订单)   |      |
 | client_order_id | false (请看备注) | string | 客户订单ID(多个订单ID中间以","分隔,一次最多允许撤消10个订单) |      |
-| contract_code          | true  | string | 合约代码                       |   "BTC-USDT","BTC-HUSD" ...  |
+| contract_code          | true  | string | 合约代码                       |    "BTC-USDT" ...  |
 
 #### 备注：
 
@@ -9682,9 +9531,9 @@ ts  |  true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | --------------- | ---- | ------ | ---------------------- | -------------- |
 | order_id        | false (请看备注) | string | 订单ID(多个订单ID中间以","分隔,一次最多允许撤消10个订单)   |      |
 | client_order_id | false (请看备注) | string | 客户订单ID(多个订单ID中间以","分隔,一次最多允许撤消10个订单) |      |
-| contract_code   | false (请看备注) | string | 合约代码  | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| pair            | false (请看备注) |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
-| contract_type   | false (请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code   | false (请看备注) | string | 合约代码  | 永续："BTC-USDT" ... ，交割："BTC-USDT-210625" ...   |
+| pair            | false (请看备注) |  string | 交易对 |   BTC-USDT   |
+| contract_type   | false (请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 
 ### 备注：
 
@@ -9742,7 +9591,7 @@ ts  |  true  |  long  |  响应生成时间点，单位：毫秒  |   |
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | true |  string | 合约代码 |  "BTC-USDT","BTC-HUSD" ...   |
+| contract_code | true |  string | 合约代码 |   "BTC-USDT"    |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 | offset | false  | string | 开平方向（不填默认全部）  | "open":开 "close":平  |
 
@@ -9792,9 +9641,9 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | false(请看备注) |  string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false(请看备注) |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false(请看备注) |  string | 合约代码 |  永续："BTC-USDT"... ， 交割："BTC-USDT-210625"...   |
+| pair | false(请看备注) |  string | 交易对 |   BTC-USDT   |
+| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 | offset | false  | string | 开平方向（不填默认全部）  | "open":开 "close":平  |
 
@@ -9845,7 +9694,7 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 
 | **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
 | ----------------------- | -------- | ------- | ------------------ | -------------- |
-| contract_code | true | string | 合约代码	 | 比如："BTC-USDT","BTC-HUSD" ... |
+| contract_code | true | string | 合约代码	 | 比如“BTC-USDT” |
 | lever_rate | true | int | 要切换的杠杆倍数;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍) |  |
 
 > 响应示例
@@ -9876,8 +9725,7 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | ---------------------- | ---- | ------- | ------------------ | ---------------------------------------- |
 | status                 | true | string  | 响应状态: ok,error            |                                          |
 | \<data\> | false     |  object      |                    |                                          |
-| contract_code               | false | string    | 合约代码      |    "BTC-USDT","BTC-HUSD" ...                 |
-| trade_partition      |  false |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code               | false | string    | 合约代码      |                                          |
 | margin_mode           | false | string |  保证金模式  | isolated：逐仓模式 |
 | lever_rate               | false | int    | 切换成功后的杠杆倍数      |                                          |
 | \</data\>            |      |         |                    |                                          |
@@ -9904,9 +9752,9 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 
 | 参数名称  | 是否必须 | 类型 | 描述  | 取值范围 |
 | ------------- | ------ | ----- | ---------------------------------------- | ---- |
-| contract_code | false(请看备注) | string | 合约代码	 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| pair | false(请看备注) |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false(请看备注) | string | 合约代码	 | 永续："BTC-USDT"... , 交割："BTC-USDT-210625"... |
+| pair | false(请看备注) |  string | 交易对 |   BTC-USDT   |
+| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | lever_rate | true | int | 要切换的杠杆倍数；首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)	 | |
 
 > Response
@@ -9933,12 +9781,11 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | ---------------------- | ---- | ------ | ------------- | -------------- |
 | status                 | true | string  | 响应状态: ok,error            |                                          |
 | \<data\> | false     |  object      |                    |                                          |
-| contract_code        | false | string    |  合约代码      |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  false |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | false | string    |  合约代码      |  永续："BTC-USDT"... , 交割："BTC-USDT-210625"...  |
 | margin_mode | false | string | 保证金模式  | cross：全仓模式； |
 | lever_rate               | false | int    | 切换成功后的杠杆倍数      |                                          |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</data\>            |      |         |                    |                                          |
 | err_code | false | int | 错误码| |
@@ -9960,7 +9807,7 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | --------------- | ----- | ------ | ------------------------------------ | ---- |
 | order_id        | false（请看备注） | string | 订单ID(多个订单ID中间以","分隔,一次最多允许查询50个订单)   |      |
 | client_order_id | false（请看备注） | string | 客户订单ID(多个订单ID中间以","分隔,一次最多允许查询50个订单) |      |
-| contract_code          | true  | string | 合约代码 |  "BTC-USDT","BTC-HUSD" ...                    |
+| contract_code          | true  | string | 合约代码 |"BTC-USDT"...                       |
 
 ###  备注：
 
@@ -10023,13 +9870,12 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | status               | true <img width=250/> | string  | 请求处理结果 <img width=1000/> | "ok" , "error"                           |
 | \<data\> |  true    |   object array      |        |    |
 | symbol               | true | string  | 品种代码   |       |
-| contract_code        | true | string  | 合约代码   | "BTC-USDT","BTC-HUSD" ...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码   | "BTC-USDT" ...   |
 | volume               | true | decimal | 委托数量   |   |
 | price                | true | decimal | 委托价格   |            |
 | order_price_type     | true | string  | 订单报价类型 |  "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | direction            | true | string  | 买卖方向  | "buy":买 "sell":卖  |
-| offset  | true | string  | 开平方向   | "open":开 "close":平    |
+| offset  | true | string  | 开平方向   | "open":开 "close":平 "both":单向持仓    |
 | lever_rate           | true | int     | 杠杆倍数   |    |
 | order_id             | true | long    | 订单ID   |    |
 | order_id_str             | true | string    | String类型订单ID   |    |
@@ -10045,13 +9891,14 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | status               | true | int     | 订单状态   | (1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单 11撤单中) |
 | order_type           | true | int  | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
 | order_source         | true | string  | 订单来源   | （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发 ） |
-| fee_asset         | true | string  | 手续费币种   | （"USDT","HUSD" ）|
+| fee_asset         | true | string  | 手续费币种   | （"USDT"...）|
 | liquidation_type               | true     | string    | 结算类型 0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管           |  |
 | canceled_at               | true     | long    |撤单时间           |  |
-| margin_account | true | string | 保证金账户  | 比如:"BTC-USDT","BTC-HUSD" ... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_mode | true | string | 保证金模式  |isolated：逐仓模式 |
 | is_tpsl | true | int | 是否设置止盈止损  | 1：是；0：否 |
 | real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</data\>        |      |         |        |         |
 | ts                   | true | long    | 时间戳    |      |
 
@@ -10075,8 +9922,8 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | --------------- | ----- | ------ | ------------------------------------ | ---- |
 | order_id        | false（请看备注） | string | 订单ID(多个订单ID中间以","分隔,一次最多允许查询50个订单)   |      |
 | client_order_id | false（请看备注） | string | 客户订单ID(多个订单ID中间以","分隔,一次最多允许查询50个订单) |      |
-| contract_code   | false（请看备注）  | string | 合约代码 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...      |
-| pair            | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...  |
+| contract_code   | false（请看备注）  | string | 合约代码 | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...       |
+| pair            | false（请看备注） |  string | 交易对 |   BTC-USDT   |
 
 
 ####  备注：
@@ -10140,18 +9987,17 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | status               | true <img width=250/> | string  | 请求处理结果 <img width=1000/> | "ok" , "error"                           |
 | \<data\> |  true    |   object array      |        |    |
 | symbol               | true | string  | 品种代码   |       |
-| contract_code        | true | string  | 合约代码   | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码   | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...   |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如: "USDT", "HUSD"    |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | volume               | true | decimal | 委托数量   |   |
 | price                | true | decimal | 委托价格   |            |
 | order_price_type     | true | string  | 订单报价类型 |  "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | direction            | true | string  | 买卖方向  | "buy":买 "sell":卖  |
-| offset  | true | string  | 开平方向   | "open":开 "close":平    |
+| offset  | true | string  | 开平方向   | "open":开 "close":平 "both":单向持仓    |
 | lever_rate           | true | int     | 杠杆倍数   |    |
 | order_id             | true | long    | 订单ID   |    |
-| order_id_str         | true | string    | String类型订单ID   |    |
+| order_id_str             | true | string    | String类型订单ID   |    |
 | client_order_id      | true | long    | 客户订单ID |    |
 | created_at           | true | long    | 创建时间   |     |
 | trade_volume         | true | decimal | 成交数量   |   |
@@ -10164,14 +10010,15 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 | status               | true | int     | 订单状态   | (1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单 11撤单中) |
 | order_type           | true | int  | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
 | order_source         | true | string  | 订单来源   | （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发） |
-| fee_asset         | true | string  | 手续费币种   | （"USDT","HUSD"...）|
+| fee_asset         | true | string  | 手续费币种   | （"USDT"...）|
 | liquidation_type               | true     | string    | 结算类型 0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管           |  |
 | canceled_at               | true     | long    |撤单时间           |  |
 | is_tpsl               | true     | int    | 是否设置止盈止损           | 1：是；0：否  |
 | real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</data\>        |      |         |        |         |
 | ts                   | true | long    | 时间戳    |      |
 
@@ -10192,10 +10039,10 @@ ts  | true  |  long  |  响应生成时间点，单位：毫秒  |   |
 
 | 参数名称       | 是否必须  | 类型     | 描述                           |    取值范围  |
 | ---------- | ----- | ------ | ---------------------------- | ---- |
-| contract_code     | true  | string | 合约代码| "BTC-USDT","BTC-HUSD" ...    |
+| contract_code     | true  | string | 合约代码| "BTC-USDT"...     |
 | order_id   | true  | long   | 订单id                         |      |
 | created_at | false  | long   | 下单时间戳                        |      |
-| order_type | false  | int    | 订单类型|  1:报单 、 2:撤单 、 3:强平、4:交割     |
+| order_type | false  | int    | 订单类型 |  1:报单 、 2:撤单 、 3:强平、4:交割     |
 | page_index | false | int    | 第几页,不填第一页                    |      |
 | page_size  | false | int    | 不填默认20，不得多于50                |      |
 
@@ -10280,11 +10127,10 @@ created_at禁止传0。
 | status                  | true <img width=250/> | string  <img width=250/> | 请求处理结果 <img width=1000/>     | "ok" , "error"                           |
 | \<data\> |  true    |  object       |             |    |
 | symbol                  | true | string  | 品种代码        |      |
-| contract_code           | true | string  | 合约代码     | "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition         | true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code           | true | string  | 合约代码     | "BTC-USDT"  |
 | lever_rate              | true | int     | 杠杆倍数        | |
 | direction               | true | string  | 买卖方向        | "buy":买 "sell":卖         |
-| offset                  | true | string  | 开平方向        | "open":开 "close":平     |
+| offset                  | true | string  | 开平方向        | "open":开 "close":平 "both":单向持仓     |
 | volume                  | true | decimal | 委托数量        | |
 | price                   | true | decimal | 委托价格        |  |
 | created_at              | true | long    | 创建时间        |  |
@@ -10298,7 +10144,7 @@ created_at禁止传0。
 | final_interest          | true | decimal | 爆仓时合约权益     |     |
 | adjust_value            | true | decimal | 爆仓时调整系数     |      |
 | fee              | true | decimal     | 总手续费        |     |
-| fee_asset              | true | string     | 手续费币种        |   （"USDT","HUSD"）                                       |
+| fee_asset              | true | string     | 手续费币种        |   （"USDT"...）                                       |
 | liquidation_type              | true | string     | 强平类型    |      |
 | order_id               | true     | long    | 订单id            |  |
 | order_id_str               | true     | string    | string格式的订单id             |  |
@@ -10311,10 +10157,11 @@ created_at禁止传0。
 | total_page              | true | int     | 总共页数        |  |
 | current_page            | true | int     | 当前页数        |    |
 | total_size              | true | int     | 总条数         |      |
-| margin_account | true | string | 保证金账户  | 比如:"BTC-USDT","BTC-HUSD" ...  |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
 | is_tpsl | true | int | 是否设置止盈止损  | 1：是；0：否 |
 | real_profit | true | decimal | 订单总真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \<trades\>  |  true    |   object array      |        |   |      |
 | id                | true | string    | 全局唯一的交易标识       |   |
 | trade_id                | true | long    | 与linear-swap-api/v1/swap_matchresults返回结果中的match_id一样，是撮合结果id， 非唯一，可重复，注意：一个撮合结果代表一个taker单和N个maker单的成交记录的集合，如果一个taker单吃了N个maker单，那这N笔trade都是一样的撮合结果id   |  |
@@ -10347,11 +10194,11 @@ created_at禁止传0。
 
 | 参数名称       | 是否必须  | 类型     | 描述                           |    取值范围  |
 | ---------- | ----- | ------ | ---------------------------- | ---- |
-| contract_code     | false（请看备注）  | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| pair        | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...    |
+| contract_code     | false（请看备注）  | string | 合约代码 | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...    |
+| pair        | false（请看备注） |  string | 交易对 |   BTC-USDT   |
 | order_id   | true  | long   | 订单id                         |      |
 | created_at | false  | long   | 下单时间戳                        |      |
-| order_type | false  | int    | 订单类型|  1:报单 、 2:撤单 、 3:强平、4:交割     |
+| order_type | false  | int    | 订单类型 |  1:报单 、 2:撤单 、 3:强平、4:交割     |
 | page_index | false | int    | 第几页,不填第一页                    |      |
 | page_size  | false | int    | 不填默认20，不得多于50                |      |
 
@@ -10436,13 +10283,12 @@ created_at禁止传0。
 | status                  | true | string  | 请求处理结果      | "ok" , "error"                           |
 | \<data\> |  true    |  object       |             |    |
 | symbol                  | true | string  | 品种代码        |      |
-| contract_code           | true | string  | 合约代码     |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code           | true | string  | 合约代码     |  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”, "HUSD" |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | lever_rate              | true | int     | 杠杆倍数        | |
 | direction               | true | string  | 买卖方向        | "buy":买 "sell":卖         |
-| offset                  | true | string  | 开平方向        | "open":开 "close":平     |
+| offset                  | true | string  | 开平方向        | "open":开 "close":平 "both":单向持仓     |
 | volume                  | true | decimal | 委托数量        | |
 | price                   | true | decimal | 委托价格        |  |
 | created_at              | true | long    | 创建时间        |  |
@@ -10455,7 +10301,7 @@ created_at禁止传0。
 | final_interest          | true | decimal | 爆仓时合约权益     |     |
 | adjust_value            | true | decimal | 爆仓时调整系数     |      |
 | fee              | true | decimal     | 总手续费        |     |
-| fee_asset              | true | string     | 手续费币种        |   （"USDT","HUSD"）                                       |
+| fee_asset              | true | string     | 手续费币种        |   （"USDT"...）                                       |
 | liquidation_type              | true | string     | 强平类型    |      |
 | canceled_at              | true | long     | 撤单时间        |        |
 | order_id               | true     | long    | 订单id            |  |
@@ -10468,12 +10314,13 @@ created_at禁止传0。
 | trade_volume               | true     | decimal    | 成交总数量           |  |
 | is_tpsl               | true     | int    | 是否设置止盈止损           | 1：是；0：否 |
 | real_profit | true | decimal | 订单总真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | total_page              | true | int     | 总共页数        |  |
 | current_page            | true | int     | 当前页数        |    |
 | total_size              | true | int     | 总条数         |      |
+| reduce_only             | true | int     | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \<trades\>  |  true    |   object array      |        |   |      |
 | id                | true | string    | 全局唯一的交易标识      |   |
 | trade_id                | true | long    | 与linear-swap-api/v1/swap_cross_matchresults返回结果中的match_id一样，是撮合结果id， 非唯一，可重复，注意：一个撮合结果代表一个taker单和N个maker单的成交记录的集合，如果一个taker单吃了N个maker单，那这N笔trade都是一样的撮合结果id  |  |
@@ -10507,11 +10354,11 @@ created_at禁止传0。
 
 | 参数名称       | 是否必须  | 类型     | 描述       | 取值范围           |
 | ---------- | ----- | ------ | ---------- | -------------- |
-| contract_code     | true  | string | 合约代码       |   "BTC-USDT","BTC-HUSD" ...  |
+| contract_code     | true  | string | 合约代码       |   "BTC-USDT" ...  |
 | page_index | false | int    | 页码，不填默认第1页 |               |
 | page_size  | false | int    |  页长，不填默认20，不得多于50          |    |
 | sort_by  | false | string    |  排序字段，不填默认按创建时间倒序         | “created_at”(按照创建时间倒序)，“update_time”(按照更新时间倒序)   |
-| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。   |
+| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部, 1:买入开多, 2: 卖出开空, 3: 买入平空, 4: 卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓）   |
 
 > Response:
 
@@ -10570,14 +10417,13 @@ status  |  true <img width=250/> |  string  |  请求处理结果 <img width=100
 \<data\>  |    |    |    |    |   
 \<orders\>              |    |    |    |    |   
 symbol  |  true  |  string  |  品种代码  |    |  
-contract_code  |  true  |  string  |  合约代码  |  "BTC-USDT","BTC-HUSD" ...  |
-trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+contract_code  |  true  |  string  |  合约代码  |  "BTC-USDT" ...  |
 volume  |  true  |  decimal    |  委托数量  |    |
 price   |  true  |  decimal    |  委托价格  |    |   
 order_price_type  |    true  |  string  | 订单报价类型 |  "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单   |
 order_type  |    true  |  int  |  订单类型 |  1:报单 、 2:撤单 、 3:强平、4:交割  |
-direction  |  true  |  string  |  "buy":买 "sell":卖  |    |   
-offset  |  true  |  string  |  "open":开 "close":平  |    |  
+direction  |  true  |  string  | 买卖方向  |   "buy":买 "sell":卖  |   
+offset  |  true  |  string  | 开平方向  | "open":开 "close":平 "both":单向持仓    |  
 lever_rate  |  true  |  int  |   杠杆倍数  |    |
 order_id  |  true  |  long  |  订单ID  |    |
 order_id_str  |  true  |  string  |  订单ID，字符串类型  |    | 
@@ -10586,7 +10432,7 @@ created_at  |  true  |  long  |  订单创建时间  |    |
 trade_volume  |   true  |  decimal    |  成交数量  |    |  
 trade_turnover  | true  |  decimal    |  成交总金额  |     | 
 fee  |   true  |  decimal    |  手续费  |    |
-fee_asset | true  | string | 手续费币种 | "USDT","HUSD"   |
+fee_asset | true  | string | 手续费币种 | "BTC","ETH"... |
 trade_avg_price  |  true |  decimal    |  成交均价  |    |  
 margin_frozen  |  true  |  decimal    |  冻结保证金  |    | 
 margin_asset   | true   | string | 保证金币种（计价币种）                 |                |
@@ -10596,10 +10442,11 @@ order_source|   true  |  string  |  订单来源| （system:系统、web:用户�
 liquidation_type|   true  |  string  | 强平类型	 |    |
 canceled_at|   true  |  long  |  撤单时间 |    |
 margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-margin_account | true | string | 保证金账户  | 比如:"BTC-USDT","BTC-HUSD" ... |
+margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 is_tpsl | true | int | 是否设置止盈止损  | 1：是；0：否 |
 update_time | true | Long | 订单更新时间，单位：毫秒  | |
 real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
+reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 \</orders\>  |    |    |    |    |
 total_page  |  true  |  int  |   总页数  |    |
 current_page  |   true  |  int  |   当前页  |    |
@@ -10624,13 +10471,12 @@ ts  |    true  |  long  |  时间戳  |    |
 
 | 参数名称       | 是否必须  | 类型     | 描述       | 取值范围           |
 | ---------- | ----- | ------ | ---------- | -------------- |
-| contract_code     | false  | string | 合约代码       |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| pair       | false |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...   |
+| contract_code     | false  | string | 合约代码       |   永续："BTC-USDT"... ，交割："BTC-USDT-210625"... |
+| pair       | false |  string | 交易对 |   BTC-USDT   |
 | page_index | false | int    | 页码，不填默认第1页 |               |
 | page_size  | false | int    |  页长，不填默认20，不得多于50          |    |
 | sort_by  | false | string    |  排序字段，不填默认按创建时间倒序         | “created_at”(按照创建时间倒序)，“update_time”(按照更新时间倒序)   |
-| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。   |
+| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部, 1: 买入开多, 2: 卖出开空, 3: 买入平空, 4: 卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓）   |
 
 
 > Response
@@ -10692,16 +10538,15 @@ ts  |    true  |  long  |  时间戳  |    |
 | \<data\> | true     |    object     |                   |                                          |
 | \<orders\> | true     |    object     |                   |                                          |
 | symbol               | true | string  | 品种代码                                     |                                          |
-| contract_code        | true | string  | 合约代码       | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...      |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码       | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...      |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,"HUSD" |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | volume               | true | decimal | 委托数量                |                                          |
 | price                | true | decimal | 委托价格              |                                          |
 | order_price_type     | true | string  | 订单报价类型 |   "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单  |
 | order_type         | true | int  | 订单类型        |   1:报单 、 2:撤单 、 3:强平、4:交割      |
 | direction            | true | string  |买卖方向   | "buy":买 "sell":卖                         |                                        
-| offset               | true | string  | 开平方向   |  "open":开 "close":平                       |                                 
+| offset               | true | string  | 开平方向   |  "open":开 "close":平 "both":单向持仓                       |                                 
 | lever_rate           | true | int     | 杠杆倍数                                     |                       |
 | order_id             | true | long    | 订单ID    | |
 | order_id_str         | true | string    | string格式的订单ID                                     |      |
@@ -10711,7 +10556,7 @@ ts  |    true  |  long  |  时间戳  |    |
 | trade_volume         | true | decimal | 成交总数量                                     |                                          |
 | trade_turnover       | true | decimal | 成交总金额，即sum（每一笔成交张数 * 合约面值 * 成交价格）                                    |                                          |
 | fee                  | true | decimal | 手续费                                      |
-| fee_asset         | true | string  | 手续费币种       |  （"USDT","HUSD"）      ||
+| fee_asset         | true | string  | 手续费币种       |  （"USDT"...）      ||
 | trade_avg_price      | true | decimal | 成交均价                                     |                                          |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_frozen        | true | decimal | 冻结保证金                                    |                                          |
@@ -10722,9 +10567,10 @@ ts  |    true  |  long  |  时间戳  |    |
 | is_tpsl              | true | int     | 是否设置止盈止损        |  1：是；0：否      |
 | update_time | true | Long | 订单更新时间，单位：毫秒  | |
 | real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>            |      |         |                     |      |
 | total_page           | true | int     | 总页数                                      |                                          |
 | current_page         | true | int     | 当前页                                      |                                          |
@@ -10747,8 +10593,8 @@ ts  |    true  |  long  |  时间戳  |    |
 
 参数名称   |  是否必须   |  类型    |  描述  |  默认值    |  取值范围  |
 -------------- | -------------- | ---------- |------------------------ | ------------ | ------------------------------------------------------------------------------------------------------ |
-contract_code  |  true   |  string   |  合约代码   |  支持大小写,"BTC-USDT","BTC-HUSD" ...   |
-trade_type  |   true  |  int  |   交易类型  |    0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平,7:交割平多,8: 交割平空, 11:减仓平多，12:减仓平空  |
+contract_code  |  true   |  string   |  合约代码   |  支持大小写,"BTC-USDT" ...  |
+trade_type  |   true  |  int  |   交易类型  |    0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 5:卖出强平, 6:买入强平, 7:交割平多, 8:交割平空, 11:减仓平多, 12:减仓平空,  17：买入（单向持仓）, 18：卖出（单向持仓）  |
 type  |  true  |  int  |   类型  |  1:所有订单,2:结束状态的订单  |
 status  |    true  |  string  |   订单状态  |  可查询多个状态，"3,4,5" , 0:全部,3:未成交, 4: 部分成交,5: 部分成交已撤单,6: 全部成交,7:已撤单 |
 create_date |  true  |  int  |   日期  |   可随意输入正整数，如果参数超过90则默认查询90天的数据 |
@@ -10817,11 +10663,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_id               | true | long    | 订单ID   |       |
 | order_id_str   | true | string    | string格式的订单ID    |      |
 | symbol                 | true | string  | 品种代码   |   |
-| contract_code          | true | string  | 合约代码   | "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition        | true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码   | "BTC-USDT" ... |
 | lever_rate             | true | int     | 杠杆倍数   |    |
 | direction              | true | string  | 买卖方向 | "buy":买 "sell":卖  |
-| offset                 | true | string  | 开平方向   | "open":开 "close":平   |
+| offset                 | true | string  | 开平方向   | "open":开 "close":平 "both":单向持仓    |
 | volume                 | true | decimal | 委托数量   |   |
 | price                  | true | decimal | 委托价格   |    |
 | create_date            | true | long    | 创建时间   |     |
@@ -10837,12 +10682,13 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | trade_avg_price        | true | decimal | 成交均价   |    |
 | status                 | true | int     | 订单状态   |     |
 | order_type             | true | int     | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
-| fee_asset         | true | string  | 手续费币种       |  （"USDT","HUSD"）      |
+| fee_asset         | true | string  | 手续费币种       |  （"USDT"...）      |
 | liquidation_type              | true | string     | 强平类型        |  0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管 |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如: "BTC-USDT","BTC-HUSD" ...  |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | is_tpsl | true | int | 是否设置止盈止损  | 1：是；0：否 |
 | real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>     |      |         |        |                          |
 | current_page           | true | int     | 当前页    |      |
 | total_page             | true | int     | 总页数    |    |
@@ -10868,9 +10714,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称        | 是否必须  | 类型     | 描述              | 取值范围   |
 | ----------- | ----- | ----------- | ---------------------------------------- | ------ |
-| contract_code      | false（请看备注）  | string | 合约代码        |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| pair        | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...   |
-| trade_type  | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平,7:交割平多,8: 交割平空, 11:减仓平多，12:减仓平空 |        |
+| contract_code      | false（请看备注）  | string | 合约代码        |  永续："BTC-USDT" ... ，交割："BTC-USDT-210625" ...    |
+| pair        | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| trade_type  | true  | int    | 交易类型        | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 5:卖出强平, 6:买入强平, 7:交割平多, 8:交割平空, 11:减仓平多, 12:减仓平空, 17：买入（单向持仓）, 18：卖出（单向持仓） |        |
 | type        | true  | int    | 类型          | 1:所有订单,2:结束状态的订单                         |
 | status      | true  | string    | 订单状态        | 可查询多个状态，"3,4,5" , 0:全部,3:未成交, 4: 部分成交,5: 部分成交已撤单,6: 全部成交,7:已撤单 |
 | create_date | true  | int    | 日期，可随意输入正整数，如果参数超过90则默认查询90天的数据          |                          |
@@ -10940,13 +10786,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_id               | true | long    | 订单ID   |       |
 | order_id_str   | true | string    | string格式的订单ID    |      |
 | symbol                 | true | string  | 品种代码   |   |
-| contract_code          | true | string  | 合约代码   |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition        | true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码   |  永续："BTC-USDT" ... ，交割："BTC-USDT-210625" ...  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”,"HUSD" |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | lever_rate             | true | int     | 杠杆倍数   |    |
 | direction              | true | string  | 买卖方向 | "buy":买 "sell":卖  |
-| offset                 | true | string  | 开平方向   | "open":开 "close":平   |
+| offset                 | true | string  | 开平方向   | "open":开 "close":平 "both":单向持仓    |
 | volume                 | true | decimal | 委托数量   |   |
 | price                  | true | decimal | 委托价格   |    |
 | create_date            | true | long    | 创建时间   |     |
@@ -10962,13 +10807,14 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | trade_avg_price        | true | decimal | 成交均价   |    |
 | status                 | true | int     | 订单状态   |     |
 | order_type             | true | int     | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
-| fee_asset         | true | string  | 手续费币种       |  （"USDT","HUSD"）      |
+| fee_asset         | true | string  | 手续费币种       |  （"USDT"...）      |
 | liquidation_type              | true | string     | 强平类型        |  0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管 |
 | is_tpls              | true | int     | 是否设置止盈止损        |  1：是；0：否 |
 | real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only   | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>     |      |         |        |                          |
 | current_page           | true | int     | 当前页    |      |
 | total_page             | true | int     | 总页数    |    |
@@ -10992,8 +10838,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称        | 是否必须  | 类型     | 描述              | 取值范围   |
 | ----------- | ----- | ----------- | ---------------------------------------- | ------ |
-| contract_code      | true  | string | 合约代码        |  "BTC-USDT","BTC-HUSD" ...                    |
-| trade_type  | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平,7:交割平多,8: 交割平空, 11:减仓平多，12:减仓平空 |
+| contract_code      | true  | string | 合约代码        |  "BTC-USDT" ...                          |
+| trade_type  | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平,7:交割平多,8: 交割平空, 11:减仓平多, 12:减仓平空,  17：买入（单向持仓）, 18：卖出（单向持仓） |
 | type        | true  | int    | 类型          | 1:所有订单,2:结束状态的订单                         |
 | status      | true  | string    | 订单状态        | 可查询多个状态，"3,4,5" , 0:全部,3:未成交, 4: 部分成交,5: 部分成交已撤单,6: 全部成交,7:已撤单 |
 | order_price_type      | false  | string    |   订单报价类型        | 订单报价类型 "limit":限价，"opponent":对手价 ，"post_only":只做maker单,post only下单只受用户持仓数量限制,"optimal_5"：最优5档，"optimal_10"：最优10档，"optimal_20"：最优20档，"ioc":IOC订单，"fok"：FOK订单, "opponent_ioc"： 对手价-IOC下单，"optimal_5_ioc"：最优5档-IOC下单，"optimal_10_ioc"：最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单,"opponent_fok"： 对手价-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
@@ -11083,13 +10929,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_id               | true | long    | 订单ID   |       |
 | order_id_str   | true | string    | string格式的订单ID    |      |
 | symbol                 | true | string  | 品种代码   |   |
-| contract_code          | true | string  | 合约代码   |  "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码   | "BTC-USDT" ... |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如： "BTC-USDT","BTC-HUSD" ...  |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | lever_rate             | true | int     | 杠杆倍数   |   |
 | direction              | true | string  | 买卖方向 | "buy":买 "sell":卖  |
-| offset                 | true | string  | 开平方向   | "open":开 "close":平   |
+| offset                 | true | string  | 开平方向   | "open":开 "close":平 "both":单向持仓   |
 | volume                 | true | decimal | 委托数量   |   |
 | price                  | true | decimal | 委托价格   |    |
 | create_date            | true | long    | 创建时间   |     |
@@ -11097,16 +10942,17 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_price_type      | true  | string    |   订单报价类型        | 订单报价类型 "limit":限价，"opponent":对手价 ，"post_only":只做maker单,post only下单只受用户持仓数量限制,"optimal_5"：最优5档，"optimal_10"：最优10档，"optimal_20"：最优20档，"ioc":IOC订单，"fok"：FOK订单, "opponent_ioc"： 对手价-IOC下单，"optimal_5_ioc"：最优5档-IOC下单，"optimal_10_ioc"：最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单,"opponent_fok"： 对手价-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | margin_frozen          | true | decimal | 冻结保证金  |   |
 | profit                 | true | decimal | 平仓盈亏     |    |
-| real_profit            | true | decimal | 真实收益     |    |
+| real_profit                 | true | decimal | 真实收益     |    |
 | trade_volume           | true | decimal | 成交数量   |     |
 | trade_turnover         | true | decimal | 成交总金额  |         |
 | fee                    | true | decimal | 手续费    |      |
 | trade_avg_price        | true | decimal | 成交均价   |    |
 | status                 | true | int     | 订单状态   |  1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单 11撤单中   |
 | order_type             | true | int     | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
-| fee_asset         | true | string  | 手续费币种       |  （"USDT"，“HUSD”）      |
+| fee_asset         | true | string  | 手续费币种       |  （"USDT"...）      |
 | liquidation_type              | true | string     | 强平类型        |  0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管 |
 | is_tpsl              | true | int     | 是否设置止盈止损        |  1：是；0：否 |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>     |      |         |        |                          |
 | remain_size           | true | int  | 剩余数据条数（在时间范围内，因受到数据条数限制而未查询到的数据条数）   |                                          |
 | next_id           | true | long     | 下一条数据的query_id（仅在查询结果超过数据条数限制时才有值）            |                                          |
@@ -11130,9 +10976,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称        | 是否必须  | 类型     | 描述              | 取值范围   |
 | ----------- | ----- | ----------- | ---------------------------------------- | ------ |
-| contract_code      | false（请看备注）  | string | 合约代码        |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...     |
-| pair      | false（请看备注）  | string | 交易对        |  "BTC-USDT","BTC-HUSD" ...                 |
-| trade_type  | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平,7:交割平多,8: 交割平空, 11:减仓平多，12:减仓平空 |
+| contract_code      | false（请看备注）  | string | 合约代码        | 永续："BTC-USDT" ... ，交割："BTC-USDT-210625" ...     |
+| pair      | false（请看备注）  | string | 交易对        |  "BTC-USDT" ...                          |
+| trade_type  | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平,7:交割平多,8: 交割平空, 11:减仓平多, 12:减仓平空,  17：买入（单向持仓）, 18：卖出（单向持仓） |
 | type        | true  | int    | 类型          | 1:所有订单,2:结束状态的订单                         |
 | status      | true  | string    | 订单状态        | 可查询多个状态，"3,4,5" , 0:全部,3:未成交, 4: 部分成交,5: 部分成交已撤单,6: 全部成交,7:已撤单 |
 | order_price_type      | false  | string    |   订单报价类型        | 订单报价类型 "limit":限价，"opponent":对手价 ，"post_only":只做maker单,post only下单只受用户持仓数量限制,"optimal_5"：最优5档，"optimal_10"：最优10档，"optimal_20"：最优20档，"ioc":IOC订单，"fok"：FOK订单, "opponent_ioc"： 对手价-IOC下单，"optimal_5_ioc"：最优5档-IOC下单，"optimal_10_ioc"：最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单,"opponent_fok"： 对手价-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
@@ -11225,13 +11071,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_id               | true | long    | 订单ID   |       |
 | order_id_str   | true | string    | string格式的订单ID    |      |
 | symbol                 | true | string  | 品种代码   |   |
-| contract_code          | true | string  | 合约代码   |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码   | 永续："BTC-USDT" ... ，交割："BTC-USDT-210625" ... |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”, “HUSD”  |
+| margin_account | true | string | 保证金账户  | 比如“USDT”  |
 | lever_rate             | true | int     | 杠杆倍数   |   |
 | direction              | true | string  | 买卖方向 | "buy":买 "sell":卖  |
-| offset                 | true | string  | 开平方向   | "open":开 "close":平   |
+| offset                 | true | string  | 开平方向   | "open":开 "close":平 "both":单向持仓   |
 | volume                 | true | decimal | 委托数量   |   |
 | price                  | true | decimal | 委托价格   |    |
 | create_date            | true | long    | 创建时间   |     |
@@ -11246,12 +11091,13 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | trade_avg_price        | true | decimal | 成交均价   |    |
 | status                 | true | int     | 订单状态   |  1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单 11撤单中   |
 | order_type             | true | int     | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
-| fee_asset         | true | string  | 手续费币种       |  （"USDT","HUSD"）      |
+| fee_asset         | true | string  | 手续费币种       |  （"USDT"...）      |
 | liquidation_type              | true | string     | 强平类型        |  0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管 |
 | is_tpsl              | true | int     | 是否设置止盈止损        |  1：是；0：否 |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only   | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>     |      |         |        |                          |
 | remain_size           | true | int  | 剩余数据条数（在时间范围内，因受到数据条数限制而未查询到的数据条数）   |                                          |
 | next_id           | true | long     | 下一条数据的query_id（仅在查询结果超过数据条数限制时才有值）            |                                          |
@@ -11274,8 +11120,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code        | true  | string | 合约代码          | "BTC-USDT","BTC-HUSD" ...                    |
-| trade_type    | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平 |
+| contract_code        | true  | string | 合约代码          | "BTC-USDT"...                           |
+| trade_type    | true  | int    | 交易类型        | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 5:卖出强平, 6:买入强平, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | create_date   | true  | int    | 日期        | 可随意输入正整数，如果参数超过90则默认查询90天的数据    |
 | page_index    | false | int    | 页码，不填默认第1页     |                                          |
 | page_size     | false | int    | 不填默认20，不得多于50    |                                          |
@@ -11333,10 +11179,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_id_str      | true | string    | string格式的订单ID   |       |
 | symbol                 | true | string  | 品种代码               | |
 | order_source           | true | string  | 订单来源   | （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发）  |
-| contract_code          | true | string  | 合约代码               | "BTC-USDT","BTC-HUSD" ...            |
-| trade_partition        | true | string  | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | "BTC-USDT" ...                          |
 | direction              | true | string  | 买卖方向  |       "buy":买 "sell":卖                                   |
-| offset                 | true | string  | 开平方向 |    "open":开 "close":平          |
+| offset                 | true | string  | 开平方向 |    "open":开 "close":平 "both":单向持仓          |
 | trade_volume           | true | decimal | 成交数量               |     |
 | trade_price            | true | decimal | 成交价格               |  |
 | trade_turnover         | true | decimal | 成交金额（成交数量 * 合约面值 * 成交价格）       |       |
@@ -11344,10 +11189,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | offset_profitloss      | true | decimal | 平仓盈亏（使用持仓均价计算，不包含仓位跨结算的已实现盈亏。）   |    |
 | trade_fee             | true | decimal | 成交手续费              |    |
 | role                   | true | string  | taker或maker        |    |
-| fee_asset         | true | string  | 手续费币种   | （"USDT","HUSD"）  |
+| fee_asset         | true | string  | 手续费币种   | （"USDT"...）  |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:"BTC-USDT","BTC-HUSD" ... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</trades\>              |      |         |                    |   |
 | current_page           | true | int     | 当前页                |  |
 | total_page             | true | int     | 总页数                |    |
@@ -11372,9 +11218,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false（请看备注）  | string | 合约代码  |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...       |
-| pair          | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...   |
-| trade_type    | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平 |
+| contract_code | false（请看备注）  | string | 合约代码  | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...        |
+| pair          | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| trade_type    | true  | int    | 交易类型        | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 5:卖出强平, 6:买入强平, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | create_date   | true  | int    | 日期        | 可随意输入正整数，如果参数超过90则默认查询90天的数据    |
 | page_index    | false | int    | 页码，不填默认第1页     |                                          |
 | page_size     | false | int    | 不填默认20，不得多于50    |    [1-50]                                  |
@@ -11429,17 +11275,16 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | \<data\> | true     |  object       |                    |     |
 | \<trades\> | true     |  object array       |                    |    |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | id               | true | string    | 全局唯一的交易标识      |   |
 | match_id               | true | long    | 撮合结果id, 与订单ws推送orders_cross.$contract_code推送结果中的trade_id是相同的，非唯一，可重复，注意：一个撮合结果代表一个taker单和N个maker单的成交记录的集合，如果一个taker单吃了N个maker单，那这N笔trade都是一样的撮合结果   |   |
 | order_id               | true | long    | 订单ID               |   |
 | order_id_str      | true | string    | string格式的订单ID   |       |
 | symbol                 | true | string  | 品种代码               | |
 | order_source           | true | string  | 订单来源   |  （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发） |
-| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| direction              | true | string  | 买卖方向  |       "buy":买 "sell":卖                                   |
-| offset                 | true | string  | 开平方向 |    "open":开 "close":平          |
+| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...     |
+| direction              | true | string  |  买卖方向  |       "buy":买 "sell":卖                                   |
+| offset                 | true | string  | 开平方向 |    "open":开 "close":平 "both":单向持仓          |
 | trade_volume           | true | decimal | 成交数量               |     |
 | trade_price            | true | decimal | 成交价格               |  |
 | trade_turnover         | true | decimal | 成交金额（成交数量 * 合约面值 * 成交价格）       |       |
@@ -11447,11 +11292,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | offset_profitloss      | true | decimal | 平仓盈亏（使用持仓均价计算，不包含仓位跨结算的已实现盈亏。）    |    |
 | trade_fee             | true | decimal | 成交手续费              |    |
 | role                   | true | string  | taker或maker        |    |
-| fee_asset         | true | string  | 手续费币种   | （"USDT","HUSD"）  |
+| fee_asset         | true | string  | 手续费币种   | （"USDT"...）  |
 | real_profit | true | decimal | 真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only   | true |  int    | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</trades\>              |      |         |                    |   |
 | current_page           | true | int     | 当前页                |  |
 | total_page             | true | int     | 总页数                |    |
@@ -11476,8 +11322,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | true  | string | 合约代码     |     "BTC-USDT","BTC-HUSD" ...                  |
-| trade_type    | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平 |
+| contract_code | true  | string | 合约代码     |                                          |
+| trade_type    | true  | int    | 交易类型        | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 5:卖出强平, 6:买入强平, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | start_time   | false  | long    | 起始时间（时间戳，单位毫秒）        | 详见备注    |
 | end_time   | false  | long    | 结束时间（时间戳，单位毫秒）        |  详见备注   |
 | from_id    | false | long    | 查询起始id（取返回数据的query_id字段）    |                     |
@@ -11560,12 +11406,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_id               | true | long    | 订单ID               |                                          |
 | order_id_str               | true | string    | string格式的订单ID               |       |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code          | true | string  | 合约代码               | "BTC-USDT","BTC-HUSD" ...                    |
-| trade_partition        |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | "BTC-USDT" ...                          |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如: "BTC-USDT","BTC-HUSD" ...   |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | direction              | true | string  |  买卖方向  |       "buy":买 "sell":卖                                   |
-| offset                 | true | string  | 开平方向 |    "open":开 "close":平          |
+| offset                 | true | string  | 开平方向 |    "open":开 "close":平 "both":单向持仓          |
 | trade_volume           | true | decimal | 成交数量               |                                          |
 | trade_price            | true | decimal | 成交价格               |                                          |
 | trade_turnover         | true | decimal | 成交总金额              |                                          |
@@ -11574,8 +11419,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | real_profit            | true | decimal | 真实收益               |                                          |
 | trade_fee             | true | decimal | 成交手续费              |                                          |
 | role                   | true | string  | taker或maker        |                                          |
-| fee_asset         | true | string  | 手续费币种       |  （"USDT","HUSD"）      |
+| fee_asset         | true | string  | 手续费币种       |  （"USDT"...）      |
 | order_source           | true | string  | 订单来源   |  system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发     |
+| reduce_only   | true |  int    | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</trades\>            |      |         |                    |                                          |
 | remain_size           | true | int  | 剩余数据条数（在时间范围内，因受到数据条数限制而未查询到的数据条数）   |                                          |
 | next_id           | true | long     | 下一条数据的query_id（仅在查询结果超过数据条数限制时才有值）            |                                          |
@@ -11599,9 +11445,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false(请看备注)  | string | 合约代码     |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| pair | false(请看备注)  | string | 交易对     |   "BTC-USDT","BTC-HUSD" ...                 |
-| trade_type    | true  | int    | 交易类型        | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多,5: 卖出强平,6: 买入强平 |
+| contract_code | false(请看备注)  | string | 合约代码     | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...    |
+| pair | false(请看备注)  | string | 交易对     |   “BTC-USDT”...                        |
+| trade_type    | true  | int    | 交易类型        | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 5:卖出强平, 6:买入强平, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | start_time   | false  | long    | 起始时间（时间戳，单位毫秒）        | 详见备注    |
 | end_time   | false  | long    | 结束时间（时间戳，单位毫秒）        |  详见备注   |
 | from_id    | false | long    | 查询起始id（取返回数据的query_id字段）    |                     |
@@ -11686,12 +11532,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_id               | true | long    | 订单ID               |                                          |
 | order_id_str               | true | string    | string格式的订单ID               |       |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code          | true | string  | 合约代码               |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...    |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | direction              | true | string  |  买卖方向  |       "buy":买 "sell":卖                                   |
-| offset                 | true | string  | 开平方向 |    "open":开 "close":平          |
+| offset                 | true | string  | 开平方向 |    "open":开 "close":平 "both":单向持仓        |
 | trade_volume           | true | decimal | 成交数量               |                                          |
 | trade_price            | true | decimal | 成交价格               |                                          |
 | trade_turnover         | true | decimal | 成交总金额              |                                          |
@@ -11700,11 +11545,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | real_profit      | true | decimal | 真实收益               |                                          |
 | trade_fee             | true | decimal | 成交手续费              |                                          |
 | role                   | true | string  | taker或maker        |                                          |
-| fee_asset         | true | string  | 手续费币种       |  （"USDT",“HUSD”）      |
+| fee_asset         | true | string  | 手续费币种       |  （"USDT"...）      |
 | order_source           | true | string  | 订单来源   |  system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发   |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only   | true |  int    | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</trades\>            |      |         |                    |                                          |
 | remain_size           | true | int  | 剩余数据条数（在时间范围内，因受到数据条数限制而未查询到的数据条数）   |                                          |
 | next_id           | true | long     | 下一条数据的query_id（仅在查询结果超过数据条数限制时才有值）            |                                          |
@@ -11727,10 +11573,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code          | true | string | 合约代码                  | "BTC-USDT","BTC-HUSD" ...                    |
+| contract_code          | true | string | 合约代码                  | "BTC-USDT"...                           |
 | volume          | true  | long | 委托数量（张）               |                                          |
 | direction       | true  | string | 买卖方向      |        “buy”:买，“sell”:卖       |
-| client_order_id | false | long | （API）客户自己填写和维护，必须保持唯一,请注意必须小于等于9223372036854775807 | |
+| client_order_id | false | long | （API）客户自己填写和维护，必须为数字 | [1-9223372036854775807] |
 | order_price_type | false | string | 订单报价类型 |不填，默认为“闪电平仓”，"lightning"：闪电平仓，"lightning_ioc"：闪电平仓-IOC，"lightning_fok"：闪电平仓-FOK |
 
 #### 备注
@@ -11792,12 +11638,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code | false（请看备注） | string | 合约代码   |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| pair          | false（请看备注） |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false（请看备注） | string | 合约代码   | 永续："BTC-USDT"... ， 交割："BTC-USDT-210625"...     |
+| pair          | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | volume          | true  | decimal | 委托数量（张）               |                                          |
 | direction       | true  | string | 买卖方向      |        “buy”:买，“sell”:卖       |
-| client_order_id | false | long | （API）客户自己填写和维护，必须保持唯一,请注意必须小于等于9223372036854775807 | |
+| client_order_id | false | long | （API）客户自己填写和维护，必须为数字 | [1-9223372036854775807] |
 | order_price_type | false | string | 订单报价类型 |不填，默认为“闪电平仓”，"lightning"：闪电平仓，"lightning_ioc"：闪电平仓-IOC，"lightning_fok"：闪电平仓-FOK |
 
 #### 备注
@@ -11861,14 +11707,15 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code | true | string | 合约代码 | "BTC-USDT","BTC-HUSD" ... <img width=1000/> |
-| trigger_type | true | string | 触发类型： ge大于等于(触发价比最新价大)；le小于(触发价比最新价小) |  |
+| contract_code | true | string | 合约代码 |BTC-USDT <img width=1000/> |
+| reduce_only  | false | int  | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
+| trigger_type | true | string | 触发类型  |  ge大于等于(触发价比最新价大)；le小于(触发价比最新价小) |
 | trigger_price | true | decimal | 触发价，精度超过最小变动单位会报错 |  |
 | order_price | false | decimal | 委托价，精度超过最小变动单位会报错 |  |
-| order_price_type | false | string | 委托类型： 不填默认为limit; 限价：limit ，最优5档：optimal_5，最优10档：optimal_10，最优20档：optimal_20 |  |
+| order_price_type | false | string | 委托类型，不填默认为limit;  | 限价：limit ，最优5档：optimal_5，最优10档：optimal_10，最优20档：optimal_20 |
 | volume | true | long | 委托数量(张) |  |
-| direction | true | string | buy:买 sell:卖 |  |
-| offset | true | string | open:开 close:平 |  |
+| direction | true | string | 买卖方向 |  buy:买 sell:卖 |
+| offset | false(请看备注) | string | 开平方向 | open:开 close:平 both:单向持仓 |
 | lever_rate | false | int | 开仓必须填写，平仓可以不填。杠杆倍数[开仓若有10倍多单，就不能再下20倍多单;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)] |  |
 
 #### 备注：
@@ -11876,6 +11723,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 - optimal_5：最优5档、optimal_10：最优10档、optimal_20：最优20档下单order_price价格参数不用传，"limit":限价需要传价格。
 
 - 若存在持仓，那么下单时杠杆倍数必须与持仓杠杆相同，否则下单失败。若需使用新杠杆下单，则必须先使用切换杠杆接口将持仓杠杆切换成功后再下单。
+
+- offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
 
 > Response:
 
@@ -11927,21 +11776,23 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
  - 该接口的限频次数为1秒5次。
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
  - （pair+contract_type）以及 contract_code 必填其一（全不填报错1014），若同时填写，优先取contract_code。
+ - offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
 
 ### 请求参数
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code |false（请看备注） | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... <img width=1000/> |
-| pair | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| trigger_type | true | string | 触发类型： ge大于等于(触发价比最新价大)；le小于(触发价比最新价小) |  |
+| contract_code |false（请看备注） | string | 合约代码 | 永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...  <img width=1000/> |
+| pair | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| reduce_only  | false | int  | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
+| trigger_type | true | string | 触发类型  |  ge大于等于(触发价比最新价大)；le小于(触发价比最新价小) |
 | trigger_price | true | decimal | 触发价，精度超过最小变动单位会报错 |  |
 | order_price | false | decimal | 委托价，精度超过最小变动单位会报错 |  |
-| order_price_type | false | string | 委托类型： 不填默认为limit; 限价：limit ，最优5档：optimal_5，最优10档：optimal_10，最优20档：optimal_20 |  |
+| order_price_type | false | string | 委托类型，不填默认为limit; |  限价：limit ，最优5档：optimal_5，最优10档：optimal_10，最优20档：optimal_20  |
 | volume | true | long | 委托数量(张) |  |
-| direction | true | string | buy:买 sell:卖 |  |
-| offset | true | string | open:开 close:平 |  |
+| direction | true | string | 买卖方向 |  buy:买 sell:卖 |
+| offset | false(请看备注) | string | 开平方向 | open:开, close:平, both:单向持仓 |
 | lever_rate | false | int | 开仓必须填写，平仓可以不填。杠杆倍数[开仓若有10倍多单，就不能再下20倍多单;首次使用高倍杠杆(>20倍)，请使用主账号登录web端同意高倍杠杆协议后，才能使用接口下高倍杠杆(>20倍)] |  |
 
 > Response
@@ -11990,7 +11841,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
 | ----------------------- | -------- | ------- | ------------------ | -------------- |
-| contract_code | true | string | 合约代码 |  "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码 |BTC-USDT |
 | order_id | true | string | 用户订单ID（多个订单ID中间以","分隔,一次最多允许撤消20个订单 ） |  |
 
 
@@ -12045,9 +11896,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code | false（请看备注） | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| pair | false（请看备注） |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false（请看备注） | string | 合约代码 | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”... |
+| pair | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | order_id | true | string | 用户订单ID（多个订单ID中间以","分隔,一次最多允许撤消10个订单 ） |  |
 
 > Response
@@ -12096,7 +11947,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code | true | string | 合约代码 | "BTC-USDT","BTC-HUSD" ... |
+| contract_code | true | string | 合约代码 |BTC-USDT |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 | offset | false  | string | 开平方向（不填默认全部）  | "open":开 "close":平  |
 
@@ -12160,9 +12011,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code | false(请看备注) | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false(请看备注) |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
-| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false(请看备注) | string | 合约代码 | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”... |
+| pair | false(请看备注) |  string | 交易对 |   BTC-USDT   |
+| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 | offset | false  | string | 开平方向（不填默认全部）  | "open":开 "close":平  |
 
@@ -12209,10 +12060,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | **参数名称**                | **是否必须** | **类型**  | **描述**             | **取值范围**       |
 | ----------------------- | -------- | ------- | ------------------ | -------------- |
-| contract_code | true | string | 合约代码 |    "BTC-USDT","BTC-HUSD" ...    |
+| contract_code | true | string | 合约代码 |BTC-USDT |
 | page_index | false | int | 第几页，不填默认第一页 | |
 | page_size | false | int | 不填默认20，不得多于50 | |
-| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。   |
+| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓）   |
 
 > Response:
 
@@ -12264,13 +12115,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | total_size | true |int |  总条数 | |
 | \<orders\>|   true          |    object array      |     订单信息                       |                |
 | symbol |true |string |合约品种 | |
-| contract_code |true | string  | 合约代码 |  "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code |true | string  | 合约代码 | |
 | trigger_type | true |string  | 触发类型  | `ge`大于等于；`le`小于等于 |
 | volume | true |decimal  | 委托数量 | |
 | order_type | true |int  | 订单类型  |  1、报单  2、撤单 |
 | direction | true |string  | 订单方向  | [买(buy),卖(sell)] |
-| offset | true |string  | 开平标志 |  [开(open),平(close)] |
+| offset | true |string  | 开平标志 |  [开(open),平(close),单向持仓(both)] |
 | lever_rate | true |int | 杠杆倍数  | |
 | order_id | true |long  | 计划委托单订单ID | |
 | order_id_str | true |string  | 字符串类型的订单ID  | |
@@ -12281,7 +12131,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | order_price_type | true |string | 订单报价类型 |  限价：limit ，最优5档：optimal_5，最优10档：optimal_10，最优20档：optimal_20 |
 | status | true |int | 订单状态  | 1:准备提交、2:已提交、3:报单中、8：撤单未找到、9：撤单中、10：失败' |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如: "BTC-USDT","BTC-HUSD" ...  |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>                  |              |          |                            |                |
 | \</data\> |   | |  | |
 | ts                         | true         | long     | 响应生成时间点，单位：毫秒 |  |
@@ -12299,12 +12150,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code | false | String | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | false | String | 合约代码 | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”...  |
+| pair | false |  string | 交易对 |   BTC-USDT   |
 | page_index | false | int | 第几页，不填默认第一页 | |
 | page_size | false | int | 不填默认20，不得多于50 | |
-| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部,1:买入 开多,2: 卖出开空,3: 买入平空,4: 卖出平多。   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓）   |
 
 > Response
 
@@ -12356,15 +12206,14 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | total_size | true |int |  总条数 | |
 | \<orders\>|   true          |    object array      |     订单信息                       |                |
 | symbol |true |string |合约品种 | “BTC”，“ETH”...  |
-| contract_code |true | string  | 合约代码 | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code |true | string  | 合约代码 | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”... |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | trigger_type | true |string  | 触发类型   | `ge`大于等于；`le`小于等于 |
 | volume | true |decimal  | 委托数量 | |
 | order_type | true |int  | 订单类型  |1、报单  2、撤单 |
 | direction | true |string  | 订单方向  |[买(buy),卖(sell)] |
-| offset | true |string  | 开平标志  | [开(open),平(close)] |
+| offset | true |string  | 开平标志  | [开(open),平(close),单向持仓(both)] |
 | lever_rate | true |int | 杠杆倍数  | |
 | order_id | true |long  | 计划委托单订单ID | |
 | order_id_str | true |string  | 字符串类型的订单ID  | |
@@ -12374,9 +12223,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | created_at | true |long | 订单创建时间 | |
 | order_price_type | true |string | 订单报价类型 |  限价：limit ，最优5档：optimal_5，最优10档：optimal_10，最优20档：optimal_20 |
 | status | true |int | 订单状态 |  1:准备提交、2:已提交、3:报单中、8：撤单未找到、9：撤单中、10：失败' |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>                  |              |          |                            |                |
 | \</data\> |   | |  | |
 | ts                         | true         | long     | 响应生成时间点，单位：毫秒 |  |
@@ -12392,13 +12242,13 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | **参数名称**  | **是否必须** | **类型** | **描述**               | **默认值** | **取值范围**|
 | ------- | ------- | ------- | -------- | ------- | -------- |
-| contract_code | true        | string   | 合约代码 |   |  "BTC-USDT","BTC-HUSD" ...   |
-| trade_type        | true         | int      | 交易类型               |            | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多；后台是根据该值转换为offset和direction，然后去查询的； 其他值无法查询出结果 |
+| contract_code | true        | string   | 合约代码 |   | BTC-USDT |
+| trade_type        | true         | int      | 交易类型               |            | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 17:买入（单向持仓）, 18:卖出（单向持仓）;后台是根据该值转换为offset和direction，然后去查询的； 其他值无法查询出结果 |
 | status        | true         | string      | 订单状态               |            | 多个以英文逗号隔开，计划委托单状态：0:全部（表示全部结束状态的订单）、4:已委托、5:委托失败、6:已撤单 |
 | create_date   | true         | int      | 日期                   |            | 可随意输入正整数，如果参数超过90则默认查询90天的数据      |
 | page_index    | false        | int      | 页码，不填默认第1页    | 1          | 第几页，不填默认第一页 |
 | page_size     | false        | int      | 不填默认20，不得多于50 | 20         | 不填默认20，不得多于50 |
-| sort_by       | false  | string | 排序字段（降序），不填默认按照created_at降序 | created_at  | "created_at"：按订单创建时间进行降序，"update_time"：按订单更新时间进行降序|
+| sort_by | false  | string | 排序字段（降序），不填默认按照created_at降序 | created_at  | "created_at"：按订单创建时间进行降序，"update_time"：按订单更新时间进行降序|
 
 #### 备注：
 
@@ -12462,13 +12312,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | total_size | true |int |  总条数 | |
 | \<orders\>|   true          |    object array      |     订单信息                       |                |
 | symbol |true |string |合约品种 | |
-| contract_code |true | string  | 合约代码 |  "BTC-USDT","BTC-HUSD" ...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code |true | string  | 合约代码 | |
 | trigger_type | true |string  | 触发类型   |`ge`大于等于；`le`小于等于 |
 | volume | true |decimal  | 委托数量 | |
 | order_type | true |int  | 订单类型  | 1、报单  2、撤单 |
 | direction | true |string  | 订单方向  | [买(buy),卖(sell)] |
-| offset | true |string  | 开平标志  | [开(open),平(close)] |
+| offset | true |string  | 开平标志  | [开(open),平(close),单向持仓(both)] |
 | lever_rate | true |int | 杠杆倍数  | |
 | order_id | true |long  | 计划委托单订单ID | |
 | order_id_str | true |string  | 字符串类型的订单ID  | |
@@ -12487,7 +12336,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | fail_code | true |int | 被触发时下order单失败错误码| |
 | fail_reason | true |string | 被触发时下order单失败原因| |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:"BTC-USDT","BTC-HUSD" ... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
+| reduce_only | true | int  | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>                  |              |          |                            |                |
 | \</data\> |   | |  | |
 | ts                         | true         | long     | 响应生成时间点，单位：毫秒 |  |
@@ -12505,9 +12355,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述              |  默认值        | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- |----- | ---------------------------------------- |
-| contract_code | false（请看备注）        | string   | 合约代码 |   |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| pair          | false（请看备注） |  string | 交易对 |  |   "BTC-USDT","BTC-HUSD" ...   |
-| trade_type        | true         | int      | 交易类型               |            | 0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多；后台是根据该值转换为offset和direction，然后去查询的； 其他值无法查询出结果 |
+| contract_code | false（请看备注）        | string   | 合约代码 |   | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”...   |
+| pair          | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| trade_type        | true         | int      | 交易类型               |            | 0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 17:买入（单向持仓）, 18:卖出（单向持仓）;后台是根据该值转换为offset和direction，然后去查询的； 其他值无法查询出结果 |
 | status        | true         | string      | 订单状态               |            | 多个以英文逗号隔开，计划委托单状态：0:全部（表示全部结束状态的订单）、4:已委托、5:委托失败、6:已撤单 |
 | create_date   | true         | int      | 日期                   |            | 可随意输入正整数，如果参数超过90则默认查询90天的数据      |
 | page_index    | false        | int      | 页码，不填默认第1页    | 1          | 第几页，不填默认第一页 |
@@ -12577,15 +12427,14 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | total_size | true |int |  总条数 | |
 | \<orders\>|   true          |    object array      |     订单信息                       |                |
 | symbol |true |string |合约品种 | “BTC”，“ETH”...  |
-| contract_code |true | string  | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code |true | string  | 合约代码 | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”... |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | trigger_type | true |string  | 触发类型   | `ge`大于等于；`le`小于等于 |
 | volume | true |decimal  | 委托数量 | |
 | order_type | true |int  | 订单类型  | 1、报单  2、撤单 |
 | direction | true |string  | 订单方向  | [买(buy),卖(sell)] |
-| offset | true |string  | 开平标志 | [开(open),平(close)]  |
+| offset | true |string  | 开平标志 | [开(open),平(close),单向持仓(both)]  |
 | lever_rate | true |int | 杠杆倍数  | |
 | order_id | true |long  | 计划委托单订单ID | |
 | order_id_str | true |string  | 字符串类型的订单ID  | |
@@ -12603,9 +12452,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | canceled_at | true |long | 撤单时间| |
 | fail_code | true |int | 被触发时下order单失败错误码| |
 | fail_reason | true |string | 被触发时下order单失败原因| |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>                  |              |          |                            |                |
 | \</data\> |   | |  | |
 | ts                         | true         | long     | 响应生成时间点，单位：毫秒 |  |
@@ -12641,7 +12491,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code   | true | string | 合约代码    | "BTC-USDT","BTC-HUSD" ...                         |
+| contract_code   | true | string | 合约代码    | BTC-USDT                                |
 | direction | true | string | 买卖方向| buy:买入平空 sell:卖出平多  |
 | volume | true | decimal |委托数量(张)|  |
 | tp_trigger_price          | false | decimal | 止盈触发价格                  |                            |
@@ -12715,7 +12565,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
  - 止盈止损订单都为平仓单。
  - 该接口的限频次数为1秒5次。
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
- - （pair+contract_type）以及 contract_code 必填其一 （全不填报错1014），若同时填写，优先取contract_code。
+ - （pair+contract_type）以及 contract_code 必填其一（全不填报错1014），若同时填写，优先取contract_code。
 
 > Request
 
@@ -12737,9 +12587,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code   | false（请看备注） | string | 合约代码    |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...        |
-| pair | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...   |
-| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code   | false（请看备注） | string | 合约代码    | 永续：“BTC-USDT”... ，交割：“BTC-USDT210625”...          |
+| pair | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | direction | true | string | 买卖方向| buy:买入平空 sell:卖出平多  |
 | volume | true | decimal |委托数量(张)|  |
 | tp_trigger_price          | false | decimal | 止盈触发价格                  |                            |
@@ -12814,7 +12664,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | true | string | 合约代码|  "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码|  "BTC-USDT" ...  |
 | order_id | true | string | 止盈止损订单ID（多个订单ID中间以","分隔,一次最多允许撤消10个订单 ）|    |
 
 > Response
@@ -12866,9 +12716,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false（请看备注） | string | 合约代码|   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair         | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false（请看备注） | string | 合约代码|  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
+| pair         | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | order_id | true | string | 止盈止损订单ID（多个订单ID中间以","分隔,一次最多允许撤消10个订单 ）|    |
 
 > Response
@@ -12918,7 +12768,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | true | string | 合约代码 |  "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码|  "BTC-USDT" ...  |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 
 > Response
@@ -12960,14 +12810,13 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
  - （pair+contract_type）以及 contract_code 必填其一（全不填报错1014），若同时填写，优先取contract_code
 
-
 ### 请求参数
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false(请看备注) | string | 合约代码 |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false(请看备注) |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
-| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code | false(请看备注) | string | 合约代码|  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
+| pair | false(请看备注) |  string | 交易对 |   BTC-USDT   |
+| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 
 > Response
@@ -13010,7 +12859,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | true | string | 合约代码|  "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码|  "BTC-USDT" ...  |
 | page_index | false | int | 第几页，不填默认第一页|    |
 | page_size | false | int | 不填默认20，不得多于50|    |
 | trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部,3: 买入平空,4: 卖出平多。   |
@@ -13062,10 +12911,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code          | true | string  | 合约代码               | "BTC-USDT","BTC-HUSD" ...               |
-| trade_partition        |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_mode | true | string | 保证金模式  |  isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如："BTC-USDT","BTC-HUSD" ... |
+| contract_code          | true | string  | 合约代码               | "BTC-USDT" ...                          |
+| margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
+| margin_account | true | string | 保证金账户  | 比如“USDT”，“BTC-USDT” |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
 | tpsl_order_type            | true | string | 止盈止损类型                |           “tp”:止盈单；"sl"：止损单        |
@@ -13099,12 +12947,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false | string | 合约代码 |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
+| contract_code | false | string | 合约代码|  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
+| pair | false |  string | 交易对 |   BTC-USDT   |
 | page_index | false | int | 第几页，不填默认第一页|    |
 | page_size | false | int | 不填默认20，不得多于50|    |
 | trade_type  | false | int    |  交易类型，不填默认查询全部         | 0:全部,3: 买入平空,4: 卖出平多。   |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response
 
@@ -13180,10 +13027,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |  ”BTC“、”ETH“...       |
-| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...     |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式  |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”，“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT”，“BTC-USDT” |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
 | tpsl_order_type            | true | string | 止盈止损类型                |           “tp”:止盈单；"sl"：止损单        |
@@ -13199,8 +13045,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | status        | true  | int | 订单状态： |     1:未生效、2:等待委托、3:委托中、4:委托成功、5:委托失败、6:已撤单、8：撤单未找到、9：撤单中、10：失败 、11：已失效    |
 | source_order_id        | true  | string |  源限价单的订单id（下单设置的止盈止损订单该字段才有值，表示当前止盈止损单由哪个限价单触发的） |       |
 | relation_tpsl_order_id        | true  | string |  关联的止盈止损单id（用户同时设置止盈止损单时，该字段才有值，否则数值为-1） |       |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</orders\>       |       |        |     |  |
 | \</data\>       |       |        |     |  |
@@ -13218,7 +13064,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | true | string | 合约代码 |  "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码,"BTC-USDT" ...|    |
 | status | true | string | 订单状态| 多个以英文逗号隔开，止盈止损订单状态： 0:全部（表示全部结束状态的订单）、4:委托成功、5:委托失败、6:已撤单、11：已失效   |
 | create_date | true | long | 日期| 可随意输入正整数，如果参数超过90则默认查询90天的数据   |
 | page_index | false | int | 第几页，不填默认第一页|    |
@@ -13279,10 +13125,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code          | true | string  | 合约代码               | "BTC-USDT","BTC-HUSD" ...            |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | "BTC-USDT" ...                          |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如： "BTC-USDT","BTC-HUSD" ... |
+| margin_account | true | string | 保证金账户  | 比如“USDT”，“BTC-USDT” |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
 | tpsl_order_type            | true | string | 止盈止损类型                |           “tp”:止盈单；"sl"：止损单        |
@@ -13322,8 +13167,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false（请看备注） | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| pair          | false（请看备注） |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
+| contract_code | false（请看备注） | string | 合约代码 | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
+| pair          | false（请看备注） |  string | 交易对 |   BTC-USDT   |
 | status | true | string | 订单状态| 多个以英文逗号隔开，止盈止损订单状态： 0:全部（表示全部结束状态的订单）、4:委托成功、5:委托失败、6:已撤单、11：已失效   |
 | create_date | true | long | 日期| 可随意输入正整数，如果参数超过90则默认查询90天的数据   |
 | page_index | false | int | 第几页，不填默认第一页|    |
@@ -13387,10 +13232,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code          | true | string  | 合约代码               |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...     |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_mode | true | string | 保证金模式  | cross：全仓模式 |
-| margin_account | true | string | 保证金账户  | 比如："USDT", "HUSD"    |
+| contract_code          | true | string  | 合约代码               | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...    |
+| margin_mode | true | string | 保证金模式  | cross：全仓模式  |
+| margin_account | true | string | 保证金账户  | 比如“USDT”，“BTC-USDT” |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
 | tpsl_order_type            | true | string | 止盈止损类型                |           “tp”:止盈单；"sl"：止损单        |
@@ -13412,8 +13256,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | triggered_price   | true | decimal | 被触发时的价格                |  |
 | relation_order_id          | true | string |  该字段为关联限价单的关联字段，未触发前数值为-1	           |                       |
 | update_time | true  | long | 订单更新时间，单位：毫秒 |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</orders\>       |       |        |     |  |
 | \</data\>       |       |        |     |  |
@@ -13431,7 +13275,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | true | string | 合约代码  |  "BTC-USDT","BTC-HUSD" ...  |
+| contract_code | true | string | 合约代码|  "BTC-USDT" ...  |
 | order_id | true | long | 开仓订单id  |    |
 
 > Response
@@ -13517,15 +13361,14 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | status          | true  | string | 请求处理结果                        | "ok" :成功, "error"：失败 |
 | \<data\>        |   true    |   object     |                               | 字典                   |
 | symbol               | true | string  | 品种代码   |                                          |
-| contract_code        | true | string  | 合约代码   | "BTC-USDT","BTC-HUSD" ...                  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code        | true | string  | 合约代码   | "BTC-USDT" ...                          |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
-| margin_account | true | string | 保证金账户  | 比如： "BTC-USDT","BTC-HUSD" ... |
+| margin_account | true | string | 保证金账户  | 比如“USDT”，“BTC-USDT” |
 | volume               | true | decimal | 委托数量   |                                          |
 | price                | true | decimal | 委托价格   |                                          |
 | order_price_type     | true | string  | 订单报价类型 | "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
-| direction            | true | string  | 买卖方向   | "buy":买 "sell":卖                         |
-| offset               | true | string  | 开平方向   | "open":开 "close":平                       |
+| direction            | true | string  | 买卖方向   | "buy":买, "sell":卖                         |
+| offset               | true | string  | 开平方向   | "open":开, "close":平, "both"：单向持仓                       |
 | lever_rate           | true | int     | 杠杆倍数   |                         |
 | order_id             | true | long    | 订单ID   |                                          |
 | order_id_str             | true | string    | String类型订单ID   |                                          |
@@ -13540,7 +13383,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | status               | true | int     | 订单状态   | (1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单 11撤单中) |
 | order_type           | true | int  | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
 | order_source         | true | string  | 订单来源   | （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发） |
-| fee_asset         | true | string  | 手续费币种   | （"USDT","HUSD"）|
+| fee_asset         | true | string  | 手续费币种   | （"BTC","ETH"...）|
 | canceled_at               | true     | long    |撤单时间           |  |
 | \<tpsl_order_info\>  |  true  | object array |  关联的止盈止损单信息    | |
 | volume                 | true | decimal  | 委托数量  |      |
@@ -13578,8 +13421,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code | false（请看备注） | string | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| pair | false（请看备注） |  string | 交易对 |  "BTC-USDT","BTC-HUSD" ...   |
+| contract_code | false（请看备注） | string | 合约代码|  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...  |
+| pair | false（请看备注） |  string | 交易对 |   BTC-USDT   |
 | order_id | true | long | 开仓订单id  |    |
 
 > Response
@@ -13668,21 +13511,20 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | status          | true  | string | 请求处理结果                        | "ok" :成功, "error"：失败 |
 | \<data\>        |   true    |   object     |                               | 字典                   |
 | symbol               | true | string  | 品种代码   |                                          |
-| contract_code        | true | string  | 合约代码   |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| margin_mode | true | string | 保证金模式  | cross：全仓模式 |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”，“HUSD”  |
+| contract_code        | true | string  | 合约代码   |  永续："BTC-USDT"... ，交割："BTC-USDT-210625"...    |
+| margin_mode | true | string | 保证金模式  | cross：全仓模式   |
+| margin_account | true | string | 保证金账户  | 比如“USDT”，“BTC-USDT” |
 | volume               | true | decimal | 委托数量   |                                          |
 | price                | true | decimal | 委托价格   |                                          |
 | order_price_type     | true | string  | 订单报价类型 | "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
-| direction            | true | string  | 买卖方向   | "buy":买 "sell":卖                         |
-| offset               | true | string  | 开平方向   | "open":开 "close":平                       |
+| direction            | true | string  | 买卖方向   | "buy":买, "sell":卖                         |
+| offset               | true | string  | 开平方向   | "open":开, "close":平, "both"：单向持仓                       |
 | lever_rate           | true | int     | 杠杆倍数   |                         |
 | order_id             | true | long    | 订单ID   |                                          |
 | order_id_str             | true | string    | String类型订单ID   |                                          |
 | client_order_id      | true | long    | 客户订单ID |                                          |
 | created_at           | true | long    | 创建时间   |                                          |
-| trade_volume         | true | decimal | 成交数量   |                                          | 
+| trade_volume         | true | decimal | 成交数量   |                                          |
 | trade_turnover       | true | decimal | 成交总金额  |                                          |
 | fee                  | true | decimal | 手续费    |                                          |
 | trade_avg_price      | true | decimal | 成交均价   |                                          |
@@ -13691,10 +13533,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | status               | true | int     | 订单状态   | (1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单 11撤单中) |
 | order_type           | true | int  | 订单类型   | 1:报单 、 2:撤单 、 3:强平、4:交割                  |
 | order_source         | true | string  | 订单来源   | （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发） |
-| fee_asset         | true | string  | 手续费币种   | （"USDT","HUSD"）|
+| fee_asset         | true | string  | 手续费币种   | （"BTC","ETH"...）|
 | canceled_at               | true     | long    |撤单时间           |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \<tpsl_order_info\>  |  true  | object array |  关联的止盈止损单信息    | |
 | volume                 | true | decimal  | 委托数量  |      |
@@ -13730,9 +13572,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 ### 请求参数
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code   | true | string | 合约代码    | "BTC-USDT","BTC-HUSD" ...                       |
+| contract_code   | true | string | 合约代码    | BTC-USDT                               |
+| reduce_only     | false | int    | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | direction | true | string | 买卖方向| buy:买 sell:卖  |
-| offset | true | string | 开平方向|   open:开 close:平  |
+| offset | false(请看备注) | string | 开平方向|   open:开 close:平  |
 | lever_rate | false | int | 杠杆倍数，开仓操作为必填，平仓操作为非必填|    |
 | volume | true | decimal |委托数量(张)|  |
 | callback_rate          | true | decimal | 回调幅度              |  如：0.01 表示1%，不可小于0.001（0.1%）                         |
@@ -13742,6 +13585,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 #### 备注
  - 委托类型为理论价格，表示跟踪委托触发成功后，以下单以来市场最低（最高）价的（1 ± 回调幅度）作为委托价（精度为币种最小变动单位，截断）向市场下委托类型为limit的订单。
  - 无论是最优N档还是理论价格下单，都不能保证订单能完全成交，主要取决于市场情况。
+ - offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
 
  > Response: 
 
@@ -13781,11 +13625,12 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 ### 请求参数
 | 参数名称            | 是否必须  | 类型     | 描述                    | 取值范围                                     |
 | --------------- | ----- | ------ | --------------------- | ---------------------------------------- |
-| contract_code    | false（请看备注）  | string   | 合约代码     |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...     |
-| pair             | false（请看备注） |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
-| contract_type    | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code    | false（请看备注）  | string   | 合约代码     | 永续："BTC-USDT"... ，交割："BTC-USDT-210625"...      |
+| pair             | false（请看备注） |  string | 交易对 |   BTC-USDT   |
+| contract_type    | false（请看备注） |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| reduce_only      | false | int    | 是否为只减仓订单（该字段在双向持仓模式下无效，在单向持仓模式下不填默认为0。）	     | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | direction | true | string | 买卖方向| buy:买 sell:卖  |
-| offset | true | string | 开平方向|   open:开 close:平  |
+| offset | false(请看备注) | string | 开平方向 |   open:开 close:平  |
 | lever_rate | false | int | 杠杆倍数，开仓操作为必填，平仓操作为非必填|    |
 | volume | true | decimal |委托数量(张)|  |
 | callback_rate          | true | decimal | 回调幅度              |  如：0.01 表示1%，不可小于0.001（0.1%）                         |
@@ -13795,6 +13640,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 #### 备注
  - 委托类型为理论价格，表示跟踪委托触发成功后，以下单以来市场最低（最高）价的（1 ± 回调幅度）作为委托价（精度为币种最小变动单位，截断）向市场下委托类型为limit的订单。
  - 无论是最优N档还是理论价格下单，都不能保证订单能完全成交，主要取决于市场情况。
+ - offset 在双向持仓模式下为必填字段。在单向持仓模式下为非必填，填仅可填“both”。
 
 > Response: 
 
@@ -13831,7 +13677,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | true | string | 合约代码    |  "BTC-USDT","BTC-HUSD" ...                   |
+| contract_code   | true | string | 合约代码    | BTC-USDT                               |
 | order_id | true | string | 用户跟踪委托订单ID（多个订单ID中间以","分隔,一次最多允许撤消10个订单 ）|    |
 
 > Response: 
@@ -13884,9 +13730,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | false (请看备注) | string | 合约代码    |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...       |
-| pair            | false (请看备注) |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
-| contract_type   | false (请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code   | false (请看备注) | string | 合约代码    | 永续：“BTC-USDT”... ，交割：“BTC-USDT-210625”...        |
+| pair            | false (请看备注) |  string | 交易对 |   BTC-USDT   |
+| contract_type   | false (请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | order_id | true | string | 用户跟踪委托订单ID（多个订单ID中间以","分隔,一次最多允许撤消10个订单 ）|    |
 
 > Response: 
@@ -13937,7 +13783,7 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | true | string | 合约代码    | "BTC-USDT","BTC-HUSD" ...                    |
+| contract_code   | true | string | 合约代码    | BTC-USDT                               |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 | offset | false  | string | 开平方向（不填默认全部）  | "open":开 "close":平  |
 
@@ -13981,14 +13827,13 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
  - （pair+contract_type）以及 contract_code 必填其一（全不填报错1014），若同时填写，优先取contract_code
 
-
 ### 请求参数
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | false(请看备注) | string | 合约代码    |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| pair | false(请看备注) |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...  |
-| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
+| contract_code  | false(请看备注)  | string | 合约代码    | 永续：“BTC-USDT”... ,永续：“BTC-USDT-210625”...     |
+| pair | false(请看备注) |  string | 交易对 |   BTC-USDT   |
+| contract_type | false(请看备注) |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
 | direction | false  | string | 买卖方向（不填默认全部）  |  "buy":买 "sell":卖 |
 | offset | false  | string | 开平方向（不填默认全部）  | "open":开 "close":平  |
 
@@ -14032,8 +13877,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | true | string | 合约代码    | "BTC-USDT","BTC-HUSD" ...                     |
-| trade_type | false  | int | 交易类型（不填默认查询全部）  |  0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多 |
+| contract_code   | true | string | 合约代码    | BTC-USDT                               |
+| trade_type | false  | int | 交易类型（不填默认查询全部）  |  0:全部, 1:买入开多, 2: 卖出开空, 3:买入平空, 4:卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | page_index | false | int | 第几页，不填默认第一页|    |
 | page_size | false | int | 不填默认20，不得多于50|    |
 
@@ -14084,12 +13929,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code   | true | string | 合约代码    | "BTC-USDT","BTC-HUSD" ...            |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string | 合约代码    | BTC-USDT                               |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
 | direction            | true | string | 买卖方向                |           买："buy",卖："sell"         |
-| offset         | true | string | 开平方向              |                  开："open",平："close"        |
+| offset         | true | string | 开平方向              |                  开："open", 平："close", "both"：单向持仓        |
 | lever_rate            | true | int    | 杠杆倍数               |                                       |
 | order_id      | true | long | 跟踪委托订单ID                |                                          |
 | order_id_str             | true | string | 字符串类型的跟踪委托订单ID              |                                          |
@@ -14101,7 +13945,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | active_price   | true | decimal | 激活价格             |  |
 | is_active   | true | int | 激活价格是否已激活             |  1：已激活；0：未激活|
 | margin_mode   | true | string | 保证金模式    | isolated：逐仓模式                             |
-| margin_account   | true | string | 保证金账户    | 比如："BTC-USDT","BTC-HUSD" ...                           |
+| margin_account   | true | string | 保证金账户    | 比如：“BTC-USDT”                               |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>       |       |        |     |  |
 | \</data\>       |       |        |     |  |
 | ts              | true  | long   | 响应生成时间点，单位：毫秒                 |     |
@@ -14114,18 +13959,17 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 #### 备注：
  - 该接口仅支持全仓模式
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625；
- - pairt和contract_code同时填写，则优先取contract_code。如果同时不填，则表示查询全仓下所有跟踪委托当前委托。
+ - pairt和contract_code同时填写，则优先取contract_code。如果同时不填，则表示查询全仓下所有跟踪委托当前委托
 
 ### 请求参数
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | false | string | 合约代码    |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| pair            | false |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
-| trade_type | false  | int | 交易类型（不填默认查询全部）  |  0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多 |
+| contract_code   | false | string | 合约代码    | 永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...     |
+| pair            | false |  string | 交易对 |   BTC-USDT   |
+| trade_type | false  | int | 交易类型（不填默认查询全部）  |  0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | page_index | false | int | 第几页，不填默认第一页|    |
 | page_size | false | int | 不填默认20，不得多于50|    |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 > Response: 
 
@@ -14177,12 +14021,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code   | true | string | 合约代码    | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string | 合约代码    | 永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...   |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
 | direction            | true | string | 买卖方向                |           买："buy",卖："sell"         |
-| offset         | true | string | 开平方向              |                  开："open",平："close"        |
+| offset         | true | string | 开平方向              |                  开："open",平："close", "both"：单向持仓        |
 | lever_rate            | true | int    | 杠杆倍数               |                                       |
 | order_id      | true | long | 跟踪委托订单ID                |                                          |
 | order_id_str             | true | string | 字符串类型的跟踪委托订单ID              |                                          |
@@ -14194,10 +14037,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | active_price   | true | decimal | 激活价格             |  |
 | is_active   | true | int | 激活价格是否已激活             |  1：已激活；0：未激活|
 | margin_mode   | true | string | 保证金模式    | cross：全仓模式                             |
-| margin_account   | true | string | 保证金账户    | 比如：“USDT”,"HUSD"                               |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| margin_account   | true | string | 保证金账户    | 比如：“BTC-USDT”                               |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>       |       |        |     |  |
 | \</data\>       |       |        |     |  |
 | ts              | true  | long   | 响应生成时间点，单位：毫秒                 |     |
@@ -14214,9 +14058,9 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | true | string | 合约代码    | "BTC-USDT","BTC-HUSD" ...                      |
+| contract_code   | true | string | 合约代码    | BTC-USDT                               |
 | status | true | string | 订单状态| 多个以英文逗号隔开，跟踪委托订单状态：0:全部（表示全部结束状态的订单）、4:已委托、5:委托失败、6:已撤单   |
-| trade_type | true  | int | 交易类型  |  0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多 |
+| trade_type | true  | int | 交易类型  |  0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | create_date | true | long | 日期| 可随意输入正整数，如果参数超过90则默认查询90天的数据   |
 | page_index | false | int | 第几页，不填默认第一页|    |
 | page_size | false | int | 不填默认20，不得多于50|    |
@@ -14278,12 +14122,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code   | true | string | 合约代码    | "BTC-USDT","BTC-HUSD" ...                          |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string | 合约代码    | BTC-USDT                               |
 | volume                 | true | decimal  | 委托数量 |      |
-| order_type           | true | int | 订单类型    |  1、报单 2、撤单               |                                       
+| order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
 | direction            | true | string | 买卖方向                |           买："buy",卖："sell"         |
-| offset         | true | string | 开平方向              |                  开："open",平："close"        |
+| offset         | true | string | 开平方向              |                  开："open", 平："close", "both"：单向持仓        |
 | lever_rate            | true | int    | 杠杆倍数               |                                       |
 | order_id      | true | long | 跟踪委托订单ID                |                                          |
 | order_id_str             | true | string | 字符串类型的跟踪委托订单ID              |                                          |
@@ -14304,7 +14147,8 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | triggered_price   | true | decimal | 被触发时的价格           |  |
 | relation_order_id          | true | string |  该字段为关联限价单的关联字段，未触发前数值为-1	           |                       |
 | margin_mode   | true | string | 保证金模式    | isolated：逐仓模式                             |
-| margin_account   | true | string | 保证金账户    | 比如："BTC-USDT","BTC-HUSD" ...                              |
+| margin_account   | true | string | 保证金账户    | 比如：“BTC-USDT”                               |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>       |       |        |     |  |
 | \</data\>       |       |        |     |  |
 | ts              | true  | long   | 响应生成时间点，单位：毫秒                 |     |
@@ -14323,10 +14167,10 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 
 | 参数名称          | 是否必须  | 类型     | 描述   | 取值范围                                     |
 | ------------- | ----- | ------ | ------------- | ---------------------------------------- |
-| contract_code   | false(请看备注) | string | 合约代码    |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...     |
-| pair            | false（请看备注） |  string | 交易对 |   "BTC-USDT","BTC-HUSD" ...   |
+| contract_code   | false(请看备注) | string | 合约代码    | 永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...     |
+| pair            | false（请看备注） |  string | 交易对 |   BTC-USDT   |
 | status | true | string | 订单状态| 多个以英文逗号隔开，跟踪委托订单状态：0:全部（表示全部结束状态的订单）、4:已委托、5:委托失败、6:已撤单   |
-| trade_type | true  | int | 交易类型（不填默认查询全部）  |  0:全部,1:买入开多,2: 卖出开空,3: 买入平空,4: 卖出平多 |
+| trade_type | true  | int | 交易类型（不填默认查询全部）  |  0:全部, 1:买入开多, 2:卖出开空, 3:买入平空, 4:卖出平多, 17：买入（单向持仓）, 18：卖出（单向持仓） |
 | create_date | true | long | 日期| 可随意输入正整数，如果参数超过90则默认查询90天的数据   |
 | page_index | false | int | 第几页，不填默认第一页|    |
 | page_size | false | int | 不填默认20，不得多于50|    |
@@ -14391,12 +14235,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | current_page        | true | int | 当前页   |                |
 | \<orders\>        |   true    |   object array    |                               |     |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code   | true | string | 合约代码    | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string | 合约代码    | 永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...   |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型：1、报单 2、撤单               |                                          |
-| direction            | true | string | 买卖方向                |           买："buy",卖："sell"         |
-| offset         | true | string | 开平方向              |                  开："open",平："close"        |
+| direction            | true | string | 买卖方向                |           买："buy", 卖："sell"         |
+| offset         | true | string | 开平方向              |                  开："open", 平："close", "both"：单向持仓        |
 | lever_rate            | true | int    | 杠杆倍数               |                                       |
 | order_id      | true | long | 跟踪委托订单ID                |                                          |
 | order_id_str             | true | string | 字符串类型的跟踪委托订单ID              |                                          |
@@ -14417,10 +14260,11 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 | triggered_price   | true | decimal | 被触发时的价格           |  |
 | relation_order_id          | true | string |  该字段为关联限价单的关联字段，未触发前数值为-1	           |                       |
 | margin_mode   | true | string | 保证金模式    | cross：全仓模式                             |
-| margin_account   | true | string | 保证金账户    | 比如：“USDT”,“HUSD”                               |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| margin_account   | true | string | 保证金账户    | 比如：“BTC-USDT”                               |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only   | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</orders\>       |       |        |     |  |
 | \</data\>       |       |        |     |  |
 | ts              | true  | long   | 响应生成时间点，单位：毫秒                 |     |
@@ -14452,14 +14296,14 @@ sort_by | false  | string | 排序字段（降序），不填默认按照create_
 --------------  | --------------  | ---------- |  ------------------------  |  ------------------------------------------------------------------------------------------------------  |
 from  |    true  |  string  |  来源业务线账户，取值：spot(币币)、linear-swap(U本位合约)  |   e.g. spot  |
 to  |    true  |  string  |  目标业务线账户，取值：spot(币币)、linear-swap(U本位合约)  | e.g. linear-swap  |
-currency  |    true  |  string  |  币种,支持大小写  |   e.g. usdt,husd  |
+currency  |    true  |  string  |  币种,支持大小写  |   e.g. usdt  |
 amount  |   true  |  decimal  |   划转金额  |      |
-margin-account  |   true  |  string  |   保证金账户	  | e.g. btc-usdt、btc-husd、USDT、HUSD    |
+margin-account  |   true  |  string  |   保证金账户	  | e.g. btc-usdt、eth-usdt、USDT     |
 
 #### 备注
-- 当"margin-account"为USDT或HUSD时，表示从全仓账户划出或转入。
+- 当"margin-account"为USDT时，表示从全仓账户划出或转入。
 
-> Response: 
+> Response:
 
 ```json
 
@@ -14704,7 +14548,7 @@ api接口response中的header返回以下字段
 
 `{`
 
-   `"op": "pong"`
+   `"op": "error"`
     
    `"ts": "1492420473027",`
     
@@ -14987,7 +14831,7 @@ WebSocket API 返回的所有数据都进⾏了 GZIP 压缩，需要 client 在�
 
 | 参数名称 | 是否必须   | 类型  | 描述 | 默认值 | 取值范围      |
 | ------- | ----- | ------ |------ |------ |------ |
-| contract_code  | true |  string   | 合约代码 或 合约标识    |    |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+| contract_code  | true |  string   | 合约代码 或 合约标识    |    | 永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
 | period         | true | string   |  K线周期   |    |  仅支持小写：1min, 5min, 15min, 30min, 1hour,4hour,1day, 1mon  |
 
 
@@ -15078,7 +14922,7 @@ WebSocket API 返回的所有数据都进⾏了 GZIP 压缩，需要 client 在�
 
   参数名称  |    是否必须   |   类型  |   描述   |    默认值    |   取值范围 |
 -------- | -------- | ------ | ------ | ------- |---------------------------------------- |
-contract_code  |  true   |  string   | 合约代码 或 合约标识    |    |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
+contract_code  |  true   |  string   | 合约代码 或 合约标识    |    | 永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
  period | true | string | K线周期 | | 1min, 5min, 15min, 30min, 60min,4hour,1day,1week, 1mon|
 
   
@@ -15198,7 +15042,7 @@ from: t1 and to: t2, should satisfy 1325347200  < t1  < t2  < 2524579200.
 
   参数名称    |  是否必须    |  类型    |  描述      |   默认值    |  取值范围  |
 -------------- |-------------- |---------- |------------ |------------ |---------------------------------------------------------------------------------|
- contract_code  |  true   |  string   |  合约代码 或 合约标识  |           |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
+ contract_code  |  true   |  string   |  合约代码 或 合约标识  |           | 永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
  type           |  true   | string     | Depth 类型        |        | (150档数据)  step0, step1, step2, step3, step4, step5, step14, step15, step16, step17（合并深度1-5,14-17）,step0时，不合并深度;(20档数据)  step6, step7, step8, step9, step10, step11, step12, step13, step18, step19（合并深度7-13,18-19）；step6时，不合并深度； |
 
 #### 备注
@@ -15325,7 +15169,7 @@ ch | true |  string | 数据所属的 channel，格式： market.period | |
 ### sub订阅参数说明
   参数名称   |  是否必须    |  类型     |  描述      |  默认值     |  取值范围  |
   -------------- |   -------------- |  ---------- |  ------------ |  ------------ |  --  |
- contract_code         |  true           |  string     |  合约代码 或 合约标识   |        |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+ contract_code         |  true           |  string     |  合约代码 或 合约标识   |        | 永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
   size           |  true           |  string     |   档位数       |        |  20:表示20档不合并的深度，150:表示150档不合并的深度  |
 
   
@@ -15434,7 +15278,7 @@ event | true |  string | 事件类型；"update":更新，表示推送买卖各2
 
 | 参数名称 | 是否必须   | 类型 | 描述  | 取值范围 |
 | ------ | ------ | ------ | ------ | ------ |
-| contract_code   |  true           |  string     |  合约代码 或 合约标识     |    永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+| contract_code   |  true           |  string     |  合约代码 或 合约标识     |   永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
    
 
 > 请求成功返回数据的例子：
@@ -15530,7 +15374,7 @@ bid  |  true  |  array  |   [买1价,买1量(张)]	  |
 
 | 字段名称 | 是否必须| 类型   | 描述  | 取值范围  |
 | ------- | ----- | ----- | ------- | ------- |
-| contract_code   |  true    |  string     |  合约代码 或 合约标识    |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
+| contract_code   |  true    |  string     |  合约代码 或 合约标识    |  永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
 
 > 返回示例:
 
@@ -15623,7 +15467,7 @@ bid  |  true  |  array  |   [买1价,买1量(张)]	  |
 
 | 字段名称 | 是否必须| 类型   | 描述  |  取值范围   |
 | ------- | ----- | ----- | ------- | ------- |
-| contract_code   |  true    |  string     |  合约代码 或 合约标识  |    永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
+| contract_code   |  true    |  string     |  合约代码 或 合约标识  |   永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
 
 > 请求成功返回数据的例子：
 
@@ -15718,7 +15562,7 @@ ts  |  true  |  long  |  发送时间  |   |
 
 | 参数名称 | 是否必须   | 类型 | 描述  |   取值范围   |
 | ------ | ------ | ------ | ------ | ------ |
-| contract_code   |  true           |  string     |  合约代码 或 合约标识     |    永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）  |
+| contract_code   |  true           |  string     |  合约代码 或 合约标识     |   永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）  |
 
 
 > 之后每当 Trade Detail 有更新时，client 会收到数据，例子：
@@ -15807,7 +15651,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 ### sub订单参数说明
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 指数标识          |         | 支持大小写，"BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 指数标识          |         | 支持大小写，"BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型               |         | 仅支持小写,1min, 5min, 15min, 30min, 60min,4hour,1day, 1mon     |
 
 
@@ -15898,7 +15742,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 ### req请求参数说明：
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 指数标识          |         |支持大小写, "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 指数标识          |         |支持大小写, "BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1mon     |
 
 
@@ -15998,7 +15842,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week, 1mon     |
 
 > 之后每当溢价指数有更新时，client 会收到数据，例子：
@@ -16082,7 +15926,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 |  参数名称   |  是否必须  |  类型  |    描述        |   默认值  |  取值范围                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week, 1mon     |
 
 
@@ -16175,7 +16019,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型           |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week, 1mon     |
 
 > 之后每当预测资金费率有更新时，client 会收到数据，例子：
@@ -16262,7 +16106,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT","BTC-HUSD","ETH-HUSD"...                           |
+| contract_code      | true     | string | 合约代码         |         | "BTC-USDT","ETH-USDT"...                           |
 | period          | true     | string  | K线类型               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week, 1mon     |
 
 
@@ -16358,7 +16202,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码 或 合约标识   |         |   永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+| contract_code      | true     | string | 合约代码 或 合约标识   |         |  永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
 | period          | true     | string  | 周期               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day,1week, 1mon     |
 | basis_price_type     | false     | string  | 基差价格类型，表示在周期内计算基差使用的价格类型              |    不填，默认为使用开盘价     |    开盘价：open，收盘价：close，最高价：high，最低价：low，平均价=（最高价+最低价）/2：average   |
 
@@ -16439,7 +16283,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码 或 合约标识   |         |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）   |
+| contract_code      | true     | string | 合约代码 或 合约标识   |         | 永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）   |
 | period          | true     | string  | 周期               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day,1week, 1mon     |
 | basis_price_type     | false     | string  | 基差价格类型，表示在周期内计算基差使用的价格类型              |    不填，默认为使用开盘价     |    开盘价：open，收盘价：close，最高价：high，最低价：low，平均价=（最高价+最低价）/2：average   |
 
@@ -16521,7 +16365,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 ### sub订阅参数说明
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string |合约代码 或 合约标识  |         | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）     |
+| contract_code      | true     | string |合约代码 或 合约标识  |         | 永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）     |
 | period          | true     | string  | K线类型               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week, 1mon     |
 
 > 当标记价格有更新时，client 会收到数据，例如：
@@ -16610,7 +16454,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | **参数名称**    | **是否必须** | **类型** | **描述**        | **默认值** | **取值范围**                                 |
 | ----------- | -------- | ------ | ------------- | ------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码 或 合约标识  |         | 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）、BTC-HUSD-CW（当周合约标识）、BTC-HUSD-NW（次周合约标识）、BTC-HUSD-CQ（当季合约标识）、BTC-HUSD-NQ（次季合约标识）     |
+| contract_code      | true     | string | 合约代码 或 合约标识  |         | 永续:BTC-USDT（永续合约代码） ，交割：BTC-USDT-210625（交割合约代码） 或 BTC-USDT-CW（当周合约标识）、BTC-USDT-NW（次周合约标识）、BTC-USDT-CQ（当季合约标识）、BTC-USDT-NQ（次季合约标识）     |
 | period          | true     | string  | K线类型               |         | 1min, 5min, 15min, 30min, 60min,4hour,1day, 1week, 1mon     |
 
 #### 备注
@@ -16701,13 +16545,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ------- | ----- | ------------------------------------------ |
 | op       | string | 必填；操作名称，订阅固定值为sub             |
 | cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 订阅主题名称，必填 (orders.$contract_code) 订阅某个合约下的成交订单信息； 详情请查看sub请求参数说明 |
-
-### sub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| topic    | string |  订阅主题名称，必填 (orders.$contract_code) 订阅、取消订阅某个合约下的成交订单信息； $contract_code为合约代码（BTC-USDT、ETH-USDT...），如果值为 * 时代表订阅所有合约; |
 
 #### 备注：
  - postOnly的报单收到的WS推送要么是报单成功，状态为3，要么是7，已撤单。
@@ -16775,13 +16613,12 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ts   | true | long  | 服务端应答时间戳   |    |
 | uid   | true | string  | 用户uid  |    |
 | symbol   | true | string  | 品种代码   |  "BTC","ETH"...  |
-| contract_code   | true | string  | 合约代码   | "BTC-USDT","BTC-HUSD" ...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码   |    |
 | volume   | true | decimal  | 委托数量   |    |
 | price   | true | decimal  | 委托价格   |    |
 | order_price_type   | true | string  | 订单报价类型    | "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单 |
 | direction   | true | string  |  买卖方向  |  "buy":买 "sell":卖  |
-| offset   | true | string  |  开平方向  |    "open":开 "close":平 |
+| offset   | true | string  |  开平方向  |    "open":开 "close":平, "both"：单向持仓 |
 | status   | true | int  | 订单状态   |  1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单  |
 | lever_rate   | true | int  | 杠杆倍数   |     |
 | order_id   | true | long  | 订单ID   |    |
@@ -16799,11 +16636,12 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | profit   | true | decimal  | 订单总平仓盈亏（使用持仓均价计算，不包含仓位跨结算的已实现盈亏。）   |    |
 | liquidation_type   | true | decimal  | 强平类型 0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管   |    |
 | canceled_at               | true     | long    | 撤单时间   |  |
-| fee_asset               | true     | string    | 手续费币种          | “USDT”,“HUSD” |
-| margin_account | true | string | 保证金账户  | 比如:"BTC-USDT","BTC-HUSD" ... |
+| fee_asset               | true     | string    | 手续费币种          | “USDT” |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
 | is_tpsl | true | int | 是否设置止盈止损  | 1：是；0：否 |
 | real_profit | true | decimal | 订单总真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \<trade\>   | true | object array |     |    |
 | id   | true | string  | 全局唯一的交易标识    |    |
 | trade_id | true | long  | 与linear-swap-api/v1/swap_matchresults返回结果中的match_id一样，是撮合结果id， 非唯一，可重复，注意：一个撮合结果代表一个taker单和N个maker单的成交记录的集合，如果一个taker单吃了N个maker单，那这N笔trade都是一样的撮合结果id   |    |
@@ -16815,7 +16653,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | role   | true | string  | taker或maker    |    |
 | real_profit |  true | decimal | 该笔成交的真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
 | profit   | true | decimal | 该笔成交的平仓盈亏（使用持仓均价计算，不包含仓位跨结算的已实现盈亏。）             |
-| fee_asset   | true | string  | 手续费币种   |  “USDT”,“HUSD”  |
+| fee_asset   | true | string  | 手续费币种   |  “USDT”  |
 | \</trade\>   |  |   |     |
 
 #### 备注：
@@ -16855,17 +16693,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 ### 取消订阅请求数据格式说明
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为unsub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 取消订阅主题名称，必填 (orders.$contract_code) 取消订阅某个合约下的成交订单信息； 详情请查看unsub请求参数说明 |
-
-### unsub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| 字段名称 | 类型   | 说明                                               |
+| :------- | :----- | :------------------------------------------------- |
+| op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
+| cid      | string | 选填;Client 请求唯一 ID                            |
+| topic    | string | 必填;待取消订阅主题名称:orders.$contract_code，订阅、取消订阅某个合约下的成交订单信息； $contract_code为合约代码（BTC-USDT、ETH-USDT...），如果值为 * 时代表订阅所有合约;  |
 
 
 ### 订阅与取消订阅规则说明
@@ -16883,7 +16715,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 #### 备注
  - 该接口仅支持全仓模式。
- - 请求参数contract_code支持交割合约代码，格式为：BTC-USDT-210625或BTC-HUSD-210625。
+ - 请求参数contract_code支持交割合约代码，格式为：BTC-USDT-210625。
 
 成功建立和 WebSocket API 的连接之后，向 Server 发送如下格式的数据来订阅数据:
 
@@ -16915,13 +16747,13 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ------- | ----- | ------------------------------------------ |
 | op       | string | 必填；操作名称，订阅固定值为sub             |
 | cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 订阅主题名称，必填 (orders_cross.$contract_code) 订阅某个合约下的成交订单信息； 详情请查看sub请求参数说明 |
+| topic    | string |  订阅主题名称，必填 (orders_cross.$contract_code) 订阅某个合约下的成交订单信息； 详情请查看sub请求参数说明 |
 
 ### sub请求参数说明
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续），  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 #### 备注：
  - postOnly的报单收到的WS推送要么是报单成功，状态为3，要么是7，已撤单。
@@ -16993,15 +16825,14 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ts   | true | long  | 服务端应答时间戳   |    |
 | uid   | true | string  | 用户uid  |    |
 | symbol   | true | string  | 品种代码   |  "BTC","ETH"...  |
-| contract_code   | true | string  | 合约代码   |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码   | 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...   |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | volume   | true | decimal  | 委托数量   |    |
 | price   | true | decimal  | 委托价格   |    |
 | order_price_type   | true | string  | 订单报价类型    | "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单  |
 | direction   | true | string  |  买卖方向  |  "buy":买 "sell":卖  |
-| offset   | true | string  |  开平方向  |    "open":开 "close":平 |
+| offset   | true | string  |  开平方向  |    "open":开 "close":平, "both"：单向持仓 |
 | status   | true | int  | 订单状态   |  1准备提交 2准备提交 3已提交 4部分成交 5部分成交已撤单 6全部成交 7已撤单  |
 | lever_rate   | true | int  | 杠杆倍数   |     |
 | order_id   | true | long  | 订单ID   |    |
@@ -17019,12 +16850,13 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | profit   | true | decimal  | 订单总平仓盈亏（使用持仓均价计算，不包含仓位跨结算的已实现盈亏。）   |    |
 | liquidation_type   | true | decimal  | 强平类型 0:非强平类型，1：多空轧差， 2:部分接管，3：全部接管   |    |
 | canceled_at               | true     | long    | 撤单时间   |  |
-| fee_asset               | true     | string    | 手续费币种          | “USDT”,“HUSD” |
+| fee_asset               | true     | string    | 手续费币种          | “USDT” |
 | is_tpsl | true | int | 是否设置止盈止损  | 1：是；0：否 |
 | real_profit | true | decimal | 订单总真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \<trade\>   | true | object array |     |    |
 | id   | true | string  | 全局唯一的交易标识    |    |
 | trade_id | true | long  | 与linear-swap-api/v1/swap_cross_matchresults返回结果中的match_id一样，是撮合结果id， 非唯一，可重复，注意：一个撮合结果代表一个taker单和N个maker单的成交记录的集合，如果一个taker单吃了N个maker单，那这N笔trade都是一样的撮合结果id    |    |
@@ -17036,7 +16868,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | role   | true | string  | taker或maker    |    |
 | real_profit |  true | decimal | 该笔成交的真实收益（使用开仓均价计算，包含仓位跨结算的已实现盈亏。）  |  |
 | profit  |  true | decimal | 该笔成交的平仓盈亏（使用持仓均价计算，不包含仓位跨结算的已实现盈亏。）             |
-| fee_asset   | true | string  | 手续费币种   |  “USDT”,“HUSD”  |
+| fee_asset   | true | string  | 手续费币种   |  “USDT”  |
 | \</trade\>   |  |   |     |
 
 #### 备注：
@@ -17088,7 +16920,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续），  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 ### 订阅与取消订阅规则说明
 
@@ -17139,13 +16971,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ------- | ----- | ------------------------------------------ |
 | op       | string | 必填；操作名称，订阅固定值为sub             |
 | cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 订阅主题名称，必填 (accounts.$contract_code) 订阅某个合约代码下的资产变更信息； 详情请查看sub请求参数说明 |
-
-### sub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| topic    | string | 必填；订阅主题名称，必填 (accounts.$contract_code)  订阅、取消订阅某个合约代码下的资产变更信息，当 $contract_code值为 * 时代表订阅所有合约代码; contract_code支持大小写，比如BTC-USDT|
 
 #### 备注：
 
@@ -17198,8 +17024,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | event   | true | string  | 资产变化通知相关事件说明 |  比如订单创建开仓(order.open) 、订单成交(order.match)（除开强平和结算交割）、结算交割(settlement)、订单强平成交(order.liquidation)（对钆和接管仓位）、订单撤销(order.cancel) 、合约账户划转（contract.transfer)（包括外部划转、母子划转和不同保证金账户划转）、系统（contract.system)、其他资产变化(other)、切换杠杆（switch_lever_rate）、初始资金（init）、由系统定期推送触发（snapshot） |
 | \<data\>   | true | object array |     |   |
 | symbol   | true | string  | 品种代码   | "BTC","ETH"...   |
-| contract_code   | true | string  | 合约代码   | "BTC-USDT","BTC-HUSD"...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码   | "BTC-USDT","ETH-USDT"...   |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance   | true | decimal  | 账户权益  |   |
 | margin_static   | true | decimal  | 静态权益  |   |
@@ -17213,8 +17038,9 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | withdraw_available   | true | decimal  | 可划转数量  |   |
 | lever_rate   | true | int  | 杠杆倍数  |   |
 | adjust_factor   | true | decimal  | 调整系数  |   |
-| margin_account | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD”...  |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
+| position_mode | true | string | 持仓模式	  | single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>   |  |   |     |   |
 
 
@@ -17251,17 +17077,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
                              
 ### 取消订阅请求数据格式说明
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为unsub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 取消订阅主题名称，必填 (accounts.$contract_code) 取消订阅某个合约代码下的资产变更信息； 详情请查看unsub请求参数说明 |
-
-### unsub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+字段名称 | 类型   | 说明                                               |
+------- | ----- | ------------------------------------------------- |
+op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
+cid      | string | 选填;Client 请求唯一 ID                            |
+topic    | string | 必填;必填；必填；订阅主题名称，必填 (accounts.$contract_code)  订阅、取消订阅某个合约代码下的资产变更信息，当 $contract_code值为 * 时代表订阅所有合约代码;contract_code支持大小写; |
 
 ### 订阅与取消订阅规则说明
 
@@ -17312,13 +17132,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ------- | ----- | ------------------------------------------ |
 | op       | string | 必填；操作名称，订阅固定值为sub             |
 | cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 订阅主题名称，必填 (accounts_cross.$margin_account) 订阅某个全仓账户下的资产变更信息； 详情请查看sub请求参数说明 |
-
-### sub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| margin_account      | true     | string | 保证金账户，支持大小写   |  "*" (表示订阅所有)  "USDT","HUSD"   |
+| topic    | string | 必填；订阅主题名称，必填 (accounts_cross.$margin_account)  订阅、取消订阅某个全仓账户下的资产变更信息，margin_account目前只有一个全仓账户（USDT） |
 
 #### 备注：
 
@@ -17396,7 +17210,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | event   | true | string  | 资产变化通知相关事件说明 |  比如订单创建开仓(order.open) 、订单成交(order.match)（除开强平和结算交割）、结算交割(settlement)、订单强平成交(order.liquidation)（对钆和接管仓位）、订单撤销(order.cancel) 、合约账户划转（contract.transfer)（包括外部划转、母子划转和不同保证金账户划转）、系统（contract.system)、其他资产变化(other)、切换杠杆（switch_lever_rate） 、初始资金（init）、由系统定期推送触发（snapshot） |
 | \<data\>   | true | object array |     |   |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | margin_asset       | true   | string | 保证金币种（计价币种）                 |                |
 | margin_balance       | true   | decimal | 账户权益                 |                |
 | margin_static        | true   | decimal | 静态权益                 |                |
@@ -17406,10 +17220,10 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | profit_unreal        | true   | decimal | 未实现盈亏                |                |
 | withdraw_available   | true   | decimal | 可划转数量                |                |
 | risk_rate            | true   | decimal | 保证金率                 |                |
+| position_mode        | true   | string | 持仓模式	  | single_side：单向持仓；dual_side：双向持仓 |
 | \<contract_detail\> |    true    |  object array       |    支持永续的合约相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |  永续："BTC-USDT","BTC-HUSD" ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 |  永续："BTC-USDT" ... |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -17417,14 +17231,13 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</contract_detail\>            |        |         |                      |                |
 | \<futures_contract_detail\> |    true    |  object array       |    支持交割的合约相关字段                  |                |
 | symbol     | true   | string  | 品种代码                 | "BTC","ETH"... |
-| contract_code     | true   | string  | 合约代码                 |  交割："BTC-USDT-211231","BTC-HUSD-211231" ... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code     | true   | string  | 合约代码                 |  交割："BTC-USDT-211231" ... |
 | margin_position      | true   | decimal | 持仓保证金（当前持有仓位所占用的保证金） |                |
 | margin_frozen        | true   | decimal | 冻结保证金                |                |
 | margin_available     | true   | decimal | 可用保证金                |                |
@@ -17432,8 +17245,8 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | liquidation_price | true | decimal | 预估强平价         |                |
 | lever_rate           | true   | decimal | 杠杠倍数                 |                |
 | adjust_factor        | true   | decimal | 调整系数                 |                |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</futures_contract_detail\>            |        |         |                      |                |
 | \</data\>   |  |   |     |   |
@@ -17473,17 +17286,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
                              
 ### 取消订阅请求数据格式说明
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为unsub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 取消订阅主题名称，必填 (accounts_cross.$margin_account) 取消订阅某个全仓账户下的资产变更信息； 详情请查看unsub请求参数说明 |
-
-### unsub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| margin_account      | true     | string | 保证金账户，支持大小写   |  "*" (表示订阅所有)  "USDT","HUSD"   |
+| 字段名称 | 类型   | 说明                                               |
+| ------- | ----- | ------------------------------------------------- |
+| op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
+| cid      | string | 选填;Client 请求唯一 ID                            |
+| topic    | string | 必填；订阅主题名称，必填 (accounts_cross.$margin_account)  订阅、取消订阅某个全仓账户的资产变更信息|
 
 ### 订阅与取消订阅规则说明
 
@@ -17530,16 +17337,10 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 ### 订阅请求数据格式说明
 
 | 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
+| :------- | :----- | :------------------------------------------ |
 | op       | string | 必填；操作名称，订阅固定值为sub             |
 | cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 订阅主题名称，必填 (positions.$contract_code) 订阅某个合约代码下的持仓变更信息； 详情请查看sub请求参数说明 |
-
-### sub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| topic    | string | 必填；订阅主题名称，必填 (positions.$contract_code)  订阅、取消订阅某个合约代码下的持仓变更信息，当 $contract_code值为 * 时代表订阅所有合约代码,contract_code支持大小写;  |
 
 > 当持仓有更新时，返回的参数示例如下:
 
@@ -17587,8 +17388,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | event                  | string  | 持仓变化通知相关事件说明，比如订单创建平仓(order.close) 、订单成交(order.match)（除开强平和结算交割）、结算交割(settlement)、订单强平成交(order.liquidation)（对钆和接管仓位）、订单撤销(order.cancel)、切换杠杆（switch_lever_rate）、 初始持仓（init）、由系统定期推送触发（snapshot）    |
 | \<data\>  | array object |  | |
 | symbol                 | string    | 品种代码 ,"BTC","ETH"...                                             |
-| contract_code          | string  | 合约代码，“BTC-USDT”,“BTC-HUSD”...                                                   |
-| trade_partition        |  string | 交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | string  | 合约代码，"BTC-USDT"                                                       |
 | volume                 | decimal  | 持仓量                                                     |
 | available              | decimal | 可平仓数量                                                     |
 | frozen                 | decimal | 冻结数量                                                      |
@@ -17602,8 +17402,9 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | direction              | string    | 仓位方向   "buy":买，即多仓  "sell":卖，即空仓                       |
 | last_price             | decimal    | 最新价                                                       |
 | margin_asset           | string | 保证金币种（计价币种）                 |  
-| margin_account        |  string | 保证金账户  比如:“BTC-USDT”,“BTC-HUSD”... |
+| margin_account        |  string | 保证金账户  比如“BTC-USDT” |
 | margin_mode           |  string | 保证金模式  isolated：逐仓模式 |
+| position_mode	           |  string | 持仓模式	 single_side：单向持仓；dual_side：双向持仓 |
 | \</data\> | | |  | |
 
 
@@ -17612,6 +17413,8 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 - 推送接口新增定期推送逻辑：每 5 秒进行一次定期推送，由定期推送触发的数据中 event 参数值为“snapshot”，表示由系统定期推送触发。 如果5秒内某仓位已触发过推送，则该仓位跳过此次推送。
 
 - 当用户持仓量为0时使用切换杠杆的接口，持仓推送接口不会推送"switch_lever_rate"。
+
+- 单向持仓模式下：只推送有仓位的持仓信息(即只推送单向非空仓的数据)，如没有持仓则不推送
 
 ## 【逐仓】取消订阅持仓变动数据（unsub）
 
@@ -17645,17 +17448,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 ### 取消订阅请求数据格式说明
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为sunub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 取消订阅主题名称，必填 (positions.$contract_code) 取消订阅某个合约代码下的持仓变更信息； 详情请查看unsub请求参数说明 |
-
-### unsub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| 字段名称 | 类型   | 说明                                               |
+| ------- | ----- | ------------------------------------------------- |
+| op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
+| cid      | string | 选填;Client 请求唯一 ID                            |
+| topic    | string | 必填;必填；必填；订阅主题名称，必填 (positions.$contract_code)  订阅、取消订阅某个合约代码下的资产变更信息，当 $contract_code值为 * 时代表订阅所有合约代码;contract_code支持大小写,比如BTC-USDT  |
 
 
 ### 订阅与取消订阅规则说明
@@ -17667,7 +17464,6 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | positions.contract_code1 | positions.contract_code1  | 允许   |
 | positions.contract_code1 | positions.contract_code2  | 不允许 |
 | positions.*       | positions.contract_code1  | 不允许 |
-
 
 ## 【全仓】持仓变动更新数据（sub）
 
@@ -17713,7 +17509,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续），  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
+| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 > 当持仓有更新时，返回的参数示例如下:
 
@@ -17763,10 +17559,9 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | event   | true | string  | 持仓变化通知相关事件说明 | 比如订单创建平仓(order.close) 、订单成交(order.match)（除开强平和结算交割）、结算交割(settlement)、订单强平成交(order.liquidation)（对钆和接管仓位）、订单撤销(order.cancel) 、切换杠杆（switch_lever_rate）、初始持仓（init）、由系统定期推送触发（snapshot）   |
 | \<data\>   | true | object array |     |    |
 | symbol   | true | string  | 品种代码    | "BTC","ETH"...   |
-| contract_code   | true | string  | 合约代码  |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”... |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码  |  永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | volume   | true | decimal  | 持仓量（张）  |    |
 | available   | true | decimal  | 可平仓数量 （张） |    |
 | frozen   | true | decimal  |  冻结数量（张） |    |
@@ -17780,9 +17575,10 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | lever_rate   | true | int  | 杠杆倍数  |    |
 | direction   | true | string  | 仓位方向   |  "buy":买，即多仓  "sell":卖，即空仓   |
 | last_price   | true | decimal  | 最新成交价  |    |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| position_mode	| true |  string | 持仓模式	 single_side：单向持仓；dual_side：双向持仓 |
 | \</data\>   |  |   |     |    |
 
 #### 备注：
@@ -17791,6 +17587,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 - 当用户持仓量为0时使用切换杠杆的接口，持仓推送接口不会推送"switch_lever_rate"。
 
+- 单向持仓模式下：只推送有仓位的持仓信息(即只推送单向非空仓的数据)，如没有持仓则不推送
 
 ## 【全仓】取消订阅持仓变动数据（unsub）
 
@@ -17829,13 +17626,13 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ------- | ----- | ------------------------------------------------- |
 | op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
 | cid      | string | 选填;Client 请求唯一 ID                            |
-| topic    | string | 取消订阅主题名称，必填 (positions_cross.$contract_code)  取消订阅某个合约代码下的资产变更信息，详情请查看unsub请求参数说明 |
+| topic    | string | 订阅主题名称，必填 (positions_cross.$contract_code)  取消订阅某个合约代码下的资产变更信息，详情请查看unsub请求参数说明 |
 
 ### unsub请求参数说明
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 ### 订阅与取消订阅规则说明
 
@@ -17877,17 +17674,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 ### 请求参数
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为sub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 订阅主题名称，必填 (matchOrders.$contract_code) 订阅某个合约订单撮合数据； 详情请查看sub请求参数说明 |
-
-### sub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
+| ------ | ---- | ------ | -------- | -------------- |
+| op | true | string | 订阅固定值为sub	 |  |
+| cid | false| string | Client 请求唯一 ID	 | |
+| topic | true| string | 订阅主题名称，(matchOrders.$contract_code) 订阅某个品种下的合约变动信息；$contract_code为品种代码（BTC-USDT、ETH-USDT），如果值为 * 时代表订阅所有品种; contract_code支持大小写; | |
 
 #### 备注：
 - postOnly的报单收到的WS推送要么是报单成功，状态为3，要么是7，已撤单;
@@ -17950,8 +17741,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ts   | true | long  | 服务端应答时间戳   |   |
 | uid   | true | string  | 用户uid  |    |
 | symbol   | true | string  | 品种代码  |  "BTC","ETH"...  |
-| contract_code   | true | string  | 合约代码  | “BTC-USDT”,“BTC-HUSD”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码  |   |
 | status   | true | int  | 订单状态 | (3未成交 4部分成交 5部分成交已撤单 6全部成交 7已撤单)   |
 | order_id   | true | long  | 订单ID  |    |
 | order_id_str   | true | string  |订单ID ,字符串类型  |   |
@@ -17960,15 +17750,16 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | trade_volume    | true     | decimal  |   订单已成交数量    |                |
 | volume                  | true     | decimal  |      订单总委托数量        |                |
 | direction   | true | string  |  买卖方向  |  "buy":买 "sell":卖  |
-| offset   | true | string  |  开平方向  |    "open":开 "close":平 |
+| offset   | true | string  |  开平方向  |    "open":开 "close":平, "both"：单向持仓 |
 | lever_rate              | true | int     | 杠杆倍数        |                  |
 | price            | true     | decimal      | 委托价格                                                     |                                                              |
 | created_at       | true     | long         | 创建时间                                                     |                                                              |
 | order_source     | true     | string       | 订单来源                                                     | （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发）    |
 | order_price_type | true     | string       | 订单报价类型                                                 |  "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单    |
-| margin_account | true | string | 保证金账户  | 比如:“BTC-USDT”,“BTC-HUSD”...  |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
 | is_tpsl | true | int | 是否设置止盈止损  | 1：是；0：否 |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \<trade\>   | true | object array |     |    |
 | id   | true | string  | 全局唯一的交易标识  |   |
 | trade_id   | true | long  | 与linear-swap-api/v1/swap_matchresults返回结果中的match_id一样，是撮合结果id， 非唯一，可重复，注意：一个撮合结果代表一个taker单和N个maker单的成交记录的集合，如果一个taker单吃了N个maker单，那这N笔trade都是一样的撮合结果id   |   |
@@ -18012,17 +17803,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
  
 ### 取消订阅请求数据格式说明
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为unsub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 取消订阅主题名称，必填 (matchOrders.$contract_code) 取消订阅某个合约订单撮合数据； 详情请查看unsub请求参数说明 |
-
-### unsub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| 字段名称 | 类型   | 说明                                               |
+| :------- | :----- | :------------------------------------------------- |
+| op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
+| cid      | string | 选填;Client 请求唯一 ID                            |
+| topic    | string | 必填;必填；必填；订阅主题名称，必填 (matchOrders.$contract_code)  订阅、取消订阅某个合约代码下的资产变更信息，当 $contract_code值为 * 时代表订阅所有合约代码; |
 
 ### 订阅与取消订阅规则说明
 
@@ -18069,13 +17854,13 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ------ | ---- | ------ | -------- | -------------- |
 | op | true | string | 订阅固定值为sub	 |  |
 | cid | false| string | Client 请求唯一 ID	 | |
-| topic | true| string | 订阅主题名称，(matchOrders_cross.$contract_code) 订阅某个合约订单撮合数据；详情请查看sub请求参数说明 |
+| topic | true| string | 订阅主题名称，(matchOrders_cross.$contract_code) 订阅某个品种下的合约订单撮合数据；详情请查看sub请求参数说明 |
 
 ### sub请求参数说明
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 #### 备注：
 - postOnly的报单收到的WS推送要么是报单成功，状态为3，要么是7，已撤单;
@@ -18141,10 +17926,9 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ts   | true | long  | 服务端应答时间戳   |   |
 | uid   | true | string  | 用户uid  |    |
 | symbol   | true | string  | 品种代码  |  "BTC","ETH"...  |
-| contract_code   | true | string  | 合约代码  |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码  | 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如:“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | status   | true | int  | 订单状态 | (3未成交 4部分成交 5部分成交已撤单 6全部成交 7已撤单)   |
 | order_id   | true | long  | 订单ID  |    |
 | order_id_str   | true | string  |订单ID ,字符串类型  |   |
@@ -18153,16 +17937,17 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | trade_volume    | true     | decimal  |   订单已成交数量    |                |
 | volume                  | true     | decimal  |      订单总委托数量        |                |
 | direction   | true | string  |  买卖方向  |  "buy":买 "sell":卖  |
-| offset   | true | string  |  开平方向  |    "open":开 "close":平 |
+| offset   | true | string  |  开平方向  |    "open":开 "close":平, "both"：单向持仓 |
 | lever_rate              | true | int     | 杠杆倍数        |                  |
 | price            | true     | decimal      | 委托价格                         |                |
 | created_at       | true     | long         | 创建时间                                                     |    |
 | is_tpsl           | true | int | 是否设置止盈止损  | 1：是；0：否 |
 | order_source     | true     | string       | 订单来源                                                     |  （system:系统、web:用户网页、api:用户API、m:用户M站、risk:风控系统、settlement:交割结算、ios：ios客户端、android：安卓客户端、windows：windows客户端、mac：mac客户端、trigger：计划委托触发、tpsl:止盈止损触发）     |
 | order_price_type | true     | string       | 订单报价类型                                                 |  "limit":限价，"opponent":对手价，"post_only":只做maker单,post only下单只受用户持仓数量限制，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单, "opponent_ioc": 对手价-IOC下单，"lightning_ioc": 闪电平仓-IOC下单，"optimal_5_ioc": 最优5档-IOC下单，"optimal_10_ioc": 最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单，"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单    |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \<trade\>   | true | object array |     |    |
 | id   | true | string  | 全局唯一的交易标识  |   |
 | trade_id   | true | long  | 与linear-swap-api/v1/swap_cross_matchresults返回结果中的match_id一样，是撮合结果id， 非唯一，可重复，注意：一个撮合结果代表一个taker单和N个maker单的成交记录的集合，如果一个taker单吃了N个maker单，那这N笔trade都是一样的撮合结果id  |   |
@@ -18217,7 +18002,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续），永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 ### 订阅与取消订阅规则说明
 
@@ -18266,17 +18051,16 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | cid | false| string | Client 请求唯一 ID	 | |
 | topic | true| string | 订阅主题名称，必填 (public.$contract_code.liquidation_orders) 订阅某个品种下的强平订单信息；详细参数见sub请求参数说明  | |
 | business_type | false | string | 业务类型，不填默认永续 |futures：交割、swap：永续、all：全部 |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 ### sub请求参数说明
 
 | 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码,支持大小写    |  全部：* (请看备注中的说明) ， 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...        |
+| contract_code      | true     | string | 合约代码,支持大小写    |  全部：*(请看备注中的说明) ，永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...         |
 
 #### 备注
- - 订阅 * 是在business_type基础下，比如business_type为永续，此时订阅 * 返回所有永续合约；若business_type为交割，此时订阅*返回所有交割合约；若business_type为全部，则订阅 * 返回所有永续合约和交割合约。
- - 当business_type为永续的情况下，订阅交割合约代码，报错2011。当已订阅了business_type为永续的 *（相当于订阅了所有永续合约），允许再订阅business_type为全部的 *（相当于订阅了所有永续合约和交割合约），反之则报错2014；相当于允许先订阅小范围，再订阅大范围，而不允许订阅完大范围，再继续订阅小范围，因为这样没有意义，大范围已经包含了小范围了。
+ - 订阅 * 是在business_type基础下，比如business_type为永续，此时订阅*返回所有永续合约；若business_type为交割，此时订阅*返回所有交割合约；若business_type为全部，则订阅*返回所有永续合约和交割合约。
+ - 当business_type为永续的情况下，订阅交割合约代码，报错2011。当已订阅了business_type为永续的*（相当于订阅了所有永续合约），允许再订阅business_type为全部的*（相当于订阅了所有永续合约和交割合约），反之则报错2014；相当于允许先订阅小范围，再订阅大范围，而不允许订阅完大范围，再继续订阅小范围，因为这样没有意义，大范围已经包含了小范围了。
 
 > 当有订单被爆仓账户接管后，返回的参数示例如下：
 
@@ -18312,17 +18096,16 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ts   | true | long  | 服务端应答时间戳   |   |
 | \<data\> | true | array object |  | |
 | symbol   | true | string  | 品种代码  |  "BTC","ETH"...  |
-| contract_code   | true | string  | 合约代码  |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码  | 永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...  |
 | direction   | true | string  | 仓位方向 | "buy":买 "sell":卖    |
-| offset   | true | string  | 开平方向 | "open":开 "close":平    |
+| offset   | true | string  | 开平方向 | "open":开 "close":平, "both"：单向持仓   |
 | volume   | true | decimal  | 强平数量（张）  |   |
 | amount   | true | decimal  | 强平数量（币）  |   |
 | trade_turnover   | true | decimal  | 强平金额（计价币种）  |   |
 | price   | true | decimal  | 破产价格  |   |
 | created_at   | true | long  | 订单创建时间  |   |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | \</data\> | | |  | |
 
@@ -18363,13 +18146,12 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | cid      | string | 选填;Client 请求唯一 ID                            |
 | topic    | string | 订阅主题名称，必填 (public.$contract_code.liquidation_orders)  取消订阅某个品种下的强平订单数据，详细参数见nusub请求参数说明  |
 | business_type | string | 业务类型，不填默认永续。 futures：交割、swap：永续、all：全部 |
-| trade_partition |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 ### nusub请求参数说明
 
 | 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码,支持大小写    |  全部：*(请看备注中的说明) ， 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...         |
+| contract_code      | true     | string | 合约代码,支持大小写    |  全部：*(请看备注中的说明) ，永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...         |
 
 #### 备注
  - 请求参数$contract_code支持交割合约代码，格式为:BTC-USDT-210625。
@@ -18455,14 +18237,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ------ | ---- | ------ | -------- | -------------- |
 | op | true | string | 订阅固定值为sub	 |  |
 | cid | false| string | Client 请求唯一 ID	 | |
-| topic | true| string | 订阅主题名称，必填 (public.$contract_code.funding_rate) 订阅某个品种下的资金费率；详细参数见sub请求参数说明 | |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-
-### sub请求参数说明
-
-| 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码,支持大小写    |  全部：*(请看备注中的说明) ， "BTC-USDT","BTC-HUSD" ...     |
+| topic | true| string | 订阅主题名称，必填 (public.$contract_code.funding_rate) 订阅某个品种下的资金费率；$contract_code为品种代码（BTC-USDT、ETH-USDT），如果值为 * 时代表订阅所有品种; contract_code支持大小写; | |
 
 > 当资金费率有更新时，返回的参数示例如下
 
@@ -18496,9 +18271,8 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | ts   | true | long  | 服务端应答时间戳   |   |
 | \<data\>   | true | object array |     |    |
 | symbol   | true | string  | 品种代码  |  "BTC","ETH"...  |
-| contract_code   | true | string  | 合约代码  | “BTC-USDT”,“BTC-HUSD”...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-| fee_asset   | true | string  | 资金费币种 | "USDT","HUSD"    |
+| contract_code   | true | string  | 合约代码  |   |
+| fee_asset   | true | string  | 资金费币种 | "USDT"...    |
 | funding_time   | true | string  | 当期资金费率时间 |    |
 | funding_rate   | true | string  | 当期资金费率  |   |
 | estimated_rate   | true | string  | 下一期预测资金费率  |   |
@@ -18541,15 +18315,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | :------- | :----- | :------------------------------------------------- |
 | op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
 | cid      | string | 选填;Client 请求唯一 ID                            |
-| topic    | string | 必填；取消订阅主题名称，必填 (public.$contract_code.funding_rate)  取消订阅某个合约代码下的资金费率。 详细参数见unsub请求参数说明 |
-| trade_partition | string | 交易区，不填默认USDT, "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
-
-### umsub请求参数说明
-
-| 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码,支持大小写    |  全部：*(请看备注中的说明) ， "BTC-USDT","BTC-HUSD" ...     |
-
+| topic    | string | 必填;必填；必填；订阅主题名称，必填 (public.$contract_code.funding_rate)  订阅、取消订阅某个合约代码下的资金费率，当 $contract_code值为 * 时代表订阅所有合约代码; |
 
 ### 订阅与取消订阅规则说明
 
@@ -18609,13 +18375,12 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | cid | false| string | Client 请求唯一 ID	 | |
 | topic | true| string | 订阅主题名称，必填 (public.$contract_code.contract_info) 订阅某个品种下的合约变动信息；详细参数见sub请求参数说明 ; | |
 | business_type | false| string | 业务类型，不填默认永续 | futures：交割、swap：永续、all：全部 |
-| trade_partition |  false |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 ### sub请求参数说明
 
 | 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码,支持大小写    |  全部：* (请看备注中的说明) ， 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...        |
+| contract_code      | true     | string | 合约代码,支持大小写    |  全部：* (请看备注中的说明) ，永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...         |
 
 #### 备注
  - 订阅 * 是在business_type基础下，比如business_type为永续，此时订阅 * 返回所有永续合约；若business_type为交割，此时订阅 * 返回所有交割合约；若business_type为全部，则订阅 * 返回所有永续合约和交割合约。
@@ -18674,8 +18439,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | event | true  | string | 通知相关事件说明 |   订阅成功返回的初始合约信息（init），合约信息字段变化触发（update），系统定期推送触发（snapshot）  |
 | \<data\> |   true   |  object array   |   |   |
 | symbol  | true | string  | 品种代码  | "BTC","ETH"...   |
-| contract_code   | true | string  | 合约代码 |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...   |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code   | true | string  | 合约代码 |  永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...   |
 | contract_size  | true | decimal | 合约面值，即1张合约对应多少标的币种（如BTC-USDT合约则面值单位就是BTC） | 10, 100... |
 | price_tick  | true | decimal | 合约价格最小变动精度 | 0.001, 0.01... |
 | settlement_date  | true | string  | 合约下次结算时间    | 时间戳，如"1490759594752"  |
@@ -18683,8 +18447,8 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | create_date   | true | string  | 合约上市日期    | 如"20180706" |
 | contract_status      | true | int     | 合约状态  | 合约状态: 0:已下市、1:上市、2:待上市、3:停牌，4:待开盘、5:结算中、6:交割中、7:结算完成、8:交割完成 |
 | support_margin_mode | true | string | 合约支持的保证金模式  | cross：全仓模式；isolated：逐仓模式；all：全逐仓都支持 |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair |   true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...   |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair |   true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
 | delivery_date  | true | string  | 合约交割日期    | 如"20180720"   |
 | \</data\>   |      |         |        |       |
@@ -18733,15 +18497,14 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | :------- | :----- | :------------------------------------------------- |
 | op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
 | cid      | string | 选填;Client 请求唯一 ID                            |
-| topic    | string | 取消订阅主题名称，必填 (public.$contract_code.contract_info)  取消订阅某个合约代码下的资产变更信息，详细参数nusub请求参数说明 ; |
+| topic    | string | 订阅主题名称，必填 (public.$contract_code.contract_info)  取消订阅某个合约代码下的资产变更信息，详细参数nusub请求参数说明 ; |
 | business_type |  string | 业务类型，不填默认永续 。 futures：交割、swap：永续、all：全部 |
-| trade_partition |  string | 交易区，不填默认USDT |  "ALL"：所有交易区， "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
 
 ### nusub请求参数说明
 
 | 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码,支持大小写    |  全部：* (请看备注中的说明) ，永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...         |
+| contract_code      | true     | string | 合约代码,支持大小写    |  全部：* (请看备注中的说明) ，永续：“BTC-USDT”... , 交割：“BTC-USDT-210625”...         |
 
 #### 备注
  - 请求参数contract_code支持交割合约代码，格式为BTC-USDT-210625。
@@ -18822,17 +18585,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 ### 请求参数
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为sub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 订阅主题名称，必填 (trigger_order.$contract_code) 订阅某个合约订单撮合数据； 详情请查看sub请求参数说明 |
-
-### sub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| 参数名称   | 是否必须 | 类型     | 描述   | 取值范围           |
+| ------ | ---- | ------ | -------- | -------------- |
+| op | true | string | 订阅固定值为sub	 |  |
+| cid | false| string | Client 请求唯一 ID	 | |
+| topic | true| string | 订阅主题名称，必填 (trigger_order.$contract_code) 订阅某个品种下的合约计划委托订单更新信息；$contract_code为品种代码（BTC-USDT、ETH-USDT），如果值为 * 时代表订阅所有品种; contract_code支持大小写; | |
 
 > **返回示例**:
 
@@ -18887,13 +18644,12 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | event | true  | string | 通知相关事件说明 |   计划委托订单下单成功（order），计划委托撤单成功（cancel），计划委托触发成功（trigger_success），计划委托触发失败（trigger_fail）  |
 | \<data\> |   true   |  object array   |   |   |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code          | true | string  | 合约代码               | “BTC-USDT”,“BTC-HUSD”...                    |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | "BTC-USDT" ...                          |
 | trigger_type              | true | string  | 触发类型    |  ge大于等于；le小于等于   |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型              |  1、报单     |
 | direction            | true | string | 买卖方向               |             买："buy",卖："sell"          |
-| offset         | true | string | 开平方向             |                                开："open",平："close"            |
+| offset         | true | string | 开平方向             |           开："open",平："close" ,"both"：单向持仓           |
 | lever_rate            | true | int    | 杠杆倍数              |                         |
 | order_id      | true | decimal | 计划委托单订单ID                |                                          |
 | order_id_str             | true | string | 字符串类型的订单ID              |                                          |
@@ -18908,10 +18664,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | triggered_at        | true  | long | 触发时间 |                      |
 | order_insert_at        | true  | long | 下order单时间 |                      |
 | canceled_at        | true  | long | 撤单时间 |                      |
-| margin_account | true | string | 保证金账户  | 比如：“BTC-USDT”,“BTC-HUSD”... |
+| margin_account | true | string | 保证金账户  | 比如“BTC-USDT” |
 | margin_mode | true | string | 保证金模式  | isolated：逐仓模式 |
 | fail_code        | true  | int | 被触发时下order单失败错误码 |                      |
 | fail_reason        | true  | string | 被触发时下order单失败原因（英文） |                      |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</data\>   |      |         |        |       |
 
 #### **说明**：
@@ -18955,17 +18712,11 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
  
 ### 取消订阅请求数据格式说明
 
-| 字段名称 | 类型   | 说明                                        |
-| ------- | ----- | ------------------------------------------ |
-| op       | string | 必填；操作名称，订阅固定值为unsub             |
-| cid      | string | 选填;Client 请求唯一 ID                     |
-| topic    | string | 取消订阅主题名称，必填 (trigger_order.$contract_code) 取消订阅某个合约订单撮合数据； 详情请查看unsub请求参数说明 |
-
-### unsub请求参数说明
-
-| 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
-| ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   |  "*" (表示订阅所有合约) "BTC-USDT","BTC-HUSD"...  |
+| 字段名称 | 类型   | 说明                                               |
+| :------- | :----- | :------------------------------------------------- |
+| op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
+| cid      | string | 选填;Client 请求唯一 ID                            |
+| topic    | string | 必填;必填；必填；订阅主题名称，必填 (trigger_order.$contract_code)  订阅、取消订阅某个合约代码下的计划委托订单更新信息，当 $contract_code值为 * 时代表订阅所有合约代码; |
 
 ### 订阅与取消订阅规则说明
 
@@ -19019,7 +18770,7 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续），  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code      | true     | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 > **返回示例**:
 
@@ -19077,15 +18828,14 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | event | true  | string | 通知相关事件说明 |   计划委托订单下单成功（order），计划委托撤单成功（cancel），计划委托触发成功（trigger_success），计划委托触发失败（trigger_fail）  |
 | \<data\> |   true   |  object array   |   |   |
 | symbol                 | true | string  | 品种代码               |                                          |
-| contract_code          | true | string  | 合约代码               |  永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
-| trade_partition |  true |  string | 交易区 |   "USDT"：USDT交易区，"HUSD"：HUSD交易区  |
+| contract_code          | true | string  | 合约代码               | 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 | margin_mode | true | string | 保证金模式  | cross：全仓模式； |
-| margin_account | true | string | 保证金账户  | 比如：“USDT”,“HUSD” |
+| margin_account | true | string | 保证金账户  | 比如“USDT” |
 | trigger_type              | true | string  | 触发类型   |  ge大于等于；le小于等于    |
 | volume                 | true | decimal  | 委托数量 |      |
 | order_type           | true | int | 订单类型              |  1、报单     |
 | direction            | true | string | 买卖方向               |             买："buy",卖："sell"          |
-| offset         | true | string | 开平方向             |                                开："open",平："close"            |
+| offset         | true | string | 开平方向             |       开："open",平："close", "both":单向持仓             |
 | lever_rate            | true | int    | 杠杆倍数              |                         |
 | order_id      | true | decimal | 计划委托单订单ID                |                                          |
 | order_id_str             | true | string | 字符串类型的订单ID              |                                          |
@@ -19102,9 +18852,10 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | canceled_at        | true  | long | 撤单时间 |                      |
 | fail_code        | true  | int | 被触发时下order单失败错误码 |                      |
 | fail_reason        | true  | string | 被触发时下order单失败原因（英文） |                      |
-| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_ quarter（次季）   |
-| pair          | true |  string | 交易对 |   如："BTC-USDT","BTC-HUSD" ...  |
+| contract_type | true |  string | 合约类型 |  swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）   |
+| pair          | true |  string | 交易对 |   如：“BTC-USDT”   |
 | business_type | true |  string | 业务类型 |  futures：交割、swap：永续   |
+| reduce_only | true | int      | 是否为只减仓订单 | 0:表示为非只减仓订单，1:表示为只减仓订单  |
 | \</data\>   |      |         |        |       |
 
 #### **说明**：
@@ -19153,13 +18904,13 @@ trade_turnover   | true | decimal |  成交额（计价币种） |              
 | :------- | :----- | :------------------------------------------------- |
 | op       | string | 必填;操作名称，订阅固定值为 unsub;                 |
 | cid      | string | 选填;Client 请求唯一 ID                            |
-| topic    | string | 取消订阅主题名称，必填 (trigger_order_cross.$contract_code) ，取消订阅某个合约代码下的计划委托订单更新信息，详情请查看unsub请求参数说明 |
+| topic    | string | 订阅主题名称，必填 (trigger_order_cross.$contract_code) ，取消订阅某个合约代码下的计划委托订单更新信息，详情请查看unsub请求参数说明 |
 
 ### unsub请求参数说明
 
 | 参数名称   | 是否必须 | 类型 | 描述        | 取值范围                               |
 | ----------- | -------- | ------ | ------------- | ---------------------------------------- |
-| contract_code  | true | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续："BTC-USDT","BTC-HUSD" ... ，交割：“BTC-USDT-210625”,“BTC-HUSD-210625”...  |
+| contract_code  | true | string | 合约代码，支持大小写   | 全部：*（交割和永续）， 永续:“BTC-USDT：... ，交割："BTC-USDT-210625"...  |
 
 ### 订阅与取消订阅规则说明
 
